@@ -1,0 +1,56 @@
+[
+  {
+    "frente": "texto",
+    "fundo": "superficie",
+    "min": 4.5,
+    "razao": 16.56507268660301
+  },
+  {
+    "frente": "suave",
+    "fundo": "fundo",
+    "min": 4.5,
+    "razao": 5.141890272757286
+  },
+  {
+    "frente": "superficie",
+    "fundo": "primaria",
+    "min": 4.5,
+    "razao": 6.271387698133873
+  },
+  {
+    "frente": "texto",
+    "fundo": "selecao",
+    "min": 4.5,
+    "razao": 13.379031454430276
+  },
+  {
+    "frente": "ok",
+    "fundo": "ok-fundo",
+    "min": 4.5,
+    "razao": 5.98234494812976
+  },
+  {
+    "frente": "erro",
+    "fundo": "erro-fundo",
+    "min": 4.5,
+    "razao": 5.748687270229619
+  },
+  {
+    "frente": "alerta",
+    "fundo": "alerta-fundo",
+    "min": 4.5,
+    "razao": 6.251675733275213
+  },
+  {
+    "frente": "controle",
+    "fundo": "fundo",
+    "min": 3,
+    "razao": 3.632299038943183
+  },
+  {
+    "frente": "primaria-escura",
+    "fundo": "superficie",
+    "min": 3,
+    "razao": 8.179512488370529
+  }
+]

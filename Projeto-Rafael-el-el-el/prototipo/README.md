@@ -11,6 +11,10 @@ npm test         # suíte de testes (Vitest)
 npm run build    # verificação de tipos e build de produção
 ```
 
+## Interface
+
+A interface usa fundo neutro, superfícies claras, azul para ações principais e rótulos textuais nos estados. A navegação por teclado oferece foco visível e Pular para conteúdo. As telas são conferidas a 1280 px e 360 px em um perfil isolado do navegador.
+
 ## Pessoas de demonstração
 
 Cada pessoa tem funções explícitas e cumulativas (não há “perfil principal”). Vínculos não concedem funções.
