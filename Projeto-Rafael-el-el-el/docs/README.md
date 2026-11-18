@@ -8,9 +8,13 @@ Todos os diagramas são Mermaid e renderizam no GitHub e no preview Markdown do 
 | [requisitos.md](requisitos.md) | Requisitos funcionais (RF01–RF34), cada um rastreado à capability/spec de origem, e não funcionais (RNF01–RNF08) |
 | [casos-de-uso.md](casos-de-uso.md) | Diagrama de casos de uso por perfil (UC01–UC16), matriz ator × caso de uso e descrição dos casos principais |
 | [fluxos-usuario.md](fluxos-usuario.md) | Jornadas por perfil (§1) e diagramas de atividade/sequência: matrícula (§2), sessão adaptativa (§3), criação e publicação de curso (§4), acompanhamento pelo professor (§5) e pelo responsável (§6) |
+| [rastreabilidade.md](rastreabilidade.md) | Matriz de rastreabilidade da change `organizacao-academica`: cada requisito e cenário ligado aos testes automatizados (e roteiros manuais) |
+| [validacao-final.md](validacao-final.md) | Validação integrada entre funções, evidências de comportamento e de build e revisão de coerência da change |
 | [../prototipo/README.md](../prototipo/README.md) | Como executar o protótipo navegável e usuários de demonstração |
 
-Especificações de origem: [`openspec/changes/edtech-adaptativa-fase-inicial/specs/`](../openspec/changes/edtech-adaptativa-fase-inicial/specs/).
+> **Organização acadêmica:** [casos-de-uso.md](casos-de-uso.md) (UC13/UC14, UC16 e UC17 atualizados), [fluxos-usuario.md](fluxos-usuario.md) (§4.1 edição e publicação do conteúdo; §7 jornadas do Aluno e da Coordenação) e [requisitos.md](requisitos.md) (modelo, matriz de autorização, estudo, indicadores) descrevem o comportamento atual; as seções por curso/perfil único são referência histórica. A rastreabilidade requisito → teste está em [rastreabilidade.md](rastreabilidade.md).
+
+Especificações vigentes: [`openspec/specs/`](../openspec/specs/) (base consolidada). Registro das duas changes: [`2026-11-17-edtech-adaptativa-fase-inicial`](../openspec/changes/archive/2026-11-17-edtech-adaptativa-fase-inicial/) (entrega inicial) e [`2026-11-17-organizacao-academica`](../openspec/changes/archive/2026-11-17-organizacao-academica/) (organização acadêmica).
 
 ## Matriz de rastreabilidade RF → caso de uso → fluxo
 

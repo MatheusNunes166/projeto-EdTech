@@ -8,5 +8,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/testes/setup.ts'],
+    // Fluxos completos de interface (digitação, várias telas) passam de 5 s com a suíte inteira em paralelo.
+    testTimeout: 20000,
   },
 });

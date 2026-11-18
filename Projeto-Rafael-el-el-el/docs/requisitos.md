@@ -1,11 +1,11 @@
 # Requisitos — EdTech de Aprendizado Adaptativo por Curso
 
-Fonte: specs da change `edtech-adaptativa-fase-inicial` (`openspec/changes/edtech-adaptativa-fase-inicial/specs/`).
+Fonte: specs da change `edtech-adaptativa-fase-inicial` (arquivada em `openspec/changes/archive/2026-11-17-edtech-adaptativa-fase-inicial/specs/`); a base vigente está em `openspec/specs/`.
 Cada requisito funcional (RF) indica a **capability** de origem e o **requirement** da spec correspondente.
 
 ## Modelo acadêmico — organização acadêmica
 
-Fonte do novo contrato: [spec de organização acadêmica](../openspec/changes/organizacao-academica/specs/organizacao-academica/spec.md), [funções cumulativas](../openspec/changes/organizacao-academica/specs/perfis-acesso/spec.md) e [design D1](../openspec/changes/organizacao-academica/design.md).
+Fonte do novo contrato: [spec de organização acadêmica](../openspec/specs/organizacao-academica/spec.md), [funções cumulativas](../openspec/specs/perfis-acesso/spec.md) e [design D1](../openspec/changes/archive/2026-11-17-organizacao-academica/design.md).
 
 O grupo 1 introduz tipos e validações estruturais puras; o grupo 2 acrescenta políticas, infraestrutura, comandos e consultas acadêmicas isolados. As telas atuais continuam usando o repositório e os contratos legados explicitamente identificados. A integração e a substituição informada dos dados pertencem aos grupos seguintes. Esta entrega não muda o seed de produção, suas versões nem as chaves de armazenamento.
 
@@ -98,6 +98,63 @@ IDs aninhados precisam concordar com as relações reais, inclusive para Adminis
 
 Os contratos futuros `IndicadoresAlunoTurma`, `IndicadoresDocenciaTurma`, `IndicadoresCoordenacao`, `IndicadoresResponsavel` e `IndicadoresAdministracao` permanecem somente tipos. Médias são representadas por turma e distinguem ausência de matriculados de médias calculadas. Nenhuma consulta desta etapa calcula ou devolve progresso, XP, domínio, taxas ou médias provisórias; não usa zero ou “Sem dados” para representar uma implementação ainda ausente. Registro/leitura de histórico são trabalho do grupo 3, e projeções/indicadores, do grupo 5.
 
+## Estudo por matrícula e histórico imutável — tarefas 3.1–3.4
+
+**Contexto de estudo.** `adaptativo/contexto-estudo.ts` resolve `matriculaId` → aluno, turma, período e disciplina e entrega somente as respostas daquela matrícula. As funções de estudo recebem esse contexto; nenhuma aceita o histórico de uma disciplina inteira. Duas matrículas do mesmo aluno em turmas paralelas ou em períodos distintos da mesma disciplina compartilham conteúdo, mas nunca respostas, domínio ou desbloqueios. Uma matrícula nova começa com domínio 0, histórico vazio e somente o primeiro tópico desbloqueado.
+
+**Resposta imutável.** `RespostaAcademica` é gravada uma única vez por `registrarResposta` e guarda: o conteúdo originalmente apresentado (`conteudoOriginal`: enunciado, alternativas na ordem, gabarito e explicação), a alternativa escolhida, a avaliação (`acertou`), a dificuldade, os efeitos concedidos (`variacaoDominio`, `xpConcedido`), a versão das regras, a data virtual e a ordem global (`momento`). A avaliação e os efeitos são calculados pelo domínio; o comando recebe apenas `questaoId` e `alternativa`, e recusa campos de autor, funções, tópico, avaliação ou XP. O validador do repositório trata a coleção como *append-only*: respostas existentes não podem ser alteradas nem removidas por nenhum comando.
+
+**Conteúdo corrente × conteúdo apresentado.** O cadastro corrente (questões da disciplina) pode receber correções textuais autorizadas no grupo 4. O histórico não o consulta: `consultarHistoricoEstudo` (aluno, na própria matrícula) e `consultarHistoricoAlunoDocente` (professor vinculado à turma da matrícula) devolvem enunciado, alternativas, gabarito e explicação da cópia gravada, e usam `acertou`, `variacaoDominio` e `xpConcedido` registrados, sem reavaliar contra o gabarito ou a dificuldade atuais. Domínio e desbloqueios são reconstituídos aplicando os efeitos gravados na ordem histórica, limitados a 0–100; o progresso devolvido é exato (a formatação pertence à apresentação). O detalhe docente exige vínculo com a turma da matrícula: o mesmo aluno em turma não vinculada, ou outra turma da mesma disciplina, é negado.
+
+**Aceitação de respostas.** A resposta é aceita apenas de pessoa ativa com função Aluno, na própria matrícula, com disciplina publicada, questão da disciplina da turma e tópico desbloqueado; alternativa inexistente é recusada. Qualquer recusa deixa o documento (respostas, domínio, progresso e XP) intacto.
+
+## Motor adaptativo, gamificação e indicadores por turma — tarefas 5.1–5.9
+
+Tudo é derivado do histórico imutável da matrícula (grupo 3), sem contadores gravados. Os valores numéricos permanecem exatos no motor e nos agregadores; somente `desempenho/apresentacao.ts` arredonda (`Math.round`: meio ponto sobe).
+
+**Próxima atividade (`adaptativo/estudo.ts`).** Entre os tópicos desbloqueados e não dominados, escolhe o de menor domínio (desempate pela ordem da disciplina); a dificuldade segue a faixa do domínio (0–39 Fácil, 40–69 Médio, 70–100 Difícil); prefere questão inédita, evita repetir a última respondida quando há alternativa e, sem inédita, reutiliza a menos recente na dificuldade. Usa apenas o banco da disciplina do contexto. Como o desbloqueio é encadeado e tópico dominado permanece dominado, na prática há um único candidato por vez; a regra de menor domínio é testada com estado injetado.
+
+**Feedback e revisão.** Após cada resposta: acerto/erro, explicação e alternativa correta (só no erro) a partir do conteúdo gravado na resposta, domínio anterior/atual e variação efetiva (limitada a 0–100), e se o tópico foi dominado. Dois erros consecutivos no mesmo tópico **da mesma matrícula** sugerem revisão; erros de outra turma, período ou aluno nunca compõem a sequência. O progresso é `100 × dominados ÷ tópicos` (exato; 1 de 6 = 100/6, exibido 17); concluída = todos dominados. Concluir a trilha não representa aprovação acadêmica nem conclusão da graduação.
+
+**Gamificação (`gamificacao/gamificacao.ts`, por matrícula).**
+
+| Elemento | Regra |
+| --- | --- |
+| XP | Soma dos `xpConcedido` das respostas da matrícula (Fácil 10, Médio 20, Difícil 30 por acerto; erro 0). Nova matrícula começa em 0. |
+| Sequência | Dias distintos com resposta na matrícula, terminando na data virtual atual ou no dia anterior; um dia inteiro sem resposta a zera. Estudo em outra turma não conta. |
+| Conquistas | Primeira questão (mesmo com erro), Primeiro tópico dominado, Sequência de 7 dias e Trilha concluída. Cada uma é concedida uma vez por matrícula, com a data da resposta que satisfez o marco (nunca a da consulta ou de uma edição). Reconstruir a projeção reproduz as mesmas datas. |
+
+Edições de conteúdo permitidas ou rejeitadas não registram respostas e, portanto, não alteram XP, conquistas, datas ou sequência.
+
+**Indicadores por turma (`desempenho/indicadores-academicos.ts`).** Sempre sobre todos os matriculados da turma, inclusive quem não respondeu; matrículas e respostas de outra turma não entram na soma nem no divisor. Para `N > 0` matriculados, `T` tópicos e `d_i` tópicos dominados pelo matriculado `i`:
+
+- progresso individual `p_i = 100 × d_i ÷ T` (0 se `T = 0`);
+- progresso médio `Σ p_i ÷ N`; domínio médio do tópico `Σ domínio(i, t) ÷ N` (zero para quem não iniciou);
+- sem matriculados: **Sem dados** (distinto de média zero), sem divisão por zero.
+
+| Exemplo | Cálculo exato | Exibido |
+| --- | --- | --- |
+| Progressos 80% e 0% | (80 + 0) ÷ 2 | 40% |
+| Domínios 80 e 0 | (80 + 0) ÷ 2 | 40 |
+| Seis tópicos, alunos com 1, 1 e 4 dominados | (100/6 + 100/6 + 400/6) ÷ 3 = 33,33… | 33% (as barras 17, 17 e 67 dariam 34 e **não** alimentam a média) |
+| Domínios 80, 0 e 0 | 80 ÷ 3 = 26,67 | 27 |
+| Domínios 80 e 5 | 42,5 | 43 |
+| Turma sem alunos | — | Sem dados |
+
+Não existem médias globais: cada média pertence a uma turma, e filtros de graduação, disciplina ou período apenas selecionam linhas por turma.
+
+**Taxa de acertos e destaque.** Taxa = acertos ÷ respostas válidas da matrícula (exata; 0 e “Sem atividade” sem respostas). “Precisa de atenção” = menos de 50% de acertos (razão sem arredondar) nas últimas até 10 respostas da matrícula consultada — usa as disponíveis se houver menos de 10; sem respostas é “Sem atividade” e não classifica. O detalhe docente traz as últimas até 10 respostas da turma vinculada; o aluno vê todo o próprio histórico.
+
+**Consultas por função** (`ConsultasAcademicas`, todas autorizadas pelo recurso real):
+
+| Consulta | Quem / escopo | Conteúdo |
+| --- | --- | --- |
+| `consultarPainelAluno`, `consultarIndicadoresAluno` | Aluno, matrículas próprias com conteúdo publicado | Progresso, domínio por tópico, taxa, XP, sequência, conquistas e última atividade por oferta, com graduação/disciplina/turma/período. |
+| `consultarIndicadoresDocencia` | Professor vinculado à turma | Todos os matriculados com indicadores e situação, `quantidadeMatriculados` e médias da turma. |
+| `consultarIndicadoresCoordenacao` | Coordenador (cursos vinculados) ou Administrador | Uma linha por turma: matrículas e médias; nenhum dado individual, resposta ou média global. Filtros por graduação, disciplina ou turma. |
+| `consultarIndicadoresResponsavel` | Responsável, alunos vinculados | Por oferta: progresso, sequência e última atividade; sem histórico de questões. |
+| `consultarIndicadoresAdministracao` | Administrador | Pessoas distintas (ativas ou não) e por função — quem tem duas funções conta uma vez no total e uma vez em cada função —, graduações, disciplinas por publicação (graduação não conta como rascunho/publicada), períodos, turmas e matrículas. |
+
 ## Revogação — tarefa 2.11
 
 Consultas e comandos não guardam permissões em cache: a primitiva relê sessão, pessoa ativa, funções e vínculos antes de cada operação. A remoção de Professor–Turma revoga o acesso aos matriculados daquela turma na próxima consulta, preservando outras turmas. A autoria do conteúdo compartilhado continua válida enquanto outra turma da disciplina ou a função Administrador a autorizar. Retirar Coordenador preserva a função Professor e seus acessos independentes, e retirar Responsável não remove as matrículas da mesma pessoa com função Aluno.
@@ -115,7 +172,7 @@ $env:NODE_OPTIONS = "$env:NODE_OPTIONS --no-experimental-webstorage"
 npm.cmd test -- --run
 ```
 
-O build continua com `npm.cmd run build` (TypeScript e Vite). Antes destas tarefas, a suíte completa apresentou 120 testes aprovados e uma falha de seletor em `src/testes/aluno.test.tsx:43`: o teste de matrícula encontra mais de uma lista com nome acessível vazio. Essa falha preexistente deve continuar sendo reportada separadamente; seu teste e o fluxo legado não foram alterados nesta etapa.
+O build continua com `npm.cmd run build` (TypeScript e Vite). A falha de seletor preexistente em `src/testes/aluno.test.tsx:43` (testes de matrícula e trilha por curso) deixou de existir na tarefa 7: os testes de interface legados (`aluno.test.tsx`, `perfis.test.tsx`) foram substituídos por testes dos novos fluxos acadêmicos. Resultados e evidências desta change estão em [validacao-final.md](validacao-final.md).
 
 ## Requisitos Funcionais da entrega inicial (referência histórica)
 

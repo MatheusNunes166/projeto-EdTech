@@ -29,7 +29,7 @@ function video(id: string, titulo: string, busca: string): Material {
   return { id, tipo: 'video', titulo, conteudo: `https://www.youtube.com/results?search_query=${encodeURIComponent(busca)}` };
 }
 
-const cursos: Curso[] = [
+export const cursos: Curso[] = [
   {
     id: 'c-mat',
     titulo: 'Matemática Básica',
@@ -183,7 +183,7 @@ const defsQuestoes: Record<string, DefQuestao[]> = {
   ],
 };
 
-function criarQuestoes(): Questao[] {
+export function criarQuestoes(): Questao[] {
   const questoes: Questao[] = [];
   let n = 0;
   for (const [cursoId, defs] of Object.entries(defsQuestoes)) {

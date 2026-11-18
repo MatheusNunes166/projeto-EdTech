@@ -5,6 +5,8 @@ import type { Dificuldade } from '../dominio/tipos';
  * após testes com usuários (design D4 e D5).
  */
 export const CONFIG = {
+  /** Versão das regras numéricas, gravada em cada resposta para auditoria histórica. */
+  versaoRegras: 1,
   dominioMinimo: 0,
   dominioMaximo: 100,
   /** Domínio a partir do qual o tópico é considerado dominado. */

@@ -14,7 +14,8 @@ export type AcaoAcademica =
   | 'consultar-painel-coordenacao' | 'consultar-painel-responsavel'
   | 'consultar-estudo' | 'responder'
   | 'consultar-metadados-catalogo' | 'consultar-minhas-turmas' | 'listar-estrutura-administravel'
-  | 'listar-turmas-docentes' | 'listar-alunos-responsavel' | 'consultar-matriculados';
+  | 'listar-turmas-docentes' | 'listar-alunos-responsavel' | 'consultar-matriculados'
+  | 'simular-data';
 
 /** Pais opcionais vêm, por exemplo, de uma URL aninhada: devem corresponder ao recurso real. */
 export type RecursoAcademico =
@@ -100,6 +101,8 @@ export function podeExecutar(
     case 'criar-graduacao': case 'administrar-periodos': case 'administrar-usuarios':
     case 'gerir-coordenadores': case 'gerir-responsaveis': case 'consultar-administracao':
       return recurso.tipo === 'instituicao' && admin;
+    case 'simular-data':
+      return recurso.tipo === 'instituicao';
     case 'consultar-catalogo':
       return recurso.tipo === 'instituicao' && tem('aluno');
     case 'consultar-metadados-catalogo':

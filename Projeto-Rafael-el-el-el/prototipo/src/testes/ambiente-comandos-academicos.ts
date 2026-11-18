@@ -36,11 +36,12 @@ export async function recusaSemEfeitos(
   expect(retrato).toEqual(copia); expect(a.persistencia.gravar).not.toHaveBeenCalled();
 }
 
-/** Estado sintético para testes de preservação, não um fluxo/seed gerado pelo motor. */
-export function adicionarHistoricoSintetico(dados: DadosAcademicos, matriculaId = 'm-ana-26') {
+/** Publica a disciplina da matrícula com 2 tópicos e uma questão por dificuldade (sem respostas). */
+export function prepararConteudoPublicado(dados: DadosAcademicos, matriculaId = 'm-ana-26') {
   const m = dados.matriculas.find((x) => x.id === matriculaId)!;
   const t = dados.turmas.find((x) => x.id === m.turmaId)!;
   const disciplina = dados.disciplinas.find((x) => x.id === t.disciplinaId)!;
+  if (disciplina.topicos.length > 0) return disciplina;
   disciplina.status = 'publicado';
   disciplina.topicos = ['tp-1', 'tp-2'].map((id) => ({ id, titulo: id, materiais: [] }));
   for (const topico of disciplina.topicos) {
@@ -52,6 +53,12 @@ export function adicionarHistoricoSintetico(dados: DadosAcademicos, matriculaId 
       });
     }
   }
+  return disciplina;
+}
+
+/** Estado sintético para testes de preservação, não um fluxo/seed gerado pelo motor. */
+export function adicionarHistoricoSintetico(dados: DadosAcademicos, matriculaId = 'm-ana-26') {
+  const disciplina = prepararConteudoPublicado(dados, matriculaId);
   dados.respostas.push({
     id: `r-${matriculaId}`, matriculaId, topicoId: 'tp-1', questaoId: `${disciplina.id}-tp-1-dificil`,
     alternativa: 0, acertou: true, dificuldade: 'dificil', variacaoDominio: 80, xpConcedido: 30,

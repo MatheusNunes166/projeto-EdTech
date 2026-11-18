@@ -49,7 +49,7 @@ export function ordenarRespostas(respostas: Resposta[]): Resposta[] {
  * Desbloqueio: o 1º tópico está sempre desbloqueado; cada tópico seguinte é
  * desbloqueado quando o anterior (desbloqueado) foi dominado.
  */
-export function aplicarDesbloqueios(curso: Curso, dominados: Set<string>): Set<string> {
+export function aplicarDesbloqueios(curso: { readonly topicos: readonly { readonly id: string }[] }, dominados: ReadonlySet<string>): Set<string> {
   const desbloqueados = new Set<string>();
   curso.topicos.forEach((t, i) => {
     if (i === 0) {

@@ -46,7 +46,7 @@ const camposTurma = ['codigo', 'disciplinaId', 'periodoLetivoId'] as const;
 export class ComandosAcademicos extends RepositorioAcademico {
   constructor(
     persistencia: PersistenciaAcademica, sessao: SessaoAcademica,
-    private readonly gerarId: () => string = () => crypto.randomUUID(),
+    protected readonly gerarId: () => string = () => crypto.randomUUID(),
   ) { super(persistencia, sessao); }
 
   criarGraduacao(campos: CadastroGraduacao, revisao: number): Promise<Graduacao> {

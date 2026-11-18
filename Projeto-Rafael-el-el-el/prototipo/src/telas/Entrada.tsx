@@ -1,50 +1,50 @@
+import { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { areaInicial, nomesDasFuncoes } from '../app/areas';
 import { useApp } from '../app/contexto';
-import { AREA_DO_PERFIL } from '../app/RotaProtegida';
-import { NOME_PERFIL, PERFIS } from '../dominio/tipos';
+import type { Funcao } from '../dominio/tipos';
+import { Restauracao } from './Restauracao';
 
 export function Entrada() {
-  const { dados, usuario, executar } = useApp();
+  const { repo, usuario, versao, executar } = useApp();
   const navegar = useNavigate();
+  const [pessoas, setPessoas] = useState<{ id: string; nome: string; funcoes: Funcao[] }[] | null>(null);
+  const [erro, setErro] = useState<string | null>(null);
 
-  if (usuario) return <Navigate to={AREA_DO_PERFIL[usuario.perfil]} replace />;
+  useEffect(() => {
+    let ativo = true;
+    repo.listarPessoasEntrada().then((p) => ativo && setPessoas(p), () => ativo && setPessoas([]));
+    return () => { ativo = false; };
+  }, [repo, versao]);
+
+  if (usuario) return <Navigate to={areaInicial(usuario.funcoes)} replace />;
 
   const entrar = async (id: string) => {
-    const u = await executar((r) => r.entrar(id));
-    navegar(AREA_DO_PERFIL[u.perfil]);
+    setErro(null);
+    try {
+      const pessoa = await executar((r) => r.entrar(id));
+      navegar(areaInicial(pessoa.funcoes));
+    } catch (e) {
+      setErro(e instanceof Error ? e.message : 'Não foi possível entrar.');
+    }
   };
-
-  const ativos = dados.usuarios.filter((u) => u.ativo);
 
   return (
     <main className="entrada">
       <h1>Trilha Adaptativa</h1>
-      <p className="sub">
-        Protótipo navegável com dados fictícios. Escolha um usuário de demonstração para entrar (sem senha).
-      </p>
-      <div className="grade-perfis">
-        {PERFIS.map((perfil) => (
-          <section key={perfil} className="cartao">
-            <h2>{NOME_PERFIL[perfil]}</h2>
-            <ul className="lista-limpa">
-              {ativos
-                .filter((u) => u.perfil === perfil)
-                .map((u) => (
-                  <li key={u.id}>
-                    <button className="largo" onClick={() => entrar(u.id)}>
-                      Entrar como {u.nome}
-                    </button>
-                  </li>
-                ))}
-            </ul>
-          </section>
-        ))}
-      </div>
-      <p>
-        <button className="secundario" onClick={() => executar((r) => r.restaurarDemonstracao())}>
-          Restaurar dados de demonstração
-        </button>
-      </p>
+      <p className="sub">Protótipo navegável com dados fictícios. Escolha uma pessoa de demonstração para entrar (sem senha).</p>
+      {erro && <p role="alert" className="alerta">{erro}</p>}
+      {pessoas === null ? <p className="carregando">Carregando…</p> : (
+        <ul className="lista-limpa grade-perfis">
+          {pessoas.map((p) => (
+            <li key={p.id} className="cartao">
+              <button className="largo" onClick={() => entrar(p.id)}>Entrar como {p.nome}</button>
+              <small className="meta">{nomesDasFuncoes(p.funcoes)}</small>
+            </li>
+          ))}
+        </ul>
+      )}
+      <p><Restauracao /></p>
     </main>
   );
 }

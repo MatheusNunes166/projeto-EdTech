@@ -1,24 +1,26 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import type { Perfil } from '../dominio/tipos';
-import { CursosAdmin, Usuarios, VisaoGeral, Vinculos } from '../telas/admin/Admin';
+import type { Funcao } from '../dominio/tipos';
 import { Catalogo } from '../telas/aluno/Catalogo';
 import { Desempenho } from '../telas/aluno/Desempenho';
-import { DetalheCurso } from '../telas/aluno/DetalheCurso';
+import { DetalheDisciplina } from '../telas/aluno/DetalheDisciplina';
 import { Materiais } from '../telas/aluno/Materiais';
-import { MeusCursos } from '../telas/aluno/MeusCursos';
+import { MinhasTurmas } from '../telas/aluno/MinhasTurmas';
 import { Sessao } from '../telas/aluno/Sessao';
 import { Trilha } from '../telas/aluno/Trilha';
+import { CadastroGraduacoesDisciplinas, CadastroPeriodosTurmas } from '../telas/admin/Cadastros';
+import { Pessoas, VisaoGeral, Vinculos } from '../telas/admin/Admin';
+import { GestaoDaTurma, GestaoTurmas } from '../telas/coordenacao/Gestao';
+import { PainelCoordenador } from '../telas/coordenacao/Painel';
+import { EditorConteudo } from '../telas/professor/EditorConteudo';
+import { DetalheAluno, ListaTurmas, PainelTurma } from '../telas/professor/Turmas';
+import { PainelResponsavel } from '../telas/responsavel/Painel';
 import { Entrada } from '../telas/Entrada';
 import { Layout } from '../telas/Layout';
-import { CursosProfessor } from '../telas/professor/CursosProfessor';
-import { EditorCurso } from '../telas/professor/EditorCurso';
-import { DetalheAluno, Turma } from '../telas/professor/Turma';
-import { PainelResponsavel } from '../telas/responsavel/PainelResponsavel';
 import { RotaProtegida } from './RotaProtegida';
 
-function Area({ perfil, children }: { perfil: Perfil; children: React.ReactNode }) {
+function Area({ funcao, children }: { funcao: Funcao; children: React.ReactNode }) {
   return (
-    <Route element={<RotaProtegida perfil={perfil} />}>
+    <Route element={<RotaProtegida funcao={funcao} />}>
       <Route element={<Layout />}>{children}</Route>
     </Route>
   );
@@ -29,48 +31,63 @@ export function Rotas() {
     <Routes>
       <Route path="/" element={<Entrada />} />
       {Area({
-        perfil: 'aluno',
+        funcao: 'aluno',
         children: (
           <>
-            <Route path="/aluno" element={<MeusCursos />} />
+            <Route path="/aluno" element={<MinhasTurmas />} />
             <Route path="/aluno/catalogo" element={<Catalogo />} />
-            <Route path="/aluno/cursos/:cursoId" element={<DetalheCurso />} />
-            <Route path="/aluno/cursos/:cursoId/trilha" element={<Trilha />} />
-            <Route path="/aluno/cursos/:cursoId/sessao" element={<Sessao />} />
-            <Route path="/aluno/cursos/:cursoId/desempenho" element={<Desempenho />} />
-            <Route path="/aluno/cursos/:cursoId/topicos/:topicoId" element={<Materiais />} />
+            <Route path="/aluno/catalogo/disciplinas/:disciplinaId" element={<DetalheDisciplina />} />
+            <Route path="/aluno/disciplinas/:disciplinaId/turmas/:turmaId" element={<Trilha />} />
+            <Route path="/aluno/disciplinas/:disciplinaId/turmas/:turmaId/sessao" element={<Sessao />} />
+            <Route path="/aluno/disciplinas/:disciplinaId/turmas/:turmaId/desempenho" element={<Desempenho />} />
+            <Route path="/aluno/disciplinas/:disciplinaId/turmas/:turmaId/topicos/:topicoId" element={<Materiais />} />
+            {/* URLs antigas de estudo por curso: não escolhem uma turma arbitrária. */}
             <Route path="/aluno/*" element={<Navigate to="/aluno" replace />} />
           </>
         ),
       })}
       {Area({
-        perfil: 'professor',
+        funcao: 'professor',
         children: (
           <>
-            <Route path="/professor" element={<CursosProfessor />} />
-            <Route path="/professor/cursos/novo" element={<EditorCurso />} />
-            <Route path="/professor/cursos/:cursoId" element={<EditorCurso />} />
-            <Route path="/professor/cursos/:cursoId/turma" element={<Turma />} />
-            <Route path="/professor/cursos/:cursoId/turma/:alunoId" element={<DetalheAluno />} />
+            <Route path="/professor" element={<ListaTurmas />} />
+            <Route path="/professor/disciplinas/:disciplinaId/turmas/:turmaId" element={<PainelTurma />} />
+            <Route path="/professor/disciplinas/:disciplinaId/turmas/:turmaId/alunos/:matriculaId" element={<DetalheAluno />} />
+            <Route path="/professor/disciplinas/:disciplinaId/conteudo" element={<EditorConteudo />} />
             <Route path="/professor/*" element={<Navigate to="/professor" replace />} />
           </>
         ),
       })}
       {Area({
-        perfil: 'admin',
+        funcao: 'coordenador',
+        children: (
+          <>
+            <Route path="/coordenacao" element={<PainelCoordenador />} />
+            <Route path="/coordenacao/gestao" element={<GestaoTurmas base="/coordenacao/gestao" />} />
+            <Route path="/coordenacao/gestao/turmas/:turmaId" element={<GestaoDaTurma base="/coordenacao/gestao" />} />
+            <Route path="/coordenacao/cadastros" element={<><CadastroGraduacoesDisciplinas /><CadastroPeriodosTurmas /></>} />
+            <Route path="/coordenacao/*" element={<Navigate to="/coordenacao" replace />} />
+          </>
+        ),
+      })}
+      {Area({
+        funcao: 'admin',
         children: (
           <>
             <Route path="/admin" element={<VisaoGeral />} />
-            <Route path="/admin/usuarios" element={<Usuarios />} />
+            <Route path="/admin/usuarios" element={<Pessoas />} />
             <Route path="/admin/vinculos" element={<Vinculos />} />
-            <Route path="/admin/cursos" element={<CursosAdmin />} />
-            <Route path="/admin/cursos/:cursoId" element={<EditorCurso />} />
+            <Route path="/admin/graduacoes" element={<CadastroGraduacoesDisciplinas />} />
+            <Route path="/admin/periodos" element={<CadastroPeriodosTurmas />} />
+            <Route path="/admin/gestao" element={<GestaoTurmas base="/admin/gestao" />} />
+            <Route path="/admin/gestao/turmas/:turmaId" element={<GestaoDaTurma base="/admin/gestao" />} />
+            <Route path="/admin/disciplinas/:disciplinaId/conteudo" element={<EditorConteudo />} />
             <Route path="/admin/*" element={<Navigate to="/admin" replace />} />
           </>
         ),
       })}
       {Area({
-        perfil: 'responsavel',
+        funcao: 'responsavel',
         children: (
           <>
             <Route path="/responsavel" element={<PainelResponsavel />} />

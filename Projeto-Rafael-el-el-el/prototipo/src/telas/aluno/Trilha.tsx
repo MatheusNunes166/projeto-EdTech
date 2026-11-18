@@ -1,95 +1,48 @@
-import { Link, Navigate, useParams } from 'react-router-dom';
-import { useApp } from '../../app/contexto';
-import { BarraProgresso } from '../../componentes/comuns';
+import { Link } from 'react-router-dom';
+import { useConsulta } from '../../app/contexto';
+import { BarraProgresso, Consulta } from '../../componentes/comuns';
+import type { AlvoMatricula } from '../../dados/comandos-estudo';
 import { formatarData } from '../../dominio/datas';
-import { CONQUISTAS, conquistasCurso, sequenciaDias, xpCurso } from '../../gamificacao/gamificacao';
-import { useTrilha } from './useTrilha';
+import { caminhoTurma, useAlvoDaRota } from './rota';
 
 export function Trilha() {
-  const { cursoId } = useParams();
-  const { dados } = useApp();
-  const trilha = useTrilha(cursoId);
-  if (!trilha) return <Navigate to={`/aluno/cursos/${cursoId}`} replace />;
-  const { curso, respostas, estado } = trilha;
+  const alvo = useAlvoDaRota();
+  return <Consulta estado={alvo}>{(a) => <TrilhaDaMatricula alvo={a} />}</Consulta>;
+}
 
-  const xp = xpCurso(respostas, curso.id);
-  const sequencia = sequenciaDias(respostas, curso.id, dados.dataVirtual);
-  const obtidas = conquistasCurso(curso, respostas);
-
+function TrilhaDaMatricula({ alvo }: { alvo: AlvoMatricula }) {
+  const estado = useConsulta((r) => r.consultarTrilha(alvo), [alvo.matriculaId]);
+  const base = caminhoTurma(alvo);
   return (
-    <>
-      <p>
-        <Link to="/aluno">← Meus cursos</Link>
-      </p>
-      <h1>{curso.titulo}</h1>
-
-      <section className="indicadores" aria-label="Indicadores do curso">
-        <div className="indicador">
-          <span className="rotulo">Progresso</span>
-          <BarraProgresso valor={estado.progresso} rotulo="Progresso do curso" />
-          {estado.concluido && <span className="selo ok">Curso concluído</span>}
-        </div>
-        <div className="indicador">
-          <span className="rotulo">XP</span>
-          <strong className="numero">{xp}</strong>
-        </div>
-        <div className="indicador">
-          <span className="rotulo">Sequência</span>
-          <strong className="numero">
-            {sequencia} {sequencia === 1 ? 'dia' : 'dias'}
-          </strong>
-        </div>
-      </section>
-
-      <div className="acoes">
-        {estado.concluido ? (
-          <span>Parabéns! Você dominou todos os tópicos.</span>
-        ) : (
-          <Link className="botao" to={`/aluno/cursos/${curso.id}/sessao`}>
-            Próxima atividade
-          </Link>
-        )}
-        <Link className="botao secundario" to={`/aluno/cursos/${curso.id}/desempenho`}>
-          Ver desempenho
-        </Link>
-      </div>
-
-      <h2>Trilha de tópicos</h2>
-      <ol className="trilha lista-limpa">
-        {estado.topicos.map((t) => {
-          const situacao = t.dominado ? 'dominado' : t.desbloqueado ? 'desbloqueado' : 'bloqueado';
-          return (
-            <li key={t.topicoId} className={`topico ${situacao}`}>
-              <div>
-                <strong>{t.titulo}</strong>{' '}
-                <span className={`selo ${situacao}`}>
-                  {t.dominado ? '✓ Dominado' : t.desbloqueado ? 'Desbloqueado' : '🔒 Bloqueado'}
-                </span>
-              </div>
-              {t.desbloqueado && (
-                <>
-                  <BarraProgresso valor={t.dominio} rotulo={`Domínio em ${t.titulo}`} />
-                  <Link to={`/aluno/cursos/${curso.id}/topicos/${t.topicoId}`}>Materiais</Link>
-                </>
-              )}
-            </li>
-          );
-        })}
-      </ol>
-
-      <h2>Conquistas</h2>
-      <ul className="conquistas lista-limpa">
-        {CONQUISTAS.map((c) => {
-          const obtida = obtidas.find((o) => o.id === c.id);
-          return (
-            <li key={c.id} className={obtida ? 'obtida' : 'pendente'}>
-              <span aria-hidden>{obtida ? '🏆' : '○'}</span> <strong>{c.nome}</strong>
-              <br />
-              <small>{obtida ? `Conquistada em ${formatarData(obtida.data)}` : c.descricao}</small>
-            </li>
-          );
-        })}
-      </ul>
-    </>
+    <Consulta estado={estado}>
+      {({ contexto, trilha, gamificacao }) => (
+        <>
+          <p><Link to="/aluno">← Minhas turmas</Link></p>
+          <h1>{contexto.disciplina.nome}</h1>
+          <p className="meta">{contexto.graduacao.nome} · Turma {contexto.turma.codigo} · {contexto.periodoLetivo.nome}</p>
+          <BarraProgresso valor={trilha.progresso} rotulo={`Progresso em ${contexto.disciplina.nome} turma ${contexto.turma.codigo}`} />
+          {trilha.concluido && <p className="destaque">Trilha concluída nesta turma (isto não representa aprovação acadêmica).</p>}
+          <section className="indicadores" aria-label={`Gamificação da turma ${contexto.turma.codigo} de ${contexto.periodoLetivo.nome}`}>
+            <p><strong>{gamificacao.xp}</strong> XP · Sequência: <strong>{gamificacao.sequenciaDias}</strong> dia(s)</p>
+            {gamificacao.conquistas.length === 0 ? <p className="meta">Nenhuma conquista ainda.</p> : (
+              <ul className="conquistas">{gamificacao.conquistas.map((c) => <li key={c.id}>🏆 {c.nome} <small>({formatarData(c.data)})</small></li>)}</ul>
+            )}
+          </section>
+          <div className="acoes">
+            {!trilha.concluido && <Link className="botao" to={`${base}/sessao`}>Estudar</Link>}
+            <Link className="botao secundario" to={`${base}/desempenho`}>Desempenho</Link>
+          </div>
+          <h2>Tópicos</h2>
+          <ol className="lista-topicos">
+            {trilha.topicos.map((t) => (
+              <li key={t.topicoId}>
+                <strong>{t.titulo}</strong> — {t.dominado ? 'Dominado' : t.desbloqueado ? 'Desbloqueado' : 'Bloqueado'} · domínio {t.dominio}
+                {t.desbloqueado && <> · <Link to={`${base}/topicos/${t.topicoId}`}>Materiais</Link></>}
+              </li>
+            ))}
+          </ol>
+        </>
+      )}
+    </Consulta>
   );
 }

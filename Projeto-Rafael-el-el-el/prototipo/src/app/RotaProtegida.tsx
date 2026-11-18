@@ -1,18 +1,15 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import type { Perfil } from '../dominio/tipos';
+import type { Funcao } from '../dominio/tipos';
+import { areaInicial } from './areas';
 import { useApp } from './contexto';
 
-export const AREA_DO_PERFIL: Record<Perfil, string> = {
-  aluno: '/aluno',
-  professor: '/professor',
-  admin: '/admin',
-  responsavel: '/responsavel',
-};
-
-/** Sem sessão → tela de entrada; perfil diferente → área inicial do próprio perfil. */
-export function RotaProtegida({ perfil }: { perfil: Perfil }) {
+/**
+ * Sem sessão → entrada; sem a função da área → área inicial da própria pessoa. A decisão vem antes de
+ * qualquer consulta: nenhum dado da área negada é carregado ou exibido.
+ */
+export function RotaProtegida({ funcao }: { funcao: Funcao }) {
   const { usuario } = useApp();
   if (!usuario) return <Navigate to="/" replace />;
-  if (usuario.perfil !== perfil) return <Navigate to={AREA_DO_PERFIL[usuario.perfil]} replace />;
+  if (!usuario.funcoes.includes(funcao)) return <Navigate to={areaInicial(usuario.funcoes)} replace />;
   return <Outlet />;
 }

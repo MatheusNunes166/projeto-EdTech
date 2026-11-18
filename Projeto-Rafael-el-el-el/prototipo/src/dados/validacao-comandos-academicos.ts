@@ -207,3 +207,25 @@ export const validarResponsaveis = validadorDeColecao('vinculosResponsavel', (da
   });
   return erros;
 });
+
+/** Respostas são append-only: as existentes ficam byte a byte iguais e as novas são coerentes. */
+export const validarRespostas = validadorDeColecao('respostas', (dados, anterior) => {
+  const erros: ErrosAcademicos = {};
+  validarIds(erros, 'respostas', dados.respostas);
+  anterior.respostas.forEach((original, i) => {
+    if (JSON.stringify(dados.respostas[i]) !== JSON.stringify(original)) {
+      erros[`${original.id}.historico`] = 'Resposta registrada não pode ser alterada ou removida.';
+    }
+  });
+  let momento = Math.max(0, ...anterior.respostas.map((r) => r.momento));
+  for (const r of dados.respostas.slice(anterior.respostas.length)) {
+    if (!dados.matriculas.some((m) => m.id === r.matriculaId)) erros[`${r.id}.matriculaId`] = 'Matrícula inexistente.';
+    if (r.data !== anterior.dataVirtual) erros[`${r.id}.data`] = 'Use a data virtual da demonstração.';
+    if (r.momento <= momento) erros[`${r.id}.momento`] = 'A ordem das respostas deve ser crescente.';
+    momento = Math.max(momento, r.momento);
+    const c = r.conteudoOriginal;
+    if (!Number.isInteger(r.alternativa) || r.alternativa < 0 || r.alternativa >= c.alternativas.length
+      || r.acertou !== (r.alternativa === c.correta)) erros[`${r.id}.avaliacao`] = 'Avaliação inconsistente com o conteúdo apresentado.';
+  }
+  return erros;
+});

@@ -1,184 +1,94 @@
-import { useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
-import { calcularEstado, deveSugerirRevisao, proximaQuestao, type ProximaAtividade } from '../../adaptativo/motor';
-import { useApp, useUsuario } from '../../app/contexto';
-import { EtiquetaDificuldade } from '../../componentes/comuns';
-import type { Resposta } from '../../dominio/tipos';
-import { conquistasCurso, novasConquistas, xpDaResposta, type ConquistaObtida } from '../../gamificacao/gamificacao';
-import { useTrilha } from './useTrilha';
-
-interface Feedback {
-  resposta: Resposta;
-  dominioAntes: number;
-  dominioDepois: number;
-  xp: number;
-  conquistas: ConquistaObtida[];
-  dominouTopico: boolean;
-  desbloqueado?: string;
-  concluiu: boolean;
-  sugerirRevisao: boolean;
-}
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useComando, useConsulta } from '../../app/contexto';
+import { Consulta, EtiquetaDificuldade, MensagemErro, Vazio } from '../../componentes/comuns';
+import type { AlvoMatricula } from '../../dados/comandos-estudo';
+import type { AtividadeApresentada, ResultadoResposta } from '../../dados/contratos-consultas-academicas';
+import { caminhoTurma, useAlvoDaRota } from './rota';
 
 export function Sessao() {
-  const { cursoId } = useParams();
-  const { dados, executar } = useApp();
-  const usuario = useUsuario();
-  const trilha = useTrilha(cursoId);
+  const alvo = useAlvoDaRota();
+  return <Consulta estado={alvo}>{(a) => <SessaoDaMatricula alvo={a} />}</Consulta>;
+}
 
-  // A atividade atual fica fixa até o aluno pedir a próxima (os dados mudam ao responder).
-  const [atividade, setAtual] = useState<ProximaAtividade | null>(() =>
-    trilha ? proximaQuestao(trilha.estado, dados.questoes, trilha.respostas) : null,
-  );
+/**
+ * A atividade e o feedback ficam neste estado local: o comando invalida a consulta da trilha, mas a
+ * questão respondida permanece na tela até o aluno pedir a próxima.
+ */
+function SessaoDaMatricula({ alvo }: { alvo: AlvoMatricula }) {
+  const trilha = useConsulta((r) => r.consultarTrilha(alvo), [alvo.matriculaId]);
+  const [atividade, setAtividade] = useState<{ valor: AtividadeApresentada | null } | null>(null);
   const [selecionada, setSelecionada] = useState<number | null>(null);
-  const [feedback, setFeedback] = useState<Feedback | null>(null);
+  const [resultado, setResultado] = useState<ResultadoResposta | null>(null);
+  const { rodar, erro } = useComando();
+  const base = caminhoTurma(alvo);
 
-  if (!trilha) return <Navigate to={`/aluno/cursos/${cursoId}`} replace />;
-  const { curso, respostas, estado } = trilha;
+  useEffect(() => {
+    if (trilha.situacao === 'ok' && atividade === null && resultado === null) setAtividade({ valor: trilha.dados.proxima });
+  }, [trilha, atividade, resultado]);
 
-  const proxima = () => {
-    setAtual(proximaQuestao(estado, dados.questoes, respostas));
-    setSelecionada(null);
-    setFeedback(null);
-  };
+  const voltar = <p><Link to={base}>← Voltar à trilha</Link></p>;
+  if (trilha.situacao === 'erro') return <Consulta estado={trilha}>{() => null}</Consulta>;
+  if (!atividade) return <p className="carregando">Carregando…</p>;
+
+  if (!atividade.valor) {
+    return <>{voltar}<Vazio>{trilha.situacao === 'ok' && trilha.dados.trilha.concluido ? 'Você concluiu a trilha desta turma! 🎉' : 'Não há questões disponíveis no momento.'}</Vazio></>;
+  }
+  const q = atividade.valor;
 
   const responder = async () => {
-    if (!atividade || selecionada === null) return;
-    const topicoId = atividade.topicoId;
-    const antes = estado.topicos.find((t) => t.topicoId === topicoId)!;
-    const conquistasAntes = conquistasCurso(curso, respostas);
-
-    const resposta = await executar((r) =>
-      r.registrarResposta({ alunoId: usuario.id, cursoId: curso.id, questaoId: atividade.questao.id, alternativa: selecionada }),
-    );
-
-    const respostasDepois = [...respostas, resposta];
-    const estadoDepois = calcularEstado(curso, respostasDepois);
-    const depois = estadoDepois.topicos.find((t) => t.topicoId === topicoId)!;
-    const indice = estadoDepois.topicos.indexOf(depois);
-    const seguinte = estadoDepois.topicos[indice + 1];
-    const dominouTopico = depois.dominado && !antes.dominado;
-
-    setFeedback({
-      resposta,
-      dominioAntes: antes.dominio,
-      dominioDepois: depois.dominio,
-      xp: xpDaResposta(resposta),
-      conquistas: novasConquistas(conquistasAntes, conquistasCurso(curso, respostasDepois)),
-      dominouTopico,
-      desbloqueado: dominouTopico && seguinte?.desbloqueado ? seguinte.titulo : undefined,
-      concluiu: estadoDepois.concluido && !estado.concluido,
-      sugerirRevisao: deveSugerirRevisao(respostasDepois, topicoId),
-    });
+    if (selecionada === null || trilha.situacao !== 'ok') return;
+    const r = await rodar((repo) => repo.responderQuestao(alvo, { questaoId: q.questaoId, alternativa: selecionada }, trilha.revisao));
+    if (r.ok) setResultado(r.valor);
   };
-
-  const voltar = (
-    <p>
-      <Link to={`/aluno/cursos/${curso.id}/trilha`}>← Voltar à trilha</Link>
-    </p>
-  );
-
-  if (!atividade) {
-    return (
-      <>
-        {voltar}
-        <h1>{curso.titulo}</h1>
-        <p className="vazio">
-          {estado.concluido ? 'Você concluiu este curso! 🎉' : 'Não há questões disponíveis no momento.'}
-        </p>
-      </>
-    );
-  }
-
-  const { questao } = atividade;
-  const topico = curso.topicos.find((t) => t.id === atividade.topicoId)!;
-  const variacao = feedback ? feedback.dominioDepois - feedback.dominioAntes : 0;
+  const proxima = () => { setResultado(null); setSelecionada(null); setAtividade(null); };
+  const variacao = resultado ? resultado.variacao : 0;
 
   return (
     <>
       {voltar}
-      <h1>{curso.titulo}</h1>
       <article className="cartao questao" aria-labelledby="enunciado">
-        <p className="meta">
-          Tópico: <strong>{topico.titulo}</strong> · <EtiquetaDificuldade dificuldade={questao.dificuldade} />
-        </p>
-        <h2 id="enunciado">{questao.enunciado}</h2>
-        <fieldset disabled={Boolean(feedback)}>
+        <p className="meta">Tópico: <strong>{q.topicoTitulo}</strong> · <EtiquetaDificuldade dificuldade={q.dificuldade} /></p>
+        <h2 id="enunciado">{q.enunciado}</h2>
+        <fieldset disabled={Boolean(resultado)}>
           <legend className="sr-only">Alternativas</legend>
-          {questao.alternativas.map((alt, i) => {
-            const classe = feedback ? (i === questao.correta ? 'correta' : i === selecionada ? 'errada' : '') : '';
+          {q.alternativas.map((alt, i) => {
+            const classe = resultado ? (resultado.alternativaCorreta?.indice === i || (resultado.acertou && selecionada === i) ? 'correta' : i === selecionada ? 'errada' : '') : '';
             return (
               <label key={i} className={`alternativa ${classe}`}>
-                <input
-                  type="radio"
-                  name="alternativa"
-                  checked={selecionada === i}
-                  onChange={() => setSelecionada(i)}
-                />
+                <input type="radio" name="alternativa" checked={selecionada === i} onChange={() => setSelecionada(i)} />
                 {alt}
               </label>
             );
           })}
         </fieldset>
-        {!feedback && (
-          <button onClick={responder} disabled={selecionada === null}>
-            Responder
-          </button>
-        )}
+        {!resultado && <button onClick={responder} disabled={selecionada === null}>Responder</button>}
+        <MensagemErro erro={erro} />
       </article>
 
-      {feedback && (
-        <section className={`feedback ${feedback.resposta.acertou ? 'acerto' : 'erro'}`} aria-live="polite">
-          <h2>{feedback.resposta.acertou ? '✔ Você acertou!' : '✘ Você errou.'}</h2>
-          {!feedback.resposta.acertou && (
-            <p>
-              Alternativa correta: <strong>{questao.alternativas[questao.correta]}</strong>
-            </p>
-          )}
+      {resultado && (
+        <section className={`feedback ${resultado.acertou ? 'acerto' : 'erro'}`} aria-live="polite">
+          <h2>{resultado.acertou ? '✔ Você acertou!' : '✘ Você errou.'}</h2>
+          {resultado.alternativaCorreta && <p>Alternativa correta: <strong>{resultado.alternativaCorreta.texto}</strong></p>}
+          <p><strong>Explicação:</strong> {resultado.explicacao}</p>
           <p>
-            <strong>Explicação:</strong> {questao.explicacao}
+            Domínio em {resultado.topicoTitulo}: {resultado.dominioAnterior} → <strong>{resultado.dominioAtual}</strong> ({variacao >= 0 ? '+' : ''}{variacao})
+            {resultado.xpConcedido > 0 && <> · +{resultado.xpConcedido} XP</>}
           </p>
-          <p>
-            Domínio em {topico.titulo}: {feedback.dominioAntes} → <strong>{feedback.dominioDepois}</strong> (
-            {variacao >= 0 ? '+' : ''}
-            {variacao})
-            {feedback.xp > 0 && <> · +{feedback.xp} XP</>}
-          </p>
-          {feedback.dominouTopico && (
-            <p className="destaque">
-              🎯 Você dominou <strong>{topico.titulo}</strong>!
-              {feedback.desbloqueado && (
-                <>
-                  {' '}
-                  Tópico desbloqueado: <strong>{feedback.desbloqueado}</strong>.
-                </>
-              )}
-            </p>
+          {resultado.topicoDominado && (
+            <p className="destaque">🎯 Você dominou <strong>{resultado.topicoTitulo}</strong>!{resultado.topicoDesbloqueado && <> Tópico desbloqueado: <strong>{resultado.topicoDesbloqueado}</strong>.</>}</p>
           )}
-          {feedback.conquistas.map((c) => (
-            <p key={c.id} className="destaque">
-              🏆 Conquista desbloqueada: <strong>{c.nome}</strong>
-            </p>
-          ))}
-          {feedback.concluiu && <p className="destaque">🎉 Curso concluído! Progresso: 100%.</p>}
-          {feedback.sugerirRevisao && (
+          {resultado.novasConquistas.map((c) => <p key={c.id} className="destaque">🏆 Conquista desbloqueada: <strong>{c.nome}</strong></p>)}
+          {resultado.concluido && <p className="destaque">🎉 Trilha concluída nesta turma! Progresso: 100%.</p>}
+          {resultado.sugerirRevisao && (
             <div className="revisao" role="note">
-              <p>
-                Você errou duas questões seguidas em <strong>{topico.titulo}</strong>. Que tal revisar os materiais antes
-                de continuar?
-              </p>
-              <Link className="botao secundario" to={`/aluno/cursos/${curso.id}/topicos/${topico.id}`}>
-                Revisar materiais de {topico.titulo}
-              </Link>
+              <p>Você errou duas questões seguidas em <strong>{resultado.topicoTitulo}</strong>. Que tal revisar os materiais antes de continuar?</p>
+              <Link className="botao secundario" to={`${base}/topicos/${q.topicoId}`}>Revisar materiais de {resultado.topicoTitulo}</Link>
             </div>
           )}
           <div className="acoes">
-            {feedback.concluiu ? (
-              <Link className="botao" to={`/aluno/cursos/${curso.id}/trilha`}>
-                Ver trilha
-              </Link>
-            ) : (
-              <button onClick={proxima}>{feedback.sugerirRevisao ? 'Continuar mesmo assim' : 'Próxima questão'}</button>
-            )}
+            {resultado.concluido ? <Link className="botao" to={base}>Ver trilha</Link>
+              : <button onClick={proxima}>{resultado.sugerirRevisao ? 'Continuar mesmo assim' : 'Próxima questão'}</button>}
           </div>
         </section>
       )}

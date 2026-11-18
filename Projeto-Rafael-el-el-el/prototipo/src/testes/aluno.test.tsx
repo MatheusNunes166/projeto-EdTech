@@ -1,146 +1,210 @@
 import { screen, waitFor, within } from '@testing-library/react';
+import type { UserEvent } from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import { calcularEstado, proximaQuestao } from '../adaptativo/motor';
-import type { Repositorio } from '../dados/repositorio';
-import { filtrarCatalogo } from '../catalogo/filtro';
-import { criarSeed } from '../dados/seed';
-import { renderizarApp } from './renderizar';
+import { gerarHistoricoMatricula } from '../dados/seed-academico';
+import type { DadosAcademicos } from '../dominio/tipos';
+import { renderizarApp, T_ALG_A } from './renderizar';
 
-describe('catálogo', () => {
-  it('lista só cursos publicados (rascunho não aparece)', async () => {
-    await renderizarApp('/aluno/catalogo', 'u-bruno');
-    expect(await screen.findByRole('link', { name: 'Matemática Básica' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Inglês Inicial' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Lógica de Programação' })).toBeInTheDocument();
-    expect(screen.queryByText('Geometria Plana')).not.toBeInTheDocument();
-  });
-
-  it('filtra por área', async () => {
-    const { usuario } = await renderizarApp('/aluno/catalogo', 'u-bruno');
-    await usuario.selectOptions(await screen.findByLabelText('Área'), 'Matemática');
+describe('7.8 — [CC] Catálogo de graduações e disciplinas publicadas, Busca e filtro, Detalhe acadêmico e ofertas, Acesso às turmas sem automatrícula', () => {
+  it('lista graduações e disciplinas publicadas; o rascunho fica oculto, inclusive na busca', async () => {
+    const { usuario } = await renderizarApp('/aluno/catalogo', 'u-ana');
+    expect(await screen.findByRole('link', { name: 'Algoritmos' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Matemática Básica' })).toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: 'Inglês Inicial' })).not.toBeInTheDocument();
+    expect(screen.queryByText('Geometria Plana')).toBeNull();
+    await usuario.type(screen.getByLabelText('Buscar'), 'geometria');
+    expect(await screen.findByText(/Nenhuma graduação ou disciplina encontrada/)).toBeInTheDocument();
   });
 
-  it('busca sem resultados mostra a mensagem', async () => {
-    const { usuario } = await renderizarApp('/aluno/catalogo', 'u-bruno');
-    await usuario.type(await screen.findByLabelText('Buscar pelo título'), 'astronomia');
-    expect(screen.getByText(/Nenhum curso encontrado/)).toBeInTheDocument();
+  it('busca por nome, busca vazia e filtros de área, nível e período', async () => {
+    const { usuario } = await renderizarApp('/aluno/catalogo', 'u-ana');
+    await screen.findByRole('link', { name: 'Algoritmos' });
+    await usuario.type(screen.getByLabelText('Buscar'), 'inglês');
+    await waitFor(() => expect(screen.queryByRole('link', { name: 'Algoritmos' })).toBeNull());
+    expect(screen.getByRole('link', { name: 'Inglês Inicial' })).toBeInTheDocument();
+    await usuario.clear(screen.getByLabelText('Buscar')); await usuario.type(screen.getByLabelText('Buscar'), 'zzzz');
+    expect(await screen.findByText(/Nenhuma graduação ou disciplina encontrada/)).toBeInTheDocument();
+    await usuario.clear(screen.getByLabelText('Buscar'));
+    await usuario.selectOptions(screen.getByLabelText('Área'), 'Exatas');
+    await waitFor(() => expect(screen.queryByRole('link', { name: 'Algoritmos' })).toBeNull());
+    expect(screen.getByRole('link', { name: 'Matemática Básica' })).toBeInTheDocument();
+    await usuario.selectOptions(screen.getByLabelText('Área'), 'Todas');
+    await usuario.selectOptions(screen.getByLabelText('Nível'), 'Avançado');
+    expect(await screen.findByText(/Nenhuma graduação ou disciplina encontrada/)).toBeInTheDocument();
+    await usuario.selectOptions(screen.getByLabelText('Nível'), 'Todos');
+    await usuario.selectOptions(screen.getByLabelText('Período'), '2027.1');
+    await waitFor(() => expect(screen.queryByRole('link', { name: 'Inglês Inicial' })).toBeNull()); // só ALG e MAT têm turma em 2027.1
+    expect(screen.getByRole('link', { name: 'Algoritmos' })).toBeInTheDocument();
   });
 
-  it('filtro: busca ignora acentos e maiúsculas e respeita nível', () => {
-    const { cursos } = criarSeed();
-    expect(filtrarCatalogo(cursos, { texto: 'INGLES', area: '', nivel: '' }).map((c) => c.id)).toEqual(['c-ing']);
-    expect(filtrarCatalogo(cursos, { texto: '', area: '', nivel: 'Intermediário' })).toEqual([]);
+  it('detalhe: tópicos e ofertas; Continuar só nas ofertas matriculadas, sem botão de matrícula e sem questões', async () => {
+    const { usuario, container } = await renderizarApp('/aluno/catalogo', 'u-bruno');
+    await usuario.click(await screen.findByRole('link', { name: 'Algoritmos' }));
+    expect(await screen.findByRole('heading', { name: 'Algoritmos' })).toBeInTheDocument();
+    expect(screen.getAllByRole('listitem').map((l) => l.textContent).join('|')).toContain('Variáveis');
+    expect(screen.queryByRole('button', { name: /Matricular/ })).toBeNull();
+    const ofertas = screen.getAllByRole('listitem').filter((l) => /Turma [AB]/.test(l.textContent ?? '') && /20\d\d\.\d/.test(l.textContent ?? ''));
+    const turmaB = ofertas.find((o) => o.textContent!.includes('Turma B'))!;
+    expect(within(turmaB).getByRole('link', { name: 'Continuar' })).toBeInTheDocument();
+    for (const o of ofertas.filter((x) => !x.textContent!.includes('Turma B'))) {
+      expect(within(o).queryByRole('link', { name: 'Continuar' })).toBeNull();
+      expect(o).toHaveTextContent('Você não está matriculado nesta turma');
+    }
+    for (const proibido of ['Uma variável serve para', 'guardar um valor', 'Explicação']) expect(container.textContent).not.toContain(proibido);
+  });
+
+  it('professor ausente é indicado na oferta', async () => {
+    const { usuario } = await renderizarApp('/aluno/catalogo', 'u-ana', (d) => { d.vinculosProfessor = d.vinculosProfessor.filter((v) => v.turmaId !== 't-alg-b-262'); });
+    await usuario.click(await screen.findByRole('link', { name: 'Algoritmos' }));
+    expect(await screen.findByText(/ainda não atribuído/)).toBeInTheDocument();
+  });
+
+  it('disciplina em rascunho não tem detalhe de catálogo, nem por endereço direto', async () => {
+    await renderizarApp('/aluno/catalogo/disciplinas/d-geo', 'u-ana');
+    expect(await screen.findByRole('heading', { name: 'Acesso negado' })).toBeInTheDocument();
   });
 });
 
-describe('matrícula e meus cursos', () => {
-  it('matricular cria trilha com o primeiro tópico desbloqueado e progresso 0%', async () => {
-    const { usuario, rotaAtual } = await renderizarApp('/aluno/cursos/c-ing', 'u-bruno');
-    await usuario.click(await screen.findByRole('button', { name: 'Matricular' }));
-    await waitFor(() => expect(rotaAtual()).toBe('/aluno/cursos/c-ing/trilha'));
-    const topicos = within(screen.getByRole('list', { name: '' }).closest('ol') ?? document.body);
-    expect(screen.getByText('Saudações').closest('li')).toHaveTextContent('Desbloqueado');
-    expect(screen.getByText('Números').closest('li')).toHaveTextContent('Bloqueado');
-    expect(topicos).toBeDefined();
-    await usuario.click(screen.getByRole('link', { name: 'Meus cursos' }));
-    const cartao = (await screen.findByRole('heading', { name: 'Inglês Inicial' })).closest('li')!;
-    expect(within(cartao).getByRole('progressbar')).toHaveAttribute('aria-valuenow', '0');
+describe('7.9 — [CC] Minhas turmas; [AC] Painel do aluno', () => {
+  it('identifica graduação, disciplina, turma e período; ofertas da mesma disciplina têm progressos separados', async () => {
+    await renderizarApp('/aluno', 'u-ana');
+    const antiga = await screen.findByRole('article', { name: 'Algoritmos turma A 2026.2' });
+    const nova = screen.getByRole('article', { name: 'Algoritmos turma A 2027.1' });
+    expect(antiga).toHaveTextContent('Sistemas de Informação · Turma A · 2026.2');
+    expect(await within(antiga).findByRole('progressbar')).not.toHaveAttribute('aria-valuenow', '0');
+    expect(await within(nova).findByRole('progressbar')).toHaveAttribute('aria-valuenow', '0');
+    expect(within(nova).getByText('Sem atividade')).toBeInTheDocument();
+    expect(within(antiga).queryByText('Sem atividade')).toBeNull();
   });
 
-  it('já matriculado: o detalhe oferece "Continuar" e não "Matricular"', async () => {
-    await renderizarApp('/aluno/cursos/c-mat', 'u-ana');
-    expect(await screen.findByRole('link', { name: 'Continuar' })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Matricular' })).not.toBeInTheDocument();
+  it('matrícula sem respostas mostra progresso zero e Sem atividade, com ação de estudo', async () => {
+    await renderizarApp('/aluno', 'u-diego');
+    const card = await screen.findByRole('article', { name: 'Algoritmos turma A 2026.2' });
+    expect(await within(card).findByRole('progressbar')).toHaveAttribute('aria-valuenow', '0');
+    expect(within(card).getByText('Sem atividade')).toBeInTheDocument();
+    expect(within(card).getByRole('link', { name: 'Abrir trilha' })).toBeInTheDocument();
   });
 
-  it('o repositório não duplica matrícula', async () => {
-    const { repo } = await renderizarApp('/aluno', 'u-ana');
-    await repo.matricular('u-ana', 'c-mat');
-    const dados = await repo.obterDados();
-    expect(dados.matriculas.filter((m) => m.alunoId === 'u-ana' && m.cursoId === 'c-mat')).toHaveLength(1);
+  it('turma com conteúdo em rascunho aparece sem ação de estudo', async () => {
+    await renderizarApp('/aluno', 'u-bruno', (d) => { d.matriculas.push({ id: 'm-bruno-geo', alunoId: 'u-bruno', turmaId: 't-geo-a-262', data: d.dataVirtual }); });
+    const card = await screen.findByRole('article', { name: 'Geometria Plana turma A 2026.2' });
+    expect(card).toHaveTextContent('Conteúdo em preparação');
+    expect(within(card).queryByRole('link')).toBeNull();
   });
 
-  it('não é possível matricular em curso rascunho', async () => {
-    const { repo } = await renderizarApp('/aluno', 'u-ana');
-    await expect(repo.matricular('u-ana', 'c-geo')).rejects.toThrow();
+  it('quem não tem matrícula vê a orientação, sem automatrícula', async () => {
+    await renderizarApp('/aluno', 'u-ana', (d) => { d.matriculas = d.matriculas.filter((m) => m.alunoId !== 'u-ana'); d.respostas = d.respostas.filter((r) => d.matriculas.some((m) => m.id === r.matriculaId)); });
+    expect(await screen.findByText(/A matrícula é feita pela coordenação ou administração/)).toBeInTheDocument();
+  });
+
+  it('painel de desempenho da turma: progresso, taxa de acertos, XP e domínio por tópico com a oferta identificada', async () => {
+    await renderizarApp(`${T_ALG_A}/desempenho`, 'u-ana');
+    expect(await screen.findByRole('heading', { name: 'Desempenho em Algoritmos' })).toBeInTheDocument();
+    expect(screen.getByText(/Sistemas de Informação · Turma A · 2026\.2/)).toBeInTheDocument();
+    expect(screen.getByText(/Taxa de acertos:/)).toBeInTheDocument();
+    expect(screen.getByText('Domínio por tópico')).toBeInTheDocument();
+    expect(screen.getAllByText(/^(Variáveis|Condicionais|Laços de repetição|Laços).*: \d+/).length).toBe(3);
+  });
+
+  it('desempenho sem respostas indica Sem atividade e taxa zero', async () => {
+    await renderizarApp('/aluno/disciplinas/d-alg/turmas/t-alg-a-262/desempenho', 'u-diego');
+    expect(await screen.findByText('(Sem atividade)')).toBeInTheDocument();
+    expect(screen.getByText(/Taxa de acertos:/)).toHaveTextContent('Taxa de acertos: 0%');
   });
 });
 
-async function questaoAtual(repo: Repositorio, alunoId: string, cursoId: string) {
-  const d = await repo.obterDados();
-  const curso = d.cursos.find((c) => c.id === cursoId)!;
-  const rs = d.respostas.filter((r) => r.alunoId === alunoId && r.cursoId === cursoId);
-  return proximaQuestao(calcularEstado(curso, rs), d.questoes, rs)!.questao;
+/** Responde pela interface usando o gabarito do armazenamento (a tela nunca o mostra antes). */
+async function responder(usuario: UserEvent, dados: () => DadosAcademicos, certo: boolean) {
+  const enunciado = (await screen.findByRole('heading', { level: 2, name: (n) => n.length > 0 })).textContent!;
+  const q = dados().questoes.find((x) => x.enunciado === enunciado)!;
+  const alvo = certo ? q.correta : (q.correta + 1) % q.alternativas.length;
+  await usuario.click(await screen.findByLabelText(q.alternativas[alvo]));
+  await usuario.click(screen.getByRole('button', { name: 'Responder' }));
+  await screen.findByText(certo ? /Você acertou!/ : /Você errou\./);
 }
 
-describe('trilha e sessão adaptativa', () => {
-  it('trilha exibe XP, sequência e conquistas do curso', async () => {
-    await renderizarApp('/aluno/cursos/c-mat/trilha', 'u-ana');
-    const indicadores = await screen.findByRole('region', { name: 'Indicadores do curso' });
-    expect(indicadores).toHaveTextContent('160');
-    expect(indicadores).toHaveTextContent('3 dias');
-    expect(screen.getByText('Primeiro tópico dominado').closest('li')).toHaveClass('obtida');
-    expect(screen.getByText('Curso concluído').closest('li')).toHaveClass('pendente');
+describe('7.10 — [AA] Inicialização e retomada, Feedback imediato, Revisão sugerida, Desbloqueio, Conclusão; [GA] Exibição de gamificação', () => {
+  it('início sem diagnóstico: questão Fácil do primeiro tópico, demais tópicos bloqueados', async () => {
+    const { usuario } = await renderizarApp(T_ALG_A, 'u-diego');
+    expect(await screen.findByRole('heading', { name: 'Algoritmos' })).toBeInTheDocument();
+    const itens = screen.getAllByRole('listitem').filter((l) => /Bloqueado|Desbloqueado|Dominado/.test(l.textContent ?? ''));
+    expect(itens.map((i) => /Bloqueado/.test(i.textContent!) ? 'B' : 'D')).toEqual(['D', 'B', 'B']);
+    await usuario.click(screen.getByRole('link', { name: 'Estudar' }));
+    expect(await screen.findByText(/Tópico:/)).toHaveTextContent('Variáveis');
+    expect(screen.getByText('Fácil')).toBeInTheDocument();
+    expect(screen.queryByText('Explicação')).toBeNull(); // sem gabarito ou explicação antes de responder
   });
 
-  it('responder → feedback imediato com resultado, explicação e variação de domínio', async () => {
-    const { repo, usuario } = await renderizarApp('/aluno/cursos/c-mat/sessao', 'u-ana');
-    const q = await questaoAtual(repo, 'u-ana', 'c-mat');
-    expect(await screen.findByRole('heading', { name: q.enunciado })).toBeInTheDocument();
-    await usuario.click(screen.getByLabelText(q.alternativas[q.correta]));
-    await usuario.click(screen.getByRole('button', { name: 'Responder' }));
-    expect(await screen.findByText('✔ Você acertou!')).toBeInTheDocument();
-    expect(screen.getByText(q.explicacao)).toBeInTheDocument();
-    expect(screen.getByText(/Domínio em Decimais: 10 →/)).toHaveTextContent('20 (+10)');
-    expect(screen.getByText(/\+10 XP/)).toBeInTheDocument();
+  it('erro: mostra a alternativa correta, a explicação e a variação; dois erros seguidos sugerem revisar o material', async () => {
+    const { usuario, dados } = await renderizarApp(`${T_ALG_A}/sessao`, 'u-diego');
+    await responder(usuario, dados, false);
+    expect(screen.getByText(/Alternativa correta:/)).toBeInTheDocument();
+    expect(screen.getByText(/Explicação:/)).toBeInTheDocument();
+    expect(document.querySelector('.feedback')).toHaveTextContent('Domínio em Variáveis: 0 → 0 (+0)');
+    expect(screen.queryByRole('note')).toBeNull();
+    await usuario.click(screen.getByRole('button', { name: 'Próxima questão' }));
+    await responder(usuario, dados, false);
+    expect(await screen.findByRole('note')).toHaveTextContent(/errou duas questões seguidas em Variáveis/);
+    await usuario.click(screen.getByRole('link', { name: 'Revisar materiais de Variáveis' }));
+    expect(await screen.findByRole('heading', { name: 'Variáveis' })).toBeInTheDocument();
+    const primeiroMaterial = dados().disciplinas.find((d) => d.id === 'd-alg')!.topicos[0].materiais[0].titulo;
+    expect(screen.getByRole('heading', { name: primeiroMaterial })).toBeInTheDocument();
+    expect(dados().respostas.filter((r) => r.matriculaId === 'm-diego-alg-a-262')).toHaveLength(2);
   });
 
-  it('após erro mostra a alternativa correta; dois erros seguidos sugerem revisão', async () => {
-    const { repo, usuario } = await renderizarApp('/aluno/cursos/c-mat/sessao', 'u-ana');
-    for (let i = 0; i < 2; i++) {
-      const q = await questaoAtual(repo, 'u-ana', 'c-mat');
-      await usuario.click(await screen.findByLabelText(q.alternativas[(q.correta + 1) % q.alternativas.length]));
-      await usuario.click(screen.getByRole('button', { name: 'Responder' }));
-      expect(await screen.findByText('✘ Você errou.')).toBeInTheDocument();
-      expect(screen.getByText('Alternativa correta:')).toHaveTextContent(q.alternativas[q.correta]);
-      if (i === 0) {
-        expect(screen.queryByRole('link', { name: /Revisar materiais/ })).not.toBeInTheDocument();
-        await usuario.click(screen.getByRole('button', { name: 'Próxima questão' }));
-      }
-    }
-    expect(screen.getByRole('link', { name: 'Revisar materiais de Decimais' })).toHaveAttribute(
-      'href',
-      '/aluno/cursos/c-mat/topicos/t-dec',
-    );
+  it('acertar até dominar o tópico mostra o desbloqueio do seguinte e atualiza o progresso', async () => {
+    const { usuario, dados } = await renderizarApp(`${T_ALG_A}/sessao`, 'u-diego', (d) => {
+      d.respostas.push(...gerarHistoricoMatricula(d, 'm-diego-alg-a-262', [[1, Array<boolean>(6).fill(true)]], { valor: 1000 }));
+    });
+    await responder(usuario, dados, true);
+    expect(screen.getByText(/Você dominou/)).toHaveTextContent('Tópico desbloqueado: Condicionais');
+    expect(screen.getByText(/\+30 XP/)).toBeInTheDocument();
+    await usuario.click(screen.getByRole('button', { name: 'Próxima questão' }));
+    expect(await screen.findByText(/Tópico:/)).toHaveTextContent('Condicionais');
   });
 
-  it('acertando até dominar o tópico, ele é dominado e o seguinte é desbloqueado', async () => {
-    const { repo, usuario } = await renderizarApp('/aluno/cursos/c-mat/sessao', 'u-ana');
-    for (let i = 0; i < 10 && !screen.queryByText(/Você dominou/); i++) {
-      const q = await questaoAtual(repo, 'u-ana', 'c-mat');
-      await usuario.click(await screen.findByLabelText(q.alternativas[q.correta]));
-      await usuario.click(screen.getByRole('button', { name: 'Responder' }));
-      await screen.findByText('✔ Você acertou!');
-      if (!screen.queryByText(/Você dominou/)) await usuario.click(screen.getByRole('button', { name: 'Próxima questão' }));
-    }
-    expect(screen.getByText(/Você dominou/)).toHaveTextContent('Decimais');
-    expect(screen.getByText(/Tópico desbloqueado/)).toHaveTextContent('Porcentagem');
+  it('conclusão: última resposta conclui a trilha, concede a conquista e não é aprovação acadêmica', async () => {
+    const { usuario, dados } = await renderizarApp(`${T_ALG_A}/sessao`, 'u-diego', (d) => {
+      d.respostas.push(...gerarHistoricoMatricula(d, 'm-diego-alg-a-262', [[1, Array<boolean>(20).fill(true)]], { valor: 1000 }));
+    });
+    await responder(usuario, dados, true);
+    expect(await screen.findByText(/Trilha concluída nesta turma! Progresso: 100%/)).toBeInTheDocument();
+    expect(screen.getByText(/Conquista desbloqueada:/)).toHaveTextContent('Trilha concluída');
+    await usuario.click(screen.getByRole('link', { name: 'Ver trilha' }));
+    expect(await screen.findByText(/não representa aprovação acadêmica/)).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Estudar' })).toBeNull();
+  });
+
+  it('duas turmas da mesma disciplina não interferem; a gamificação aparece na oferta correta', async () => {
+    const { usuario, dados } = await renderizarApp('/aluno/disciplinas/d-alg/turmas/t-alg-a-271/sessao', 'u-ana');
+    const respostasAntigas = () => dados().respostas.filter((r) => r.matriculaId === 'm-ana-alg-a-262');
+    const antes = JSON.stringify(respostasAntigas());
+    const xpAntigo = respostasAntigas().reduce((s, r) => s + r.xpConcedido, 0);
+    await responder(usuario, dados, true);
+    expect(JSON.stringify(respostasAntigas())).toBe(antes);
     await usuario.click(screen.getByRole('link', { name: '← Voltar à trilha' }));
-    expect((await screen.findByText('Decimais')).closest('li')).toHaveTextContent('Dominado');
-    expect(screen.getByText('Porcentagem').closest('li')).toHaveTextContent('Desbloqueado');
+    const nova = await screen.findByRole('region', { name: 'Gamificação da turma A de 2027.1' });
+    expect(nova).toHaveTextContent('10 XP');
+    expect(nova).toHaveTextContent('Primeira questão');
+    await usuario.click(screen.getByRole('link', { name: '← Minhas turmas' }));
+    const card = await screen.findByRole('article', { name: 'Algoritmos turma A 2026.2' });
+    await usuario.click(within(card).getByRole('link', { name: 'Abrir trilha' }));
+    const antiga = await screen.findByRole('region', { name: 'Gamificação da turma A de 2026.2' });
+    expect(antiga).toHaveTextContent(`${xpAntigo} XP`);
+    expect(antiga).not.toHaveTextContent('Sequência: 1 dia');
   });
-});
 
-describe('painel de desempenho do aluno', () => {
-  it('os números batem com o histórico do seed (Ana em Matemática)', async () => {
-    await renderizarApp('/aluno/cursos/c-mat/desempenho', 'u-ana');
-    // Seed: 14 respostas, 11 acertos; XP = 4×10 + 3×20 + 1×30 (Frações) + 3×10 (Decimais) = 160.
-    expect(await screen.findByTestId('taxa-acertos')).toHaveTextContent('79% (11 de 14)');
-    expect(screen.getByTestId('xp')).toHaveTextContent('160');
-    expect(screen.getByRole('progressbar', { name: 'Progresso do curso' })).toHaveAttribute('aria-valuenow', '33');
-    expect(screen.getByRole('progressbar', { name: 'Domínio em Frações' })).toHaveAttribute('aria-valuenow', '95');
-    expect(screen.getByRole('progressbar', { name: 'Domínio em Decimais' })).toHaveAttribute('aria-valuenow', '10');
+  it('IDs aninhados incompatíveis na sessão, e tópico bloqueado nos materiais, não expõem conteúdo', async () => {
+    const a = await renderizarApp('/aluno/disciplinas/d-ing/turmas/t-alg-a-262/sessao', 'u-ana');
+    expect(await screen.findByRole('heading', { name: 'Acesso negado' })).toBeInTheDocument();
+    a.unmount();
+    await renderizarApp(`${T_ALG_A}/topicos/t-lacos`, 'u-diego');
+    expect(await screen.findByText(/não encontrado ou ainda bloqueado/)).toBeInTheDocument();
+  });
+
+  it('a retomada preserva o estado: o progresso gravado reaparece ao reabrir a trilha', async () => {
+    await renderizarApp(T_ALG_A, 'u-elisa');
+    const barra = await screen.findByRole('progressbar');
+    expect(barra).toHaveAttribute('aria-valuenow', '100');
+    expect(screen.getByText(/Sequência de 7 dias/)).toBeInTheDocument();
   });
 });

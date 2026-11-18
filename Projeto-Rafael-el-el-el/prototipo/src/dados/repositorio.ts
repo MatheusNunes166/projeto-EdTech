@@ -12,6 +12,14 @@ const CHAVE_SESSAO = 'trilha-adaptativa:sessao';
 
 export type NovaResposta = Omit<Resposta, 'id' | 'momento' | 'data' | 'acertou' | 'topicoId' | 'dificuldade'>;
 
+/** Dados locais incompatíveis: nada foi alterado. */
+export class ErroArmazenamentoLegado extends Error {
+  constructor(mensagem: string) {
+    super(mensagem);
+    this.name = 'ErroArmazenamentoLegado';
+  }
+}
+
 let contadorIds = 0;
 export function novoId(prefixo: string): string {
   contadorIds++;
@@ -23,19 +31,24 @@ export class Repositorio {
 
   // ---- infraestrutura -------------------------------------------------
 
+  /**
+   * Primeira execução (sem dados) inicializa a demonstração; dados existentes incompatíveis NUNCA são
+   * substituídos em silêncio: a substituição exige a confirmação do fluxo acadêmico (armazenamento-academico).
+   */
   private ler(): Dados {
     const bruto = this.storage.getItem(CHAVE_DADOS);
-    if (bruto) {
-      try {
-        const dados = JSON.parse(bruto) as Dados;
-        if (dados.versaoSeed === SEED_VERSAO) return dados;
-      } catch {
-        /* dados corrompidos: recarrega o seed */
-      }
+    if (bruto === null) {
+      const seed = criarSeed();
+      this.gravar(seed);
+      return seed;
     }
-    const seed = criarSeed();
-    this.gravar(seed);
-    return seed;
+    try {
+      const dados = JSON.parse(bruto) as Dados;
+      if (dados.versaoSeed === SEED_VERSAO) return dados;
+    } catch {
+      /* JSON inválido: tratado como incompatível abaixo */
+    }
+    throw new ErroArmazenamentoLegado('Os dados locais são incompatíveis com esta versão; confirme a substituição para continuar.');
   }
 
   private gravar(dados: Dados): void {

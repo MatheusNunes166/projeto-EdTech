@@ -1,5 +1,5 @@
 import type {
-  Disciplina, Funcao, Graduacao, NivelDisciplina, PeriodoLetivo, QuestaoDisciplina,
+  Dificuldade, Disciplina, Funcao, Graduacao, NivelDisciplina, PeriodoLetivo, QuestaoDisciplina,
   StatusConteudo, Topico,
 } from '../dominio/tipos';
 import type { AlvoTurma } from './comandos-academicos';
@@ -62,31 +62,58 @@ export interface ConteudoEditavel {
   questoes: QuestaoDisciplina[];
 }
 
-/** Contratos futuros do grupo 5. Nenhuma consulta de 2.10 devolve estes resultados.
- * Valores devem vir das projeções reais; ausência de implementação não é zero ou Sem dados.
- * Médias são exatas; o arredondamento pertence à apresentação.
- */
+/** Histórico de uma matrícula: conteúdo apresentado na resposta, não o conteúdo corrente. */
+export interface RespostaHistorica {
+  id: string; topicoId: string; questaoId: string; alternativa: number; acertou: boolean;
+  dificuldade: Dificuldade; variacaoDominio: number; xpConcedido: number; data: string; momento: number;
+  enunciado: string; alternativas: string[]; correta: number; explicacao: string;
+}
+export interface HistoricoMatricula {
+  matriculaId: string;
+  aluno: IdentidadePessoa;
+  contexto: ContextoTurma;
+  trilha: {
+    topicos: { topicoId: string; titulo: string; dominio: number; desbloqueado: boolean; dominado: boolean }[];
+    /** Exato (0–100); a formatação pertence à apresentação. */
+    progresso: number; concluido: boolean;
+  };
+  respostas: RespostaHistorica[];
+}
+
+/** Indicadores do grupo 5. Médias são exatas; o arredondamento pertence à apresentação (design D6). */
+export interface ConquistaIndicador { id: string; nome: string; data: string }
+export type SituacaoAluno = 'sem-atividade' | 'precisa-de-atencao' | 'regular';
 export interface IndicadoresAlunoTurma {
   matriculaId: string;
+  /** Porcentagem exata (0–100) de tópicos dominados. */
   progresso: number;
-  dominioPorTopico: { topicoId: string; dominio: number }[];
+  concluido: boolean;
+  dominioPorTopico: { topicoId: string; titulo: string; dominio: number }[];
+  /** Acertos ÷ respostas válidas da matrícula, em porcentagem exata; 0 sem respostas (ver totalRespostas). */
   taxaAcertos: number;
+  totalRespostas: number;
   xp: number;
+  sequenciaDias: number;
+  conquistas: ConquistaIndicador[];
+  ultimaAtividade: string | null;
 }
 export type MediasTurma =
   | { situacao: 'sem-dados' }
   | { situacao: 'calculadas'; progressoMedio: number; dominioMedioPorTopico: { topicoId: string; dominio: number }[] };
+export interface IndicadoresPainelAluno extends IndicadoresAlunoTurma { contexto: ContextoTurma }
 export interface IndicadoresDocenciaTurma {
   turmaId: string;
-  matriculados: (IdentidadePessoa & IndicadoresAlunoTurma)[];
+  contexto: ContextoTurma;
+  quantidadeMatriculados: number;
+  matriculados: (IdentidadePessoa & IndicadoresAlunoTurma & { situacao: SituacaoAluno })[];
   medias: MediasTurma;
 }
 export interface IndicadoresCoordenacao {
-  turmas: { turmaId: string; quantidadeMatriculados: number; medias: MediasTurma }[];
+  turmas: { turmaId: string; contexto: ContextoTurma; quantidadeMatriculados: number; medias: MediasTurma }[];
 }
 export interface IndicadoresResponsavel {
   alunoId: string;
-  turmas: { turmaId: string; progresso: number; sequenciaDias: number; ultimaAtividade: string | null }[];
+  turmas: { turmaId: string; contexto: ContextoTurma; progresso: number; sequenciaDias: number; ultimaAtividade: string | null }[];
 }
 export interface IndicadoresAdministracao {
   pessoas: { total: number; porFuncao: Record<Funcao, number> };
@@ -95,4 +122,43 @@ export interface IndicadoresAdministracao {
   periodosLetivos: number;
   turmas: number;
   matriculas: number;
+}
+
+/** Contratos das telas de estudo e administração (grupo 7). */
+export interface PessoaAdministravel extends IdentidadePessoa { email: string; funcoes: Funcao[]; ativo: boolean }
+export interface PessoasAdministracao {
+  pessoas: PessoaAdministravel[];
+  coordenacao: { coordenadorId: string; graduacaoId: string }[];
+  responsaveis: { responsavelId: string; alunoId: string }[];
+  graduacoes: { id: string; codigo: string; nome: string }[];
+}
+export interface MaterialTrilha { id: string; tipo: string; titulo: string; conteudo: string }
+export interface TopicoTrilha { topicoId: string; titulo: string; dominio: number; desbloqueado: boolean; dominado: boolean; materiais: MaterialTrilha[] }
+/** Questão apresentada ao aluno: sem gabarito nem explicação até a resposta. */
+export interface AtividadeApresentada {
+  questaoId: string; topicoId: string; topicoTitulo: string; dificuldade: Dificuldade;
+  enunciado: string; alternativas: string[];
+}
+export interface TrilhaMatricula {
+  matriculaId: string;
+  contexto: ContextoTurma;
+  trilha: { topicos: TopicoTrilha[]; progresso: number; concluido: boolean };
+  gamificacao: { xp: number; sequenciaDias: number; conquistas: ConquistaIndicador[] };
+  proxima: AtividadeApresentada | null;
+}
+export interface ResultadoResposta {
+  acertou: boolean;
+  explicacao: string;
+  alternativaCorreta: { indice: number; texto: string } | null;
+  topicoTitulo: string;
+  dominioAnterior: number;
+  dominioAtual: number;
+  variacao: number;
+  xpConcedido: number;
+  topicoDominado: boolean;
+  topicoDesbloqueado: string | null;
+  novasConquistas: ConquistaIndicador[];
+  sugerirRevisao: boolean;
+  concluido: boolean;
+  progresso: number;
 }

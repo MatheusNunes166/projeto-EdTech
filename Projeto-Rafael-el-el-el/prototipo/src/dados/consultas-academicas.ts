@@ -1,13 +1,21 @@
 import {
   pessoaAtiva, podeExecutar, type LeituraProfunda, type PedidoAutorizacao, type RecursoAcademico,
 } from '../dominio/autorizacao';
-import { NIVEIS_CURSO, type DadosAcademicos, type Funcao, type Disciplina } from '../dominio/tipos';
-import { ComandosAcademicos, type AlvoDisciplina, type AlvoTurma } from './comandos-academicos';
+import { FUNCOES, NIVEIS_CURSO, type DadosAcademicos, type Funcao, type Disciplina } from '../dominio/tipos';
+import { CONFIG } from '../adaptativo/config';
+import { calcularEstadoMatricula, resolverContextoEstudo } from '../adaptativo/contexto-estudo';
+import {
+  calcularMediasTurma, contextosDaTurma, indicadoresDaMatricula, situacaoDoAluno, ultimaAtividadeMatricula,
+} from '../desempenho/indicadores-academicos';
+import type { AlvoDisciplina, AlvoTurma } from './comandos-academicos';
+import { ComandosConteudo } from './comandos-conteudo';
+import { conferirAlvoMatricula, type AlvoMatricula } from './comandos-estudo';
 import type {
   CandidatoVinculo, ConsultaAcademica, ConteudoEditavel, ContextoTurma, DetalheDisciplina,
-  DetalheGraduacao, DisciplinaAdministravel, DisciplinaCatalogo, EstruturaAdministravel,
+  DetalheGraduacao, DisciplinaAdministravel, HistoricoMatricula, DisciplinaCatalogo, EstruturaAdministravel,
   FiltrosCatalogo, GraduacaoCatalogo, IdentidadePessoa, MatriculadoTurma, MinhaTurma,
-  OfertaCatalogo, PedidoCandidatos,
+  OfertaCatalogo, PedidoCandidatos, IndicadoresAdministracao, IndicadoresCoordenacao, IndicadoresDocenciaTurma,
+  IndicadoresPainelAluno, IndicadoresResponsavel,
 } from './contratos-consultas-academicas';
 import { conferirChaves, rejeitar } from './validacao-comandos-academicos';
 
@@ -74,7 +82,7 @@ function conferirFiltros(filtros: FiltrosCatalogo) {
 /** Fachada isolada de consultas e comandos. Toda projeção enumera os campos de seu DTO.
  * Não expõe obterDados(), seletores públicos ou históricos; não inicializa persistência.
  */
-export class ConsultasAcademicas extends ComandosAcademicos {
+export class ConsultasAcademicas extends ComandosConteudo {
   consultarCatalogo(filtros: FiltrosCatalogo = {}): Promise<ConsultaAcademica<GraduacaoCatalogo[]>> {
     return this.consultar(institucional('consultar-catalogo'), (dados, autor) => {
       conferirFiltros(filtros);
@@ -234,4 +242,128 @@ export class ConsultasAcademicas extends ComandosAcademicos {
       } };
     });
   }
+
+  /** Trilha da turma atual: indicadores, XP, sequência e conquistas apenas dessa matrícula do aluno da sessão. */
+  consultarIndicadoresAluno(alvo: AlvoMatricula): Promise<ConsultaAcademica<IndicadoresPainelAluno>> {
+    return this.consultar({ acao: 'consultar-estudo', recurso: { tipo: 'matricula', ...alvo } }, (dados) => {
+      conferirAlvoMatricula(alvo);
+      const contexto = resolverContextoEstudo(dados, alvo.matriculaId);
+      if (!contexto) rejeitar('matriculaId', 'Matrícula inexistente.');
+      return { revisao: dados.revisao, dados: { ...indicadoresDaMatricula(contexto, dados.dataVirtual), contexto: contextoTurma(dados, contexto.turmaId) } };
+    });
+  }
+
+  /** Painel do aluno: indicadores próprios de cada matrícula com conteúdo publicado, por oferta. */
+  consultarPainelAluno(): Promise<ConsultaAcademica<IndicadoresPainelAluno[]>> {
+    return this.consultar(institucional('consultar-minhas-turmas'), (dados, autor) => ({
+      revisao: dados.revisao, dados: dados.matriculas.filter((m) => m.alunoId === autor.id).flatMap((m) => {
+        const contexto = resolverContextoEstudo(dados, m.id);
+        const oferta = contexto && contextoTurma(dados, m.turmaId);
+        return contexto && oferta?.disciplina.status === 'publicado'
+          ? [{ ...indicadoresDaMatricula(contexto, dados.dataVirtual), contexto: oferta }] : [];
+      }),
+    }));
+  }
+
+  /** Painel do professor numa turma vinculada: matriculados (todos) com indicadores e médias da turma. */
+  consultarIndicadoresDocencia(alvo: AlvoTurma): Promise<ConsultaAcademica<IndicadoresDocenciaTurma>> {
+    return this.consultar({ acao: 'consultar-turma-docente', recurso: recursoTurma(alvo) }, (dados) => {
+      conferirAlvo(alvo, ['turmaId', 'disciplinaId', 'graduacaoId']);
+      const contextos = contextosDaTurma(dados, alvo.turmaId);
+      return { revisao: dados.revisao, dados: {
+        turmaId: alvo.turmaId, contexto: contextoTurma(dados, alvo.turmaId),
+        quantidadeMatriculados: contextos.length,
+        matriculados: contextos.map((c) => ({
+          ...identidade(achar(dados.usuarios, c.alunoId)), ...indicadoresDaMatricula(c, dados.dataVirtual), situacao: situacaoDoAluno(c),
+        })),
+        medias: calcularMediasTurma(contextos),
+      } };
+    });
+  }
+
+  /** Coordenação: uma linha por turma dos cursos vinculados; sem média global e sem respostas detalhadas. */
+  consultarIndicadoresCoordenacao(escopo?: EscopoEstrutura): Promise<ConsultaAcademica<IndicadoresCoordenacao>> {
+    const pedidos = [institucional('listar-estrutura-administravel')];
+    if (escopo) pedidos.push({ acao: 'consultar-painel-coordenacao', recurso: escopo });
+    return this.consultar(pedidos, (dados, autor) => {
+      if (escopo) conferirAlvo(escopo, escopo.tipo === 'graduacao' ? ['tipo', 'graduacaoId']
+        : escopo.tipo === 'disciplina' ? ['tipo', 'disciplinaId', 'graduacaoId'] : ['tipo', 'turmaId', 'disciplinaId', 'graduacaoId']);
+      const noEscopo = (t: Documento['turmas'][number]) => {
+        if (!escopo) return true;
+        const d = achar(dados.disciplinas, t.disciplinaId);
+        return escopo.tipo === 'graduacao' ? d.graduacaoId === escopo.graduacaoId
+          : escopo.tipo === 'disciplina' ? t.disciplinaId === escopo.disciplinaId : t.id === escopo.turmaId;
+      };
+      return { revisao: dados.revisao, dados: { turmas: dados.turmas
+        .filter((t) => noEscopo(t) && podeExecutar(dados, autor.id, { acao: 'consultar-painel-coordenacao', recurso: { tipo: 'turma', turmaId: t.id } }))
+        .map((t) => {
+          const contextos = contextosDaTurma(dados, t.id);
+          return { turmaId: t.id, contexto: contextoTurma(dados, t.id), quantidadeMatriculados: contextos.length, medias: calcularMediasTurma(contextos) };
+        }) } };
+    });
+  }
+
+  /** Responsável: só alunos vinculados; por oferta, progresso, sequência e última atividade (sem histórico). */
+  consultarIndicadoresResponsavel(alunoId: string): Promise<ConsultaAcademica<IndicadoresResponsavel>> {
+    return this.consultar({ acao: 'consultar-painel-responsavel', recurso: { tipo: 'aluno', alunoId } }, (dados) => ({
+      revisao: dados.revisao, dados: { alunoId, turmas: dados.matriculas.filter((m) => m.alunoId === alunoId).flatMap((m) => {
+        const c = resolverContextoEstudo(dados, m.id);
+        if (!c) return [];
+        const i = indicadoresDaMatricula(c, dados.dataVirtual);
+        return [{ turmaId: m.turmaId, contexto: contextoTurma(dados, m.turmaId), progresso: i.progresso,
+          sequenciaDias: i.sequenciaDias, ultimaAtividade: ultimaAtividadeMatricula(c) }];
+      }) },
+    }));
+  }
+
+  /** Totais administrativos: pessoas distintas (ativas ou não), por função e contagens de entidades. */
+  consultarIndicadoresAdministracao(): Promise<ConsultaAcademica<IndicadoresAdministracao>> {
+    return this.consultar(institucional('consultar-administracao'), (dados) => ({
+      revisao: dados.revisao, dados: {
+        pessoas: {
+          total: new Set(dados.usuarios.map((u) => u.id)).size,
+          porFuncao: Object.fromEntries(FUNCOES.map((f) => [f, dados.usuarios.filter((u) => u.funcoes.includes(f)).length])) as Record<Funcao, number>,
+        },
+        graduacoes: dados.graduacoes.length,
+        disciplinas: {
+          rascunho: dados.disciplinas.filter((d) => d.status === 'rascunho').length,
+          publicadas: dados.disciplinas.filter((d) => d.status === 'publicado').length,
+        },
+        periodosLetivos: dados.periodosLetivos.length, turmas: dados.turmas.length, matriculas: dados.matriculas.length,
+      },
+    }));
+  }
+
+  /** Retomada do próprio aluno: estado reconstituído e conteúdo originalmente apresentado. */
+  consultarHistoricoEstudo(alvo: AlvoMatricula): Promise<ConsultaAcademica<HistoricoMatricula>> {
+    return this.consultar({ acao: 'consultar-estudo', recurso: { tipo: 'matricula', ...alvo } },
+      (dados) => ({ revisao: dados.revisao, dados: historicoDTO(dados, alvo) }));
+  }
+
+  /** Detalhe docente: exige vínculo com a turma da matrícula, não apenas a mesma disciplina ou aluno. */
+  consultarHistoricoAlunoDocente(alvo: AlvoMatricula): Promise<ConsultaAcademica<HistoricoMatricula>> {
+    return this.consultar({ acao: 'consultar-historico-docente', recurso: { tipo: 'matricula', ...alvo } },
+      (dados) => ({ revisao: dados.revisao, dados: historicoDTO(dados, alvo, CONFIG.atencao.ultimasRespostas) }));
+  }
+}
+
+/** Usa a cópia gravada em cada resposta; nunca reavalia contra o cadastro corrente. */
+function historicoDTO(dados: Documento, alvo: AlvoMatricula, ultimas?: number): HistoricoMatricula {
+  conferirAlvoMatricula(alvo);
+  const contexto = resolverContextoEstudo(dados, alvo.matriculaId);
+  if (!contexto) rejeitar('matriculaId', 'Matrícula inexistente.');
+  const trilha = calcularEstadoMatricula(contexto);
+  return {
+    matriculaId: contexto.matriculaId,
+    aluno: identidade(achar(dados.usuarios, contexto.alunoId)),
+    contexto: contextoTurma(dados, contexto.turmaId),
+    trilha: { topicos: trilha.topicos.map((t) => ({ ...t })), progresso: trilha.progresso, concluido: trilha.concluido },
+    respostas: (ultimas === undefined ? contexto.respostas : contexto.respostas.slice(-ultimas)).map((r) => ({
+      id: r.id, topicoId: r.topicoId, questaoId: r.questaoId, alternativa: r.alternativa, acertou: r.acertou,
+      dificuldade: r.dificuldade, variacaoDominio: r.variacaoDominio, xpConcedido: r.xpConcedido,
+      data: r.data, momento: r.momento, enunciado: r.conteudoOriginal.enunciado,
+      alternativas: [...r.conteudoOriginal.alternativas], correta: r.conteudoOriginal.correta,
+      explicacao: r.conteudoOriginal.explicacao,
+    })),
+  };
 }

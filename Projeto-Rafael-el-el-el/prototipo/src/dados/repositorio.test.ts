@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { Repositorio } from './repositorio';
+import { ErroArmazenamentoLegado, Repositorio } from './repositorio';
 import { DATA_INICIAL, SEED_VERSAO, criarSeed } from './seed';
 
 describe('Repositorio (localStorage)', () => {
@@ -36,10 +36,20 @@ describe('Repositorio (localStorage)', () => {
     expect(await repo.obterSessao()).toBeNull();
   });
 
-  it('recarrega o seed automaticamente quando a versão salva é diferente', async () => {
-    const antigo = { ...criarSeed(), versaoSeed: SEED_VERSAO - 1, usuarios: [] };
-    localStorage.setItem('trilha-adaptativa:dados', JSON.stringify(antigo));
-    expect((await repo.obterDados()).usuarios.length).toBeGreaterThan(0);
+  it('não repõe em silêncio dados de versão diferente nem JSON inválido: erro e armazenamento intactos', async () => {
+    const antigo = JSON.stringify({ ...criarSeed(), versaoSeed: SEED_VERSAO - 1, usuarios: [] });
+    for (const conteudo of [antigo, '{json inválido', '']) {
+      localStorage.setItem('trilha-adaptativa:dados', conteudo);
+      await expect(repo.obterDados()).rejects.toBeInstanceOf(ErroArmazenamentoLegado);
+      await expect(repo.entrar('u-ana')).rejects.toBeInstanceOf(ErroArmazenamentoLegado);
+      expect(localStorage.getItem('trilha-adaptativa:dados')).toBe(conteudo);
+    }
+  });
+
+  it('restaurar explicitamente continua substituindo os dados (ação confirmada pelo fluxo de restauração)', async () => {
+    localStorage.setItem('trilha-adaptativa:dados', '{json inválido');
+    await repo.restaurarDemonstracao();
+    expect(await repo.obterDados()).toEqual(criarSeed());
   });
 
   it('simular próximo dia avança a data virtual usada nas respostas', async () => {

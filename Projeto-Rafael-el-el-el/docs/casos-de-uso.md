@@ -7,6 +7,8 @@
 
 ## Diagrama geral
 
+> **Referência histórica** (entrega inicial): o diagrama, a matriz e as descrições UC01–UC16 abaixo refletem perfil único e matrícula pelo próprio aluno (UC03). Para a organização acadêmica valem os casos atualizados da seção final deste arquivo (UC13/UC14, UC16, UC17 e UC18); UC03 foi substituído por matrícula administrativa.
+
 ```mermaid
 flowchart LR
     A["👤 Aluno"]
@@ -94,7 +96,7 @@ flowchart LR
   - **A1 — Sair:** o usuário aciona "Sair"; o sistema volta à tela de entrada.
   - **A2 — Acesso indevido:** o usuário acessa o endereço de outra área; o sistema redireciona para a área do seu perfil.
 
-### UC03 — Matricular-se em curso (RF08–RF10)
+### UC03 — Matricular-se em curso (RF08–RF10) — _histórico; substituído pelo UC18_
 - **Ator:** Aluno.
 - **Pré-condição:** curso publicado; aluno ainda não matriculado.
 - **Fluxo principal:**
@@ -155,3 +157,38 @@ flowchart LR
 - **Fluxo principal:**
   1. O Responsável abre seu painel.
   2. O sistema lista apenas os alunos vinculados, com cursos, progresso, sequência de dias e última atividade.
+
+## Organização acadêmica — casos de uso atualizados (change `organizacao-academica`)
+
+Os casos abaixo **substituem** as descrições por perfil único e por curso acima (mantidas como referência histórica) para as telas entregues nas tarefas 7.4, 7.15 e 7.16. Pessoas têm funções cumulativas explícitas (Aluno, Professor, Coordenador, Administrador e Responsável); cada função abre sua própria área, e vínculos nunca concedem funções.
+
+### UC13/UC14 — Gerenciar pessoas, funções e vínculos globais (7.4)
+- **Ator:** Administrador (exclusivo; Coordenador, Professor, Aluno e Responsável não alcançam estas telas nem por endereço direto).
+- **Fluxo principal:**
+  1. O Administrador lista as pessoas (nome, e-mail, funções e situação) e cria ou edita uma pessoa escolhendo uma ou mais funções — por exemplo, Professor e Coordenador na mesma pessoa.
+  2. Desativa ou reativa uma pessoa: a desativação não apaga matrículas, respostas ou vínculos.
+  3. Em *Vínculos*, atribui ou remove a coordenação de uma graduação e vincula Responsáveis a Alunos.
+- **Regras e alternativos:**
+  - **A1 — Pessoa ativa sem função:** rejeitada com o motivo; nada é salvo.
+  - **A2 — Coordenação sem a função Coordenador** (ou vínculo Responsável–Aluno cujo destino não é Aluno): rejeitado; ninguém concede coordenação a si próprio sem ser Administrador.
+  - **A3 — Revogação:** retirar uma função ou vínculo vale na próxima operação, inclusive com telas já abertas; o histórico e os demais vínculos permanecem.
+
+### UC16 — Acompanhar alunos vinculados (7.15)
+- **Ator:** Responsável.
+- **Fluxo principal:**
+  1. O Responsável abre seu painel; o sistema lista **apenas** os alunos vinculados.
+  2. Para cada aluno, mostra uma linha por oferta (disciplina, graduação, turma e período) com progresso, sequência de dias e última atividade — duas ofertas da mesma disciplina aparecem separadas.
+- **Alternativos:** **A1 — Sem respostas** na oferta: progresso zero, sequência zero e última atividade “Sem atividade”. O painel nunca traz histórico de questões, gabaritos ou XP detalhado.
+
+### UC17 — Consultar a visão geral administrativa (7.16)
+- **Ator:** Administrador.
+- **Fluxo principal:** o sistema apresenta o total de **pessoas distintas**, as pessoas por função (quem tem duas funções conta uma vez no total e uma vez em cada função), graduações, disciplinas **por estado de publicação** (publicadas e em rascunho), períodos letivos, turmas e matrículas.
+- **Regra:** graduações não são contadas como publicadas nem como rascunho — a publicação pertence à disciplina.
+
+### UC18 — Matricular aluno em turma (7.7)
+- **Ator:** Administrador ou Coordenador do curso da turma (o Aluno **não** se matricula).
+- **Fluxo principal:** em *Gestão acadêmica*, o ator escolhe a turma do seu escopo e um aluno ativo e registra a matrícula na data virtual. A matrícula não depende da publicação do conteúdo, mas o estudo fica indisponível enquanto a disciplina estiver em rascunho.
+- **Regras e alternativos:**
+  - **A1 — Matrícula repetida:** o sistema informa que o aluno já estava matriculado e preserva respostas, XP e progresso (nada é reiniciado).
+  - **A2 — Outro período:** nova matrícula em outra oferta da mesma disciplina começa do zero, sem copiar o histórico.
+  - **A3 — Fora do escopo:** turma de outro curso é negada (a coordenação não a vê nem a acessa por endereço direto).
