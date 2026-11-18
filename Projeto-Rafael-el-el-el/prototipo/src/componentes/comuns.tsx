@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import type { EstadoConsulta, ErroComando } from '../app/contexto';
 import { arredondarExibicao } from '../desempenho/apresentacao';
 import { NOME_DIFICULDADE, type Dificuldade } from '../dominio/tipos';
@@ -60,4 +60,25 @@ export function Campo({ rotulo, erro, children }: { rotulo: string; erro?: strin
       {erro && <span className="erro-campo" role="alert">{erro}</span>}
     </div>
   );
+}
+
+export function PularParaConteudo() {
+  return <a className="pular-conteudo" href="#conteudo" onClick={(e) => { e.preventDefault(); document.getElementById('conteudo')?.focus(); }}>Pular para conteúdo</a>;
+}
+
+/** Aguarda o título autorizado do destino, inclusive nas páginas que carregam por consulta. */
+export function FocoDaPagina({ caminho }: { caminho: string }) {
+  useEffect(() => {
+    const main = document.getElementById('conteudo');
+    const focar = () => {
+      const titulo = main?.querySelector('h1');
+      if (!titulo) return false;
+      titulo.tabIndex = -1; titulo.focus(); return true;
+    };
+    if (focar() || !main) return;
+    const observador = new MutationObserver(() => { if (focar()) observador.disconnect(); });
+    observador.observe(main, { childList: true, subtree: true });
+    return () => observador.disconnect();
+  }, [caminho]);
+  return null;
 }

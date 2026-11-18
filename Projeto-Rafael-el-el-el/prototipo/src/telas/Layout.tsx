@@ -1,7 +1,7 @@
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AREA_DA_FUNCAO, ROTULO_AREA, localizacaoDaPagina, nomesDasFuncoes } from '../app/areas';
 import { useApp, useConsulta, useComando, useUsuario } from '../app/contexto';
-import { MensagemErro } from '../componentes/comuns';
+import { FocoDaPagina, MensagemErro, PularParaConteudo } from '../componentes/comuns';
 import { formatarData } from '../dominio/datas';
 import { FUNCOES, type Funcao } from '../dominio/tipos';
 import { Demonstracao } from './Restauracao';
@@ -38,6 +38,7 @@ export function Layout() {
 
   return (
     <div className="app">
+      <PularParaConteudo />
       <header className="topo">
         <div className="identidade-app"><div className="marca">Trilha Adaptativa</div>
           <p className="localizacao" aria-label="Localização atual"><strong>{ROTULO_AREA[area]}</strong> · {localizacao.titulo}</p>
@@ -67,7 +68,8 @@ export function Layout() {
         )}
         <MensagemErro erro={erro} />
       </Demonstracao>
-      <main className={`conteudo ${area === 'aluno' ? 'experiencia-aluno' : ''}`}><Outlet /></main>
+      <main id="conteudo" tabIndex={-1} className={`conteudo ${area === 'aluno' ? 'experiencia-aluno' : ''}`}><Outlet /></main>
+      <FocoDaPagina caminho={pathname} />
     </div>
   );
 }

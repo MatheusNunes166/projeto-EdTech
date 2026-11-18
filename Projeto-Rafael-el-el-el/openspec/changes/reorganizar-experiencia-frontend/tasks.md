@@ -40,12 +40,12 @@ Lista de implementação futura, após revisão desta change. Nenhuma tarefa foi
 
 ## 6. Sessão de estudo e interação acessível
 
-- [ ] 6.1 Montar a sessão em duas colunas a partir de 900 px e faixa compacta abaixo disso, com somente os cinco elementos de contexto definidos em D6; verificar a 1280 px e 360 px a questão com maior destaque e ausência de indicadores extras no resumo.
-- [ ] 6.2 Adaptar o cartão para alternativas em grade quando houver espaço e empilhadas abaixo de 640 px, mantendo rádio, ordem original e envio explícito; verificar 360 px com texto longo e quantidade variável de alternativas, seleção sem envio e Responder indisponível sem seleção ou durante envio.
-- [ ] 6.3 Preservar atividade, seleção e resultado locais durante atualização de consultas e redimensionamento; verificar uma única resposta por envio, erro sem perda da seleção, feedback completo e nenhuma troca automática de questão.
-- [ ] 6.4 Manter revisão sugerida com acesso a materiais e Continuar mesmo assim, Próxima questão nos outros casos e Ver trilha na conclusão; verificar segundo erro no mesmo tópico/turma, avanço somente explícito e fim de trilha sem nova atividade.
-- [ ] 6.5 Implementar salto ao conteúdo e foco em transições de etapa, página e questão, completando rótulos textuais e anúncios de feedback; verificar por teclado entrada → turma → trilha → sessão → avanço, expansores e cancelamento da restauração, sem perda de foco ou dependência de cor.
-- [ ] 6.6 Atualizar os testes de sessão e foco nos arquivos de aluno e shell; verificar `npm test -- src/testes/aluno.test.tsx src/testes/shell.test.tsx`, cobrindo feedback estável após invalidação, envio duplicado, revisão, conclusão e destino do foco após avanço.
+- [x] 6.1 Montar a sessão em duas colunas a partir de 900 px e faixa compacta abaixo disso, com somente os cinco elementos de contexto definidos em D6; verificar a 1280 px e 360 px a questão com maior destaque e ausência de indicadores extras no resumo.
+- [x] 6.2 Adaptar o cartão para alternativas em grade quando houver espaço e empilhadas abaixo de 640 px, mantendo rádio, ordem original e envio explícito; verificar 360 px com texto longo e quantidade variável de alternativas, seleção sem envio e Responder indisponível sem seleção ou durante envio.
+- [x] 6.3 Preservar atividade, seleção e resultado locais durante atualização de consultas e redimensionamento; verificar uma única resposta por envio, erro sem perda da seleção, feedback completo e nenhuma troca automática de questão.
+- [x] 6.4 Manter revisão sugerida com acesso a materiais e Continuar mesmo assim, Próxima questão nos outros casos e Ver trilha na conclusão; verificar segundo erro no mesmo tópico/turma, avanço somente explícito e fim de trilha sem nova atividade.
+- [x] 6.5 Implementar salto ao conteúdo e foco em transições de etapa, página e questão, completando rótulos textuais e anúncios de feedback; verificar por teclado entrada → turma → trilha → sessão → avanço, expansores e cancelamento da restauração, sem perda de foco ou dependência de cor.
+- [x] 6.6 Atualizar os testes de sessão e foco nos arquivos de aluno e shell; verificar `npm test -- src/testes/aluno.test.tsx src/testes/shell.test.tsx`, cobrindo feedback estável após invalidação, envio duplicado, revisão, conclusão e destino do foco após avanço.
 
 ## 7. Verificação integrada e evidências para revisão
 

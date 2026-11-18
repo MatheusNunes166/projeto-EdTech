@@ -4,6 +4,7 @@ import { AREA_DA_FUNCAO, areaInicial, nomesDasFuncoes } from '../app/areas';
 import { useApp } from '../app/contexto';
 import { FUNCOES, NOME_FUNCAO, type Funcao } from '../dominio/tipos';
 import { Demonstracao } from './Restauracao';
+import { PularParaConteudo } from '../componentes/comuns';
 
 export function Entrada() {
   const { repo, usuario, versao, executar } = useApp();
@@ -51,7 +52,7 @@ export function Entrada() {
   const candidatos = pessoas?.filter((p) => p.funcoes.includes(funcao!)) ?? [];
 
   return (
-    <main className="entrada">
+    <><PularParaConteudo /><main id="conteudo" tabIndex={-1} className="entrada">
       <h1>Trilha Adaptativa</h1>
       <p className="sub">Aprendizagem no seu ritmo, em cada turma.</p>
       <p>Protótipo com dados fictícios e entrada simulada, sem senha. Escolha uma função e depois uma pessoa para entrar.</p>
@@ -78,6 +79,6 @@ export function Entrada() {
         </ul>
       )}
       <Demonstracao />
-    </main>
+    </main></>
   );
 }

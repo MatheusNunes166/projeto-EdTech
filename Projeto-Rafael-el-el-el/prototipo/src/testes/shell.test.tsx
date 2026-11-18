@@ -196,6 +196,23 @@ describe('7.2 — [PA] Funções de usuário suportadas, Permissões cumulativas
 });
 
 describe('Frontend 3 — cabeçalho e Demonstração', () => {
+  it('salto ao conteúdo, troca de etapa e troca de página têm destinos de foco sem tabindex positivo', async () => {
+    const a = await renderizarApp('/');
+    const funcao = await screen.findByRole('button', { name: 'Aluno' });
+    expect(screen.getByRole('heading', { name: 'Escolha sua função' })).toHaveFocus();
+    screen.getByRole('link', { name: 'Pular para conteúdo' }).focus();
+    await a.usuario.keyboard('{Enter}');
+    expect(document.getElementById('conteudo')).toHaveFocus();
+    await a.usuario.click(funcao);
+    expect(screen.getByRole('heading', { name: 'Escolha uma pessoa — Aluno' })).toHaveFocus();
+    await a.usuario.tab();
+    expect(screen.getByRole('button', { name: 'Voltar às funções' })).toHaveFocus();
+    await a.usuario.click(screen.getByRole('button', { name: 'Entrar como Ana Souza' }));
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Minhas turmas' })).toHaveFocus());
+    await a.usuario.click(screen.getByRole('link', { name: 'Catálogo' }));
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Catálogo' })).toHaveFocus());
+    expect([...document.querySelectorAll('[tabindex]')].every((e) => Number(e.getAttribute('tabindex')) <= 0)).toBe(true);
+  });
   it.each([
     ['/aluno/disciplinas/d-alg/turmas/t-alg-a-262/sessao', 'u-ana', 'Área do Aluno', 'Sessão de estudo', 'Minhas turmas'],
     ['/aluno/catalogo/disciplinas/d-alg', 'u-ana', 'Área do Aluno', 'Detalhe da disciplina', 'Catálogo'],

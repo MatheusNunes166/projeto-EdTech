@@ -1,0 +1,31 @@
+{
+  "desktop": {
+    "largura": 1280,
+    "questao": 828,
+    "contexto": 280,
+    "contextoAcima": false,
+    "alternativas": 8,
+    "colunas": "repeat(2, minmax(0px, 1fr))",
+    "resumo": "Algoritmos\n\nTurma A · 2026.2\n\n0%\nVer trilha"
+  },
+  "mobile": {
+    "largura": 360,
+    "questao": 313,
+    "contexto": 313,
+    "contextoAcima": true,
+    "alternativas": 8,
+    "colunas": "minmax(0px, 1fr)",
+    "resumo": "Algoritmos\n\nTurma A · 2026.2\n\n0%\nVer trilha"
+  },
+  "overflow": {
+    "width": 360,
+    "document": 345,
+    "overflow": []
+  },
+  "jornadaPorTeclado": true,
+  "focoEnunciadoAposAvanco": true,
+  "feedbackEstavelAoRedimensionar": true,
+  "umaRespostaPorEnvio": true,
+  "revisaoAposSegundoErro": true,
+  "capturas": "Feedback ap?s segundo erro; captura integral a partir do topo da p?gina"
+}

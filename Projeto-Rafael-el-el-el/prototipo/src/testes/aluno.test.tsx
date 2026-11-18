@@ -234,6 +234,98 @@ describe('Frontend 5 — orientação da trilha e conquistas sob demanda', () =>
   });
 });
 
+describe('Frontend 6 — sessão estável, envio e foco', () => {
+  it('resumo contém só os cinco elementos e alternativas variáveis mantêm ordem; selecionar não envia', async () => {
+    const a = await renderizarApp(`${T_ALG_A}/sessao`, 'u-diego', (d) => {
+      d.questoes.filter((q) => q.disciplinaId === 'd-alg').forEach((q) => q.alternativas.push('Uma alternativa adicional com texto longo '.repeat(8)));
+    });
+    const qTexto = (await screen.findByRole('heading', { level: 2 })).textContent;
+    const q = a.dados().questoes.find((q) => q.enunciado === qTexto)!;
+    const resumo = screen.getByRole('complementary', { name: 'Contexto da sessão' });
+    expect(resumo).toHaveTextContent('Algoritmos'); expect(resumo).toHaveTextContent('Turma A · 2026.2');
+    expect(within(resumo).getByRole('progressbar')).toHaveAttribute('aria-label', 'Progresso da matrícula');
+    expect(within(resumo).getByRole('link', { name: 'Ver trilha' })).toHaveAttribute('href', T_ALG_A);
+    for (const proibido of ['Sistemas de Informação', 'XP', 'Sequência', 'Conquistas', 'Materiais', 'Marcos']) expect(resumo).not.toHaveTextContent(proibido);
+    expect(screen.getAllByRole('radio').map((r) => r.getAttribute('aria-label'))).toEqual(q.alternativas);
+    const antes = JSON.stringify(a.dados());
+    expect(screen.getByRole('button', { name: 'Responder' })).toBeDisabled();
+    await a.usuario.click(screen.getAllByRole('radio')[0]);
+    expect(screen.getByText('Selecionada')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Responder' })).toBeEnabled();
+    expect(screen.queryByText('Alternativa correta')).toBeNull();
+    expect(screen.queryByText(q.explicacao)).toBeNull();
+    expect(JSON.stringify(a.dados())).toBe(antes);
+  });
+
+  it('duplo clique no mesmo envio não grava duas respostas e controles ficam bloqueados durante a operação', async () => {
+    const original = RepositorioApp.prototype.responderQuestao;
+    let liberar: (() => Promise<void>) | undefined;
+    const sonda = vi.spyOn(RepositorioApp.prototype, 'responderQuestao').mockImplementation(function (this: RepositorioApp, ...args) {
+      return new Promise((resolve, reject) => { liberar = async () => { try { resolve(await original.apply(this, args)); } catch (e) { reject(e); } }; });
+    });
+    try {
+      const a = await renderizarApp(`${T_ALG_A}/sessao`, 'u-diego');
+      await a.usuario.click((await screen.findAllByRole('radio'))[0]);
+      const botao = screen.getByRole('button', { name: 'Responder' });
+      await act(async () => { botao.click(); botao.click(); });
+      expect(sonda).toHaveBeenCalledTimes(1);
+      expect(botao).toBeDisabled(); expect(screen.getAllByRole('radio').every((r) => (r as HTMLInputElement).disabled || r.closest('fieldset')!.disabled)).toBe(true);
+      await act(async () => { await liberar!(); });
+      await screen.findByRole('region', { name: 'Resultado da resposta' });
+      expect(a.dados().respostas.filter((r) => r.matriculaId === 'm-diego-alg-a-262')).toHaveLength(1);
+      await a.usuario.click(screen.getByRole('button', { name: 'Responder' }));
+      expect(sonda).toHaveBeenCalledTimes(1);
+    } finally { sonda.mockRestore(); }
+  });
+
+  it('falha no envio mantém questão e seleção, sem feedback de sucesso ou alteração de dados', async () => {
+    const sonda = vi.spyOn(RepositorioApp.prototype, 'responderQuestao').mockRejectedValueOnce(new Error('Falha de gravação'));
+    try {
+      const a = await renderizarApp(`${T_ALG_A}/sessao`, 'u-diego');
+      const radio = (await screen.findAllByRole('radio'))[0];
+      const titulo = screen.getByRole('heading', { level: 2 }).textContent;
+      const antes = JSON.stringify(a.dados());
+      await a.usuario.click(radio); await a.usuario.click(screen.getByRole('button', { name: 'Responder' }));
+      expect(await screen.findByRole('alert')).toHaveTextContent('Falha de gravação');
+      expect(radio).toBeChecked(); expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(titulo!);
+      expect(screen.queryByRole('region', { name: 'Resultado da resposta' })).toBeNull();
+      expect(JSON.stringify(a.dados())).toBe(antes);
+    } finally { sonda.mockRestore(); }
+  });
+
+  it('feedback e seleção sobrevivem à reautorização e ao resize, sem envio extra; avanço explícito foca o enunciado', async () => {
+    const a = await renderizarApp(`${T_ALG_A}/sessao`, 'u-diego');
+    await responder(a.usuario, a.dados, true);
+    const texto = screen.getByRole('heading', { level: 2, name: a.dados().respostas.slice(-1)[0].conteudoOriginal.enunciado }).textContent;
+    const feedback = screen.getByRole('region', { name: 'Resultado da resposta' }).textContent;
+    a.avisarOutraAba();
+    expect(screen.queryByRole('region', { name: 'Resultado da resposta' })).toBeNull(); // nenhuma exposição durante reautorização
+    expect(await screen.findByRole('region', { name: 'Resultado da resposta' })).toHaveTextContent(feedback!);
+    expect(screen.getByRole('heading', { level: 2, name: texto! })).toBeInTheDocument();
+    expect(screen.getAllByRole('radio').some((r) => (r as HTMLInputElement).checked)).toBe(true);
+    act(() => { window.dispatchEvent(new Event('resize')); });
+    expect(screen.getByRole('region', { name: 'Resultado da resposta' })).toHaveTextContent(feedback!);
+    expect(a.dados().respostas.filter((r) => r.matriculaId === 'm-diego-alg-a-262')).toHaveLength(1);
+    await a.usuario.click(screen.getByRole('button', { name: 'Próxima questão' }));
+    await waitFor(() => expect(document.getElementById('enunciado')).toHaveFocus());
+    expect(screen.queryByRole('region', { name: 'Resultado da resposta' })).toBeNull();
+    expect(screen.getByRole('button', { name: 'Responder' })).toBeDisabled();
+    expect(a.dados().respostas.filter((r) => r.matriculaId === 'm-diego-alg-a-262')).toHaveLength(1);
+  });
+
+  it('o estado local preservado não volta a ser exibido depois da revogação de acesso', async () => {
+    const a = await renderizarApp(`${T_ALG_A}/sessao`, 'u-diego');
+    await responder(a.usuario, a.dados, true);
+    const admin = a.outraAba('u-renata');
+    await admin.definirAtivo('u-diego', false, a.dados().revisao);
+    a.avisarOutraAba();
+    expect(await screen.findByRole('button', { name: 'Aluno' })).toBeInTheDocument();
+    expect(screen.queryByRole('radio')).toBeNull();
+    expect(screen.queryByRole('region', { name: 'Resultado da resposta' })).toBeNull();
+    expect(a.dados().respostas.filter((r) => r.matriculaId === 'm-diego-alg-a-262')).toHaveLength(1);
+  });
+});
+
 /** Responde pela interface usando o gabarito do armazenamento (a tela nunca o mostra antes). */
 async function responder(usuario: UserEvent, dados: () => DadosAcademicos, certo: boolean) {
   const enunciado = (await screen.findByRole('heading', { level: 2, name: (n) => n.length > 0 })).textContent!;
@@ -291,7 +383,7 @@ describe('7.10 — [AA] Inicialização e retomada, Feedback imediato, Revisão 
     await responder(usuario, dados, true);
     expect(await screen.findByText(/Trilha concluída nesta turma! Progresso: 100%/)).toBeInTheDocument();
     expect(screen.getByText(/Conquista desbloqueada:/)).toHaveTextContent('Trilha concluída');
-    await usuario.click(screen.getByRole('link', { name: 'Ver trilha' }));
+    await usuario.click(within(screen.getByRole('region', { name: 'Resultado da resposta' })).getByRole('link', { name: 'Ver trilha' }));
     expect(await screen.findByText(/não representa aprovação acadêmica/)).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Estudar' })).toBeNull();
   });
@@ -303,7 +395,7 @@ describe('7.10 — [AA] Inicialização e retomada, Feedback imediato, Revisão 
     const xpAntigo = respostasAntigas().reduce((s, r) => s + r.xpConcedido, 0);
     await responder(usuario, dados, true);
     expect(JSON.stringify(respostasAntigas())).toBe(antes);
-    await usuario.click(screen.getByRole('link', { name: '← Voltar à trilha' }));
+    await usuario.click(within(screen.getByRole('complementary', { name: 'Contexto da sessão' })).getByRole('link', { name: 'Ver trilha' }));
     const nova = await screen.findByRole('region', { name: 'Gamificação da turma A de 2027.1' });
     await usuario.click(within(nova).getByText(/Conquistas \(/, { selector: 'summary' }));
     expect(nova).toHaveTextContent('10 XP');
