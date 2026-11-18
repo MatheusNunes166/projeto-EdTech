@@ -46,7 +46,7 @@ button.secundario:hover:not(:disabled), .botao.secundario:hover { background: #e
 button.perigo { background: var(--cor-erro); border-color: var(--cor-erro); }
 button.icone { padding: 0.3rem 0.6rem; background: var(--cor-superficie); color: var(--cor-texto); border-color: var(--cor-borda); }
 button.largo { width: 100%; text-align: left; }
-:focus-visible { outline: 3px solid #f0b400; outline-offset: 2px; }
+:focus-visible { outline: 3px solid #2448a8; outline-offset: 3px; }
 
 input, select, textarea {
   font: inherit;
@@ -80,7 +80,7 @@ fieldset { border: 1px solid var(--cor-borda); border-radius: var(--raio); paddi
   padding: 0.5rem 1.5rem; background: #eef1f7; font-size: 0.9rem; color: var(--cor-suave);
 }
 .barra-demo button { padding: 0.25rem 0.75rem; font-size: 0.85rem; }
-.conteudo { max-width: 1000px; margin: 0 auto; padding: 1rem 1.5rem 3rem; }
+.conteudo { max-width: 1180px; margin: 0 auto; padding: 1.5rem 1.5rem 3rem; }
 
 .entrada { max-width: 1000px; margin: 0 auto; padding: 2rem 1rem; }
 .sub { color: var(--cor-suave); }
@@ -109,9 +109,10 @@ fieldset { border: 1px solid var(--cor-borda); border-radius: var(--raio); paddi
 .dif-medio { background: var(--cor-alerta-fundo); color: var(--cor-alerta); }
 .dif-dificil { background: var(--cor-erro-fundo); color: var(--cor-erro); }
 
-.barra { position: relative; height: 1.25rem; background: #e6e9f0; border-radius: 999px; overflow: hidden; min-width: 120px; }
+.progresso { display: flex; align-items: center; gap: 12px; }
+.barra { flex: 1; height: 0.65rem; background: #e6e9f0; border: 1px solid #747e91; border-radius: 999px; overflow: hidden; min-width: 0; }
 .barra-preenchida { height: 100%; background: var(--cor-primaria); transition: width 0.3s; }
-.barra-texto { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; color: var(--cor-texto); }
+.barra-texto { font-size: 0.85rem; font-weight: 600; color: var(--cor-texto); min-width: 3ch; font-variant-numeric: tabular-nums; }
 
 .indicadores { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 0 0 1rem; }
 .indicador { background: var(--cor-superficie); border: 1px solid var(--cor-borda); border-radius: var(--raio); padding: 0.75rem 1rem; display: flex; flex-direction: column; gap: 0.25rem; }
@@ -162,3 +163,23 @@ tr.inativo td { color: var(--cor-suave); }
   .topo, .barra-demo, .conteudo { padding-left: 1rem; padding-right: 1rem; }
   table { display: block; overflow-x: auto; }
 }
+
+/* Superfícies reorganizadas: sem alterar a estrutura dos formulários de gestão. */
+.entrada, .experiencia-aluno { overflow-wrap: anywhere; min-width: 0; }
+.entrada { max-width: 1180px; padding: 24px; }
+.experiencia-aluno :is(.cartao, article, section, fieldset, label, .grade-cartoes, .indicadores) { min-width: 0; }
+.experiencia-aluno .grade-cartoes { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 24px; }
+.experiencia-aluno .cartao { padding: 24px; }
+.experiencia-aluno .indicadores { grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); }
+.experiencia-aluno :is(input, select, textarea) { min-width: 0; max-width: 100%; }
+.experiencia-aluno :is(pre, code, a, .alternativa) { overflow-wrap: anywhere; white-space: pre-wrap; }
+.experiencia-aluno input, .experiencia-aluno select, .entrada button { border-color: #747e91; }
+.experiencia-aluno .topico.bloqueado { opacity: 1; }
+.usuario { flex-wrap: wrap; min-width: 0; overflow-wrap: anywhere; }
+.topo nav a { overflow-wrap: anywhere; }
+@media (max-width: 640px) {
+  .entrada { padding: 24px 16px; }
+  .experiencia-aluno .cartao { padding: 16px; }
+  .experiencia-aluno .grade-cartoes { gap: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .barra-preenchida { transition: none; } }

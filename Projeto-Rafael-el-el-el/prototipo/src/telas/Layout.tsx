@@ -64,7 +64,7 @@ export function Layout() {
         <Restauracao />
       </div>
       <MensagemErro erro={erro} />
-      <main className="conteudo"><Outlet /></main>
+      <main className={`conteudo ${area === 'aluno' ? 'experiencia-aluno' : ''}`}><Outlet /></main>
     </div>
   );
 }

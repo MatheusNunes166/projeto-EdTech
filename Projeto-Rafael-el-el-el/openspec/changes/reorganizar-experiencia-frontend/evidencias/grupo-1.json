@@ -1,0 +1,42 @@
+{
+  "navegador": "Chrome headless via CDP",
+  "textosLongos": "Nomes acadêmicos estendidos apenas na fixture do navegador isolado",
+  "resultados": [
+    {
+      "rota": "/aluno",
+      "width": 360,
+      "document": 345,
+      "overflow": []
+    },
+    {
+      "rota": "/aluno/catalogo",
+      "width": 360,
+      "document": 345,
+      "overflow": []
+    },
+    {
+      "rota": "/aluno/catalogo/disciplinas/d-alg",
+      "width": 360,
+      "document": 345,
+      "overflow": []
+    },
+    {
+      "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262",
+      "width": 360,
+      "document": 345,
+      "overflow": []
+    },
+    {
+      "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/desempenho",
+      "width": 360,
+      "document": 345,
+      "overflow": []
+    },
+    {
+      "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/topicos/t-var",
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    }
+  ]
+}

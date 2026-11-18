@@ -7,8 +7,10 @@ import { NOME_DIFICULDADE, type Dificuldade } from '../dominio/tipos';
 export function BarraProgresso({ valor, rotulo }: { valor: number; rotulo: string }) {
   const exibido = arredondarExibicao(valor);
   return (
-    <div className="barra" role="progressbar" aria-valuenow={exibido} aria-valuemin={0} aria-valuemax={100} aria-label={rotulo}>
-      <div className="barra-preenchida" style={{ width: `${exibido}%` }} />
+    <div className="progresso">
+      <div className="barra" role="progressbar" aria-valuenow={valor} aria-valuetext={`${exibido}%`} aria-valuemin={0} aria-valuemax={100} aria-label={rotulo}>
+        <div className="barra-preenchida" style={{ width: `${valor}%` }} />
+      </div>
       <span className="barra-texto">{exibido}%</span>
     </div>
   );

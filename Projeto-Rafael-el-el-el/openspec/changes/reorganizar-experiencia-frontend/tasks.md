@@ -4,9 +4,9 @@ Lista de implementação futura, após revisão desta change. Nenhuma tarefa foi
 
 ## 1. Base visual e componentes de apresentação
 
-- [ ] 1.1 Ajustar tokens de fundo claro, superfícies, bordas, espaçamento e foco conforme D1, com classes de layout específicas para entrada e telas do aluno; verificar em navegador cartões e cabeçalho sem sobreposição e sem alteração da estrutura dos formulários dos demais perfis.
-- [ ] 1.2 Reaproveitar ou compor contexto acadêmico e progresso a partir dos componentes atuais, mantendo o valor exato nos dados e o arredondamento somente na apresentação; verificar `BarraProgresso` com nome, valor acessível e porcentagem legível fora de preenchimento com contraste variável.
-- [ ] 1.3 Aplicar limites flexíveis e quebra de textos nas telas do aluno, incluindo catálogo, detalhe, materiais e desempenho; verificar cada uma a 360 px com nomes longos, sem corte ou rolagem horizontal da página ou dos cartões.
+- [x] 1.1 Ajustar tokens de fundo claro, superfícies, bordas, espaçamento e foco conforme D1, com classes de layout específicas para entrada e telas do aluno; verificar em navegador cartões e cabeçalho sem sobreposição e sem alteração da estrutura dos formulários dos demais perfis.
+- [x] 1.2 Reaproveitar ou compor contexto acadêmico e progresso a partir dos componentes atuais, mantendo o valor exato nos dados e o arredondamento somente na apresentação; verificar `BarraProgresso` com nome, valor acessível e porcentagem legível fora de preenchimento com contraste variável.
+- [x] 1.3 Aplicar limites flexíveis e quebra de textos nas telas do aluno, incluindo catálogo, detalhe, materiais e desempenho; verificar cada uma a 360 px com nomes longos, sem corte ou rolagem horizontal da página ou dos cartões.
 
 ## 2. Entrada por função e pessoa
 
