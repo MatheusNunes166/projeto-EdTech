@@ -172,6 +172,16 @@ tr.inativo td { color: var(--cor-suave); }
 .cartao-funcao:hover:not(:disabled) { background: #eef2fd; color: var(--cor-primaria-escura); }
 .estado-turma { font-size: 0.9rem; font-weight: 600; color: var(--cor-suave); margin: 12px 0; }
 .estado-turma.concluida { color: var(--cor-ok); }
+.experiencia-trilha .resumo-trilha { margin-top: 24px; }
+.experiencia-trilha .topicos-estudo { display: grid; gap: 12px; }
+.experiencia-trilha .topicos-estudo li + li { margin-top: 0; }
+.experiencia-trilha .topico { grid-template-columns: minmax(0, 1fr) auto; }
+.experiencia-trilha .topico > strong { grid-column: 1 / -1; }
+.experiencia-trilha .topico > a { grid-column: 1 / -1; justify-self: start; }
+.experiencia-trilha .topico.recomendado { background: #eef2fd; border-color: #747e91; border-left-color: var(--cor-primaria); }
+.selo.recomendado { background: #fff; color: var(--cor-primaria-escura); }
+.resumo-gamificacao { border-top: 1px solid var(--cor-borda); margin-top: 24px; padding-top: 16px; }
+.resumo-gamificacao .conquistas { margin-top: 16px; }
 .experiencia-aluno .grade-cartoes article { display: flex; flex-direction: column; gap: 4px; }
 .experiencia-aluno .grade-cartoes article h2 { margin: 0 0 8px; }
 .experiencia-aluno .grade-cartoes article .acoes { margin-top: auto; padding-top: 16px; }

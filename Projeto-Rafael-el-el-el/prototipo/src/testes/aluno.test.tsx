@@ -176,6 +176,64 @@ describe('Frontend 4 — ação por matrícula, estados e indicadores parciais',
   });
 });
 
+describe('Frontend 5 — orientação da trilha e conquistas sob demanda', () => {
+  it.each([[60, 30, 't-cond'], [30, 30, 't-var']] as const)('recomendação usa proxima.topicoId, conserva ordem com domínios %s/%s', async (primeiro, segundo, recomendado) => {
+    const original = RepositorioApp.prototype.consultarTrilha;
+    const sonda = vi.spyOn(RepositorioApp.prototype, 'consultarTrilha').mockImplementation(async function (this: RepositorioApp, alvo) {
+      const real = await original.call(this, alvo);
+      const topicos = real.dados.trilha.topicos.map((t, i) => ({ ...t, desbloqueado: i < 2, dominado: false, dominio: i === 0 ? primeiro : i === 1 ? segundo : 0 }));
+      return { ...real, dados: { ...real.dados, trilha: { ...real.dados.trilha, topicos }, proxima: { ...real.dados.proxima!, topicoId: recomendado, topicoTitulo: topicos.find((t) => t.topicoId === recomendado)!.titulo } } };
+    });
+    try {
+      const a = await renderizarApp(T_ALG_A, 'u-diego');
+      const lista = await screen.findByRole('list', { name: 'Tópicos da disciplina' });
+      const itens = within(lista).getAllByRole('listitem');
+      expect(itens.map((e) => within(e).getByText(/Variáveis|Condicionais|Laços/, { selector: 'strong' }).textContent)).toEqual(['Variáveis', 'Condicionais', 'Laços de repetição']);
+      const tag = within(lista).getByText('Próximo recomendado');
+      expect(tag.closest('li')).toHaveTextContent(recomendado === 't-var' ? 'Variáveis' : 'Condicionais');
+      expect(within(itens[2]).queryByRole('link', { name: 'Materiais' })).toBeNull();
+      expect(within(itens[0]).getByRole('link', { name: 'Materiais' })).toBeInTheDocument();
+      expect(a.dados().respostas.filter((r) => r.matriculaId === 'm-diego-alg-a-262')).toEqual([]);
+    } finally { sonda.mockRestore(); }
+  });
+
+  it('ausência de próxima atividade sem conclusão não inventa recomendação ou Estudar', async () => {
+    const original = RepositorioApp.prototype.consultarTrilha;
+    const sonda = vi.spyOn(RepositorioApp.prototype, 'consultarTrilha').mockImplementation(async function (this: RepositorioApp, alvo) {
+      const real = await original.call(this, alvo); return { ...real, dados: { ...real.dados, proxima: null } };
+    });
+    try {
+      await renderizarApp(T_ALG_A, 'u-diego');
+      expect(await screen.findByText('Não há questões disponíveis no momento.')).toBeInTheDocument();
+      expect(screen.queryByText('Próximo recomendado')).toBeNull();
+      expect(screen.queryByRole('link', { name: 'Estudar' })).toBeNull();
+      expect(screen.queryByText(/Trilha concluída nesta turma/)).toBeNull();
+    } finally { sonda.mockRestore(); }
+  });
+
+  it.each(['u-diego', 'u-elisa'])('conquistas de %s começam recolhidas, exibem dados originais e expandir não grava', async (id) => {
+    const a = await renderizarApp(T_ALG_A, id);
+    const resumo = await screen.findByText(/Conquistas \(/, { selector: 'summary' });
+    const detalhes = resumo.closest('details')!;
+    expect(detalhes).not.toHaveAttribute('open');
+    const antes = JSON.stringify(a.dados());
+    await a.usuario.click(resumo);
+    expect(detalhes).toHaveAttribute('open');
+    if (id === 'u-diego') {
+      expect(resumo).toHaveTextContent('Conquistas (0)');
+      expect(within(detalhes).getByText('Nenhuma conquista ainda.')).toBeVisible();
+    } else {
+      expect(within(detalhes).getByText(/Sequência de 7 dias/)).toBeVisible();
+      expect(detalhes.textContent).toMatch(/\d{2}\/\d{2}\/2026/);
+      expect(screen.queryByText('Próximo recomendado')).toBeNull();
+      expect(screen.queryByRole('link', { name: 'Estudar' })).toBeNull();
+    }
+    await a.usuario.click(resumo);
+    expect(detalhes).not.toHaveAttribute('open');
+    expect(JSON.stringify(a.dados())).toBe(antes);
+  });
+});
+
 /** Responde pela interface usando o gabarito do armazenamento (a tela nunca o mostra antes). */
 async function responder(usuario: UserEvent, dados: () => DadosAcademicos, certo: boolean) {
   const enunciado = (await screen.findByRole('heading', { level: 2, name: (n) => n.length > 0 })).textContent!;
@@ -247,6 +305,7 @@ describe('7.10 — [AA] Inicialização e retomada, Feedback imediato, Revisão 
     expect(JSON.stringify(respostasAntigas())).toBe(antes);
     await usuario.click(screen.getByRole('link', { name: '← Voltar à trilha' }));
     const nova = await screen.findByRole('region', { name: 'Gamificação da turma A de 2027.1' });
+    await usuario.click(within(nova).getByText(/Conquistas \(/, { selector: 'summary' }));
     expect(nova).toHaveTextContent('10 XP');
     expect(nova).toHaveTextContent('Primeira questão');
     await usuario.click(screen.getByRole('link', { name: '← Minhas turmas' }));
@@ -266,9 +325,10 @@ describe('7.10 — [AA] Inicialização e retomada, Feedback imediato, Revisão 
   });
 
   it('a retomada preserva o estado: o progresso gravado reaparece ao reabrir a trilha', async () => {
-    await renderizarApp(T_ALG_A, 'u-elisa');
+    const { usuario } = await renderizarApp(T_ALG_A, 'u-elisa');
     const barra = await screen.findByRole('progressbar');
     expect(barra).toHaveAttribute('aria-valuenow', '100');
+    await usuario.click(screen.getByText(/Conquistas \(/, { selector: 'summary' }));
     expect(screen.getByText(/Sequência de 7 dias/)).toBeInTheDocument();
   });
 });

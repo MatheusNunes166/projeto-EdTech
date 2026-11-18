@@ -33,10 +33,10 @@ Lista de implementação futura, após revisão desta change. Nenhuma tarefa foi
 
 ## 5. Trilha e gamificação sob demanda
 
-- [ ] 5.1 Reorganizar `Trilha.tsx` com progresso, ação principal e tópicos ordenados com domínio e estados textuais; verificar sequência cadastrada, materiais somente dos tópicos liberados e Desempenho da mesma turma acessível.
-- [ ] 5.2 Destacar Próximo recomendado usando `proxima.topicoId`, sem reproduzir o motor ou reordenar a lista; verificar menor domínio, empate por ordem, trilha concluída sem atividade e próxima atividade ausente sem falsa conclusão, usando fixtures sem alterar o seed.
-- [ ] 5.3 Exibir XP e sequência compactos e Conquistas (N) em detalhes inicialmente recolhidos; verificar nomes e datas ao expandir, mensagem sem conquistas e independência dos indicadores entre períodos, sem gravações provocadas pela expansão.
-- [ ] 5.4 Atualizar os testes de trilha em `src/testes/aluno.test.tsx` para a recomendação, conclusão, materiais e conquistas recolhidas; verificar o comando direcionado desse arquivo com preservação das asserções de XP, datas, retomada e bloqueios de tópico.
+- [x] 5.1 Reorganizar `Trilha.tsx` com progresso, ação principal e tópicos ordenados com domínio e estados textuais; verificar sequência cadastrada, materiais somente dos tópicos liberados e Desempenho da mesma turma acessível.
+- [x] 5.2 Destacar Próximo recomendado usando `proxima.topicoId`, sem reproduzir o motor ou reordenar a lista; verificar menor domínio, empate por ordem, trilha concluída sem atividade e próxima atividade ausente sem falsa conclusão, usando fixtures sem alterar o seed.
+- [x] 5.3 Exibir XP e sequência compactos e Conquistas (N) em detalhes inicialmente recolhidos; verificar nomes e datas ao expandir, mensagem sem conquistas e independência dos indicadores entre períodos, sem gravações provocadas pela expansão.
+- [x] 5.4 Atualizar os testes de trilha em `src/testes/aluno.test.tsx` para a recomendação, conclusão, materiais e conquistas recolhidas; verificar o comando direcionado desse arquivo com preservação das asserções de XP, datas, retomada e bloqueios de tópico.
 
 ## 6. Sessão de estudo e interação acessível
 

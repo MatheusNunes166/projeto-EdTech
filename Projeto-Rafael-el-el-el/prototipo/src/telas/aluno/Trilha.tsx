@@ -15,33 +15,40 @@ function TrilhaDaMatricula({ alvo }: { alvo: AlvoMatricula }) {
   const base = caminhoTurma(alvo);
   return (
     <Consulta estado={estado}>
-      {({ contexto, trilha, gamificacao }) => (
-        <>
+      {({ contexto, trilha, gamificacao, proxima }) => (
+        <div className="experiencia-trilha">
           <p><Link to="/aluno">← Minhas turmas</Link></p>
           <h1>{contexto.disciplina.nome}</h1>
           <p className="meta">{contexto.graduacao.nome} · Turma {contexto.turma.codigo} · {contexto.periodoLetivo.nome}</p>
-          <BarraProgresso valor={trilha.progresso} rotulo={`Progresso em ${contexto.disciplina.nome} turma ${contexto.turma.codigo}`} />
-          {trilha.concluido && <p className="destaque">Trilha concluída nesta turma (isto não representa aprovação acadêmica).</p>}
-          <section className="indicadores" aria-label={`Gamificação da turma ${contexto.turma.codigo} de ${contexto.periodoLetivo.nome}`}>
-            <p><strong>{gamificacao.xp}</strong> XP · Sequência: <strong>{gamificacao.sequenciaDias}</strong> dia(s)</p>
-            {gamificacao.conquistas.length === 0 ? <p className="meta">Nenhuma conquista ainda.</p> : (
-              <ul className="conquistas">{gamificacao.conquistas.map((c) => <li key={c.id}>🏆 {c.nome} <small>({formatarData(c.data)})</small></li>)}</ul>
-            )}
+          <section className="cartao resumo-trilha" aria-label="Progresso da trilha">
+            <BarraProgresso valor={trilha.progresso} rotulo={`Progresso em ${contexto.disciplina.nome} turma ${contexto.turma.codigo}`} />
+            {trilha.concluido ? <p className="destaque">Trilha concluída nesta turma (isto não representa aprovação acadêmica).</p>
+              : proxima ? <p>Seu próximo passo: <strong>{proxima.topicoTitulo}</strong>.</p>
+                : <p role="status">Não há questões disponíveis no momento.</p>}
+            <div className="acoes">
+              {!trilha.concluido && proxima && <Link className="botao" to={`${base}/sessao`}>Estudar</Link>}
+              <Link className="botao secundario" to={`${base}/desempenho`}>Desempenho</Link>
+            </div>
           </section>
-          <div className="acoes">
-            {!trilha.concluido && <Link className="botao" to={`${base}/sessao`}>Estudar</Link>}
-            <Link className="botao secundario" to={`${base}/desempenho`}>Desempenho</Link>
-          </div>
           <h2>Tópicos</h2>
-          <ol className="lista-topicos">
+          <ol className="lista-limpa trilha topicos-estudo" aria-label="Tópicos da disciplina">
             {trilha.topicos.map((t) => (
-              <li key={t.topicoId}>
-                <strong>{t.titulo}</strong> — {t.dominado ? 'Dominado' : t.desbloqueado ? 'Desbloqueado' : 'Bloqueado'} · domínio {t.dominio}
-                {t.desbloqueado && <> · <Link to={`${base}/topicos/${t.topicoId}`}>Materiais</Link></>}
+              <li key={t.topicoId} className={`topico ${t.dominado ? 'dominado' : t.desbloqueado ? 'desbloqueado' : 'bloqueado'} ${!trilha.concluido && proxima?.topicoId === t.topicoId ? 'recomendado' : ''}`}>
+                <strong>{t.titulo}</strong>
+                <span>{t.dominado ? 'Dominado' : t.desbloqueado ? 'Desbloqueado' : 'Bloqueado'} · domínio {t.dominio}</span>
+                {!trilha.concluido && proxima?.topicoId === t.topicoId && <span className="selo recomendado">Próximo recomendado</span>}
+                {t.desbloqueado && <Link to={`${base}/topicos/${t.topicoId}`}>Materiais</Link>}
               </li>
             ))}
           </ol>
-        </>
+          <section className="resumo-gamificacao" aria-label={`Gamificação da turma ${contexto.turma.codigo} de ${contexto.periodoLetivo.nome}`}>
+            <p><strong>{gamificacao.xp}</strong> XP · Sequência: <strong>{gamificacao.sequenciaDias}</strong> dia(s)</p>
+            <details><summary>Conquistas ({gamificacao.conquistas.length})</summary>
+              {gamificacao.conquistas.length === 0 ? <p className="meta">Nenhuma conquista ainda.</p>
+                : <ul className="conquistas lista-limpa">{gamificacao.conquistas.map((c) => <li key={c.id}>🏆 {c.nome} <small>({formatarData(c.data)})</small></li>)}</ul>}
+            </details>
+          </section>
+        </div>
       )}
     </Consulta>
   );

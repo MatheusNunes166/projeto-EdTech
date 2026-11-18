@@ -1,0 +1,24 @@
+{
+  "estados": [
+    {
+      "width": 1280,
+      "document": 1265,
+      "overflow": []
+    },
+    {
+      "width": 360,
+      "document": 345,
+      "overflow": []
+    }
+  ],
+  "contexto": {
+    "ordem": [
+      "Variáveis",
+      "Condicionais",
+      "Laços de repetição"
+    ],
+    "recomendado": "Condicionais\nDesbloqueado · domínio 10\nPróximo recomendado\nMateriais",
+    "conquistas": "160 XP · Sequência: 0 dia(s)\n\nConquistas (2)\n🏆 Primeira questão (14/11/2026)\n🏆 Primeiro tópico dominado (15/11/2026)"
+  },
+  "dadosPreservados": true
+}
