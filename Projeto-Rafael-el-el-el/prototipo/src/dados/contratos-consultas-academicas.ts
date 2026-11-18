@@ -110,7 +110,7 @@ export interface IndicadoresDocenciaTurma {
   medias: MediasTurma;
 }
 export interface IndicadoresCoordenacao {
-  turmas: { turmaId: string; contexto: ContextoTurma; quantidadeMatriculados: number; medias: MediasTurma }[];
+  turmas: { turmaId: string; contexto: ContextoTurma; quantidadeMatriculados: number; medias: MediasTurma; topicos: { topicoId: string; titulo: string }[] }[];
 }
 export interface IndicadoresResponsavel {
   alunoId: string;

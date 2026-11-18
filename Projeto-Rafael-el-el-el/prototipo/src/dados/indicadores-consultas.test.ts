@@ -85,6 +85,9 @@ describe('5.9 — [AC] Painéis por função; [PA] Acesso restrito por função 
       const a = ambienteEstudo((d) => { d.vinculosCoordenador.push({ coordenadorId: 'u-carla', graduacaoId: 'g-si' }); });
       await a.repo.entrar('u-carla');
       const todas = (await a.repo.consultarIndicadoresCoordenacao()).dados.turmas;
+      const oferta = todas.find((t) => t.turmaId === 't-26')!;
+      expect(oferta.topicos.length).toBeGreaterThan(0);
+      expect(oferta.topicos.every((t) => typeof t.titulo === 'string' && Object.keys(t).length === 2)).toBe(true);
       expect(todas.map((t) => t.turmaId).sort()).toEqual(['t-27', 't-26', 't-b', 't-dir'].sort());
       expect(todas.find((t) => t.turmaId === 't-dir')!.medias).toEqual({ situacao: 'sem-dados' });
       expect(Object.keys((await a.repo.consultarIndicadoresCoordenacao()).dados)).toEqual(['turmas']); // sem média global

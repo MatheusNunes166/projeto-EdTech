@@ -31,3 +31,7 @@ Baseline em `8e3a65c` com 662 testes em 42 arquivos e build aprovado. Node 26 co
 ## 8
 
 68 testes de Aluno, shell e integração e build aprovados. As sete rotas foram abertas em 1280 px e 360 px. A jornada por teclado passou por material, trilha, sessão e desempenho. O redimensionamento conservou seleção e feedback, a mudança de questão focou o enunciado e somente o envio registrou uma resposta.
+
+## 9
+
+79 testes direcionados e build aprovados. A projeção foi conferida separadamente com 15 testes após acrescentar a verificação dos títulos. A jornada em Chrome selecionou os quatro critérios, abriu os domínios, atribuiu uma docente e retornou à mesma oferta em 1280 px e 360 px. As respostas permaneceram idênticas. Os casos de 40%, precisão, turma vazia e filtro sem resultado passaram.

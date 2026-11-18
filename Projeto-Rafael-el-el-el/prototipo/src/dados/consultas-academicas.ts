@@ -302,7 +302,11 @@ export class ConsultasAcademicas extends ComandosConteudo {
         .filter((t) => noEscopo(t) && podeExecutar(dados, autor.id, { acao: 'consultar-painel-coordenacao', recurso: { tipo: 'turma', turmaId: t.id } }))
         .map((t) => {
           const contextos = contextosDaTurma(dados, t.id);
-          return { turmaId: t.id, contexto: contextoTurma(dados, t.id), quantidadeMatriculados: contextos.length, medias: calcularMediasTurma(contextos) };
+          return {
+            turmaId: t.id, contexto: contextoTurma(dados, t.id), quantidadeMatriculados: contextos.length,
+            medias: calcularMediasTurma(contextos),
+            topicos: achar(dados.disciplinas, t.disciplinaId).topicos.map((topico) => ({ topicoId: topico.id, titulo: topico.titulo })),
+          };
         }) } };
     });
   }

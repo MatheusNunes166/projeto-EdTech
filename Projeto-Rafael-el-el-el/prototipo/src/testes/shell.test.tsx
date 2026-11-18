@@ -186,7 +186,7 @@ describe('7.2 — [PA] Funções de usuário suportadas, Permissões cumulativas
     expect(within(areas).getAllByRole('link').map((l) => l.textContent)).toEqual(['Área do Professor', 'Área da Coordenação']);
     await usuario.click(within(areas).getByRole('link', { name: 'Área da Coordenação' }));
     expect(await screen.findByRole('heading', { name: 'Painel da coordenação' })).toBeInTheDocument();
-    const linhas = await screen.findAllByRole('row');
+    const linhas = within(await screen.findByRole('list', { name: 'Turmas e indicadores' })).getAllByRole('listitem');
     expect(linhas.map((l) => l.textContent).join('|')).toContain('Sistemas de Informação');
     expect(linhas.map((l) => l.textContent).join('|')).not.toContain('Licenciatura');
   });

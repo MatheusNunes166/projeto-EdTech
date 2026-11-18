@@ -1,3 +1,4 @@
+import { selecaoDaOferta } from './selecao';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useComando, useConsulta } from '../../app/contexto';
@@ -50,7 +51,7 @@ function EdicaoDaTurma({ base, oferta, revisao }: { base: Base; oferta: Oferta; 
   const abrir = (tipo: typeof edicao) => { limpar(); setEdicao(tipo); setPessoa(''); setNomePessoa(''); if (tipo) setAviso(''); };
   const matricular = edicao === 'matricula';
   return <>
-    <p><Link to={base}>Voltar às turmas</Link></p>
+    <div className="acoes"><Link to={base}>Voltar às turmas</Link>{base === "/coordenacao/gestao" && <Link to={"/coordenacao?" + selecaoDaOferta(oferta)}>Voltar aos indicadores</Link>}</div>
     <h1>{nomeOferta(oferta)}</h1>
     <p className="meta">{contextoOferta(oferta)}</p>
     {aviso && <p role="status">{aviso}</p>}

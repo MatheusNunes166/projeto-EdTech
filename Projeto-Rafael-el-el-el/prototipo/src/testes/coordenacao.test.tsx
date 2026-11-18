@@ -99,16 +99,21 @@ function cenario80e0(d: DadosAcademicos) {
 
 describe('7.14 — [AC] Painel do coordenador, Progresso médio por turma, Domínio médio por tópico da turma, Precisão e exibição das médias', () => {
   it('uma linha por turma, com progresso médio 80 e 0 → 40% e domínio médio dos tópicos', async () => {
-    await renderizarApp('/coordenacao', 'u-lucia', cenario80e0);
-    const linha = await screen.findByRole('row', { name: /Cinco Tópicos/ });
+    const { usuario } = await renderizarApp('/coordenacao', 'u-lucia', cenario80e0);
+    const linha = await screen.findByRole('listitem', { name: /Cinco Tópicos/ });
     expect(linha).toHaveTextContent('40%');
     expect(linha).toHaveTextContent('2'); // matrículas
-    expect(within(linha).getByText(/45 · 45 · 45 · 45 · 0/)).toBeInTheDocument(); // (90+0)/2 nos quatro dominados
+    await usuario.click(within(linha).getByText('Domínio por tópico'));
+    for (const topico of ['a', 'b', 'c', 'd', 'e']) {
+      const rotulo = within(linha).getByText('Tópico ' + topico);
+      expect(rotulo.parentElement).toHaveTextContent(topico === 'e' ? '0' : '45');
+      expect(rotulo).toBeVisible();
+    }
   });
 
   it('turma sem alunos mostra Sem dados e nenhum indicador inválido', async () => {
     await renderizarApp('/coordenacao', 'u-lucia');
-    const linha = await screen.findByRole('row', { name: /Matemática Básica.*2027\.1/ });
+    const linha = await screen.findByRole('listitem', { name: /Matemática Básica.*2027\.1/ });
     expect(linha).toHaveTextContent('Nenhum aluno matriculado');
     expect(within(linha).getAllByText('Sem dados')).toHaveLength(2);
     expect(linha.textContent).not.toMatch(/NaN|Infinity/);
@@ -119,26 +124,49 @@ describe('7.14 — [AC] Painel do coordenador, Progresso médio por turma, Domí
     const seed = criarSeedAcademico();
     const esperado = exibirMedias(calcularMediasTurma(contextosDaTurma(seed, 't-alg-a-262')));
     expect(esperado.situacao).toBe('calculadas');
-    const linha = await screen.findByRole('row', { name: /Algoritmos.*A.*2026\.2/ });
+    const linha = await screen.findByRole('listitem', { name: /Algoritmos.*A.*2026\.2/ });
     if (esperado.situacao === 'calculadas') expect(linha).toHaveTextContent(`${esperado.progressoMedio}%`);
     expect(linha).toHaveTextContent('3'); // Ana, Elisa e Diego
   });
 
   it('filtros só selecionam linhas por turma: nenhuma média global nem respostas detalhadas', async () => {
     const { usuario, container } = await renderizarApp('/coordenacao', 'u-lucia');
-    await screen.findByRole('row', { name: /Geometria Plana/ });
+    await screen.findByRole('listitem', { name: /Geometria Plana/ });
     expect(container.textContent).not.toMatch(/média geral|média global|média combinada/i);
     for (const proibido of ['Ana Souza', 'Bruno Lima', 'Quanto é', 'conteudoOriginal']) expect(container.textContent).not.toContain(proibido);
     await usuario.selectOptions(screen.getByLabelText('Período'), '2027.1');
-    await waitFor(() => expect(screen.queryByRole('row', { name: /Geometria Plana/ })).toBeNull());
-    expect(screen.getAllByRole('row')).toHaveLength(2); // cabeçalho + MAT 2027.1
+    await waitFor(() => expect(screen.queryByRole('listitem', { name: /Geometria Plana/ })).toBeNull());
+    expect(within(screen.getByRole('list', { name: 'Turmas e indicadores' })).getAllByRole('listitem')).toHaveLength(1);
+    await usuario.selectOptions(screen.getByLabelText('Disciplina'), 'Geometria Plana');
+    expect(await screen.findByText('Nenhuma turma encontrada para os filtros.')).toBeVisible();
+    expect(screen.queryByText('Sem dados')).toBeNull();
   });
 
   it('dois papéis na mesma pessoa: o painel de coordenação traz só os cursos coordenados e dá acesso à gestão', async () => {
     const { usuario } = await renderizarApp('/coordenacao', 'u-carla');
-    expect((await screen.findAllByRole('row', { name: /Algoritmos/ })).length).toBeGreaterThan(0);
-    expect(screen.queryByRole('row', { name: /Matemática Básica/ })).toBeNull(); // leciona, mas não coordena
-    await usuario.click(screen.getAllByRole('link', { name: 'Gestão acadêmica' })[0]);
-    expect(await screen.findByRole('heading', { name: 'Gestão acadêmica' })).toBeInTheDocument();
+    expect((await screen.findAllByRole('listitem', { name: /Algoritmos/ })).length).toBeGreaterThan(0);
+    expect(screen.queryByRole('listitem', { name: /Matemática Básica/ })).toBeNull(); // leciona, mas não coordena
+    await usuario.selectOptions(screen.getByLabelText('Graduação'), 'Sistemas de Informação');
+    await usuario.selectOptions(screen.getByLabelText('Disciplina'), 'Algoritmos');
+    await usuario.selectOptions(screen.getByLabelText('Período'), '2026.2');
+    await usuario.selectOptions(screen.getByLabelText('Turma'), 't-alg-a-262');
+    await usuario.click(screen.getByRole('link', { name: 'Gerir Algoritmos · Turma A · 2026.2' }));
+    expect(await screen.findByRole('heading', { name: 'Algoritmos — Turma A' })).toBeVisible();
+    await usuario.click(screen.getByRole('link', { name: 'Voltar aos indicadores' }));
+    expect(await screen.findByLabelText('Turma')).toHaveValue('t-alg-a-262');
+    expect(screen.getByLabelText('Disciplina')).toHaveValue('d-alg');
   });
+});
+
+it('remove seleção incompatível ao trocar a graduação e mantém escopo autorizado', async () => {
+  const { usuario, dados } = await renderizarApp('/coordenacao?graduacao=g-si&disciplina=d-alg&periodo=p-2026-2&turma=t-alg-a-262', 'u-carla', (d) => {
+    d.vinculosCoordenador.push({ coordenadorId: 'u-carla', graduacaoId: 'g-lm' });
+  });
+  const antes = dados();
+  await usuario.selectOptions(await screen.findByLabelText('Graduação'), 'Licenciatura em Matemática');
+  expect(screen.getByLabelText('Disciplina')).toHaveValue('');
+  expect(screen.getByLabelText('Turma')).toHaveValue('');
+  expect(screen.queryByRole('listitem', { name: /Algoritmos/ })).toBeNull();
+  expect(screen.getByRole('listitem', { name: /Matemática Básica/ })).toBeVisible();
+  expect(dados()).toEqual(antes);
 });
