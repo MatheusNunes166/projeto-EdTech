@@ -94,6 +94,10 @@ A trilha mantém a ordem dos tópicos e destaca o **Próximo recomendado** infor
 
 As [evidências da reorganização](../openspec/changes/reorganizar-experiencia-frontend/evidencias/README.md) registram testes, capturas em três larguras, contraste e preservação dos dados locais.
 
+## Acompanhamento pelo Responsável
+
+O painel mostra somente os alunos vinculados à conta e separa suas ofertas por turma e período. Progresso, sequência e última atividade aparecem por oferta. **Sem atividade** indica uma oferta ainda sem respostas. Em **Detalhes da oferta**, consulte a graduação.
+
 ## Dados locais, aviso de perda e restauração
 
 O documento acadêmico usa o namespace `trilha-adaptativa:academico:*`. A versão anterior do protótipo usava `trilha-adaptativa:dados` e `trilha-adaptativa:sessao`.

@@ -340,3 +340,8 @@ button[aria-pressed='true'].secundario { color: var(--cor-primaria-escura); back
 .filtros-coordenacao { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 @media (max-width: 899px) { .filtros-coordenacao { grid-template-columns: repeat(2,minmax(0,1fr)); } }
 @media (max-width: 639px) { .filtros-coordenacao { grid-template-columns: minmax(0,1fr); } }
+
+.painel-responsavel { display: grid; gap: var(--e6); }
+.aluno-acompanhado h2 { margin-top: 0; }
+.aluno-acompanhado .registro .progresso { max-inline-size: 32rem; margin-block: var(--e2); }
+.aluno-acompanhado .registro details { margin-top: var(--e2); }

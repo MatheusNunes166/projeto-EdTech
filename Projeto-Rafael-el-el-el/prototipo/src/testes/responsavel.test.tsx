@@ -42,3 +42,20 @@ describe('7.15 — [AC] Painel do responsável; [PA] Vínculos entre responsáve
     expect(rotaAtual()).toBe('/aluno');
   });
 });
+
+it('abre contexto de uma oferta sem mudar dados e reage à revogação do vínculo', async () => {
+  const { usuario, dados, outraAba, avisarOutraAba } = await renderizarApp('/responsavel', 'u-helena');
+  const oferta = await screen.findByLabelText('Ana Souza — Algoritmos turma A 2027.1');
+  const antes = dados();
+  await usuario.click(within(oferta).getByText('Detalhes da oferta'));
+  expect(within(oferta).getByText('Graduação: Sistemas de Informação')).toBeVisible();
+  expect(oferta).toHaveTextContent('Última atividade: Sem atividade');
+  expect(dados()).toEqual(antes);
+  await outraAba('u-renata').definirVinculoResponsavel({ responsavelId: 'u-helena', alunoId: 'u-ana' }, false, antes.revisao);
+  const revogado = dados();
+  avisarOutraAba();
+  expect(await screen.findByText('Nenhum aluno vinculado.')).toBeVisible();
+  expect(screen.queryByText('Ana Souza')).toBeNull();
+  expect(dados()).toEqual(revogado);
+  expect(revogado.respostas).toEqual(antes.respostas);
+});

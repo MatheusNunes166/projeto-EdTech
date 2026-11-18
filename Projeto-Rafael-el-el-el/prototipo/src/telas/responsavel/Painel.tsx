@@ -1,4 +1,5 @@
 import { useConsulta } from '../../app/contexto';
+import { ListaRegistros, Registro } from '../../componentes/Gestao';
 import { BarraProgresso, Consulta, Vazio } from '../../componentes/comuns';
 import { formatarData } from '../../dominio/datas';
 
@@ -9,7 +10,9 @@ export function PainelResponsavel() {
     <>
       <h1>Painel do responsável</h1>
       <Consulta estado={alunos}>
-        {(lista) => lista.length === 0 ? <Vazio>Nenhum aluno vinculado.</Vazio> : lista.map((a) => <AlunoVinculado key={a.id} id={a.id} nome={a.nome} />)}
+        {(lista) => lista.length === 0 ? <Vazio>Nenhum aluno vinculado.</Vazio> : (
+          <div className="painel-responsavel">{lista.map((a) => <AlunoVinculado key={a.id} id={a.id} nome={a.nome} />)}</div>
+        )}
       </Consulta>
     </>
   );
@@ -18,20 +21,21 @@ export function PainelResponsavel() {
 function AlunoVinculado({ id, nome }: { id: string; nome: string }) {
   const estado = useConsulta((r) => r.consultarIndicadoresResponsavel(id), [id]);
   return (
-    <section className="cartao" aria-label={`Aluno ${nome}`}>
+    <section className="aluno-acompanhado" aria-label={`Aluno ${nome}`}>
       <h2>{nome}</h2>
       <Consulta estado={estado}>
         {({ turmas }) => turmas.length === 0 ? <Vazio>Sem turmas.</Vazio> : (
-          <ul className="lista-limpa">
+          <ListaRegistros rotulo={"Ofertas de " + nome}>
             {turmas.map((t) => (
-              <li key={t.turmaId} aria-label={`${nome} — ${t.contexto.disciplina.nome} turma ${t.contexto.turma.codigo} ${t.contexto.periodoLetivo.nome}`}>
+              <Registro key={t.turmaId} rotulo={`${nome} — ${t.contexto.disciplina.nome} turma ${t.contexto.turma.codigo} ${t.contexto.periodoLetivo.nome}`}>
                 <strong>{t.contexto.disciplina.nome}</strong>
-                <p className="meta">{t.contexto.graduacao.nome} · Turma {t.contexto.turma.codigo} · {t.contexto.periodoLetivo.nome}</p>
+                <p className="meta">Turma {t.contexto.turma.codigo} · {t.contexto.periodoLetivo.nome}</p>
                 <BarraProgresso valor={t.progresso} rotulo={`Progresso de ${nome} em ${t.contexto.disciplina.nome} ${t.contexto.periodoLetivo.nome}`} />
                 <p>Sequência: {t.sequenciaDias} dia(s) · Última atividade: {t.ultimaAtividade ? formatarData(t.ultimaAtividade) : 'Sem atividade'}</p>
-              </li>
+                <details><summary>Detalhes da oferta</summary><p>Graduação: {t.contexto.graduacao.nome}</p></details>
+              </Registro>
             ))}
-          </ul>
+          </ListaRegistros>
         )}
       </Consulta>
     </section>

@@ -35,3 +35,7 @@ Baseline em `8e3a65c` com 662 testes em 42 arquivos e build aprovado. Node 26 co
 ## 9
 
 79 testes direcionados e build aprovados. A projeção foi conferida separadamente com 15 testes após acrescentar a verificação dos títulos. A jornada em Chrome selecionou os quatro critérios, abriu os domínios, atribuiu uma docente e retornou à mesma oferta em 1280 px e 360 px. As respostas permaneceram idênticas. Os casos de 40%, precisão, turma vazia e filtro sem resultado passaram.
+
+## 10
+
+22 testes de Responsável, indicadores e integração e build aprovados. Chrome percorreu entrada, as ofertas de Ana nos dois períodos, o expansor e a saída por teclado em 1280 px e 360 px. Documento acadêmico idêntico. O teste de revogação removeu a oferta da tela na próxima consulta e confirmou histórico intacto.
