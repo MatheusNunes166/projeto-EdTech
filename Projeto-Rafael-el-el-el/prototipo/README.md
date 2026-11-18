@@ -15,6 +15,8 @@ npm run build    # verificação de tipos e build de produção
 
 A interface usa fundo neutro, superfícies claras, azul para ações principais e rótulos textuais nos estados. A navegação por teclado oferece foco visível e Pular para conteúdo. As telas são conferidas a 1280 px e 360 px em um perfil isolado do navegador.
 
+Listas de gestão usam ações na linha do registro. As confirmações abrem com foco em **Cancelar**. Escape cancela e devolve o foco à ação original. Erros recuperáveis indicam como tentar novamente e mantêm os campos editados.
+
 ## Pessoas de demonstração
 
 Cada pessoa tem funções explícitas e cumulativas (não há “perfil principal”). Vínculos não concedem funções.

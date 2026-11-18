@@ -158,7 +158,7 @@ export function useUsuario(): Usuario {
 export type EstadoConsulta<T> =
   | { situacao: 'carregando' }
   | { situacao: 'ok'; dados: T; revisao: number }
-  | { situacao: 'erro'; erro: ErroComando };
+  | { situacao: 'erro'; erro: ErroComando; tentarNovamente?: () => void };
 
 /**
  * Consulta autorizada de uma tela. Ao trocar de pessoa, mudar os parâmetros ou receber um evento externo,
@@ -171,6 +171,7 @@ export function useConsulta<T>(
   const { repo, usuario, versao, epoca } = useApp();
   const chave = JSON.stringify([usuario?.id ?? null, epoca, ...deps]);
   const [resultado, setResultado] = useState<{ chave: string; estado: EstadoConsulta<T> } | null>(null);
+  const [tentativa, setTentativa] = useState(0);
   const ref = useRef(consultar);
   ref.current = consultar;
   useEffect(() => {
@@ -180,8 +181,12 @@ export function useConsulta<T>(
       (e) => { if (ativo) setResultado({ chave, estado: { situacao: 'erro', erro: normalizarErro(e) } }); },
     );
     return () => { ativo = false; };
-  }, [repo, chave, versao]);
-  return resultado && resultado.chave === chave ? resultado.estado : { situacao: 'carregando' };
+  }, [repo, chave, versao, tentativa]);
+  if (!resultado || resultado.chave !== chave) return { situacao: 'carregando' };
+  if (resultado.estado.situacao !== 'erro' || ['ACESSO_NEGADO', 'SEM_SESSAO', 'SESSAO_INVALIDA'].includes(resultado.estado.erro.codigo)) {
+    return resultado.estado;
+  }
+  return { ...resultado.estado, tentarNovamente: () => { setResultado(null); setTentativa((n) => n + 1); } };
 }
 
 /** Atalho para comandos de formulário: guarda o último erro (ou null) e nunca sinaliza sucesso em falha. */

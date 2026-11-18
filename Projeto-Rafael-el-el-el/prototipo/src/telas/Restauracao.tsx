@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
+import { Confirmacao } from '../componentes/Confirmacao';
 import { Expansor } from '../componentes/Expansor';
 import { useNavigate } from 'react-router-dom';
 import { normalizarErro, useApp } from '../app/contexto';
@@ -13,9 +14,6 @@ export function Restauracao({ rotulo = 'Restaurar dados de demonstração' }: { 
   const [aberto, setAberto] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [ocupado, setOcupado] = useState(false);
-  const acionador = useRef<HTMLButtonElement>(null);
-  const titulo = useRef<HTMLHeadingElement>(null);
-  useEffect(() => { if (aberto) titulo.current?.focus(); }, [aberto]);
 
   const confirmar = async () => {
     if (ocupado) return;
@@ -31,19 +29,13 @@ export function Restauracao({ rotulo = 'Restaurar dados de demonstração' }: { 
 
   return (
     <>
-      <button ref={acionador} className="secundario" onClick={() => setAberto(true)}>{rotulo}</button>
+      <button className="secundario" onClick={() => setAberto(true)}>{rotulo}</button>
       {aberto && (
-        <div role="alertdialog" aria-labelledby="rest-titulo" aria-describedby="rest-texto" className="cartao">
-          <h2 id="rest-titulo" tabIndex={-1} ref={titulo}>Restaurar a demonstração?</h2>
-          <p id="rest-texto">
-            As alterações atuais e o histórico fictício <strong>serão apagados</strong> e a demonstração inicial será recuperada; a sessão atual será encerrada.
-          </p>
+        <Confirmacao titulo="Restaurar a demonstração?" acao="Confirmar restauração" ocupado={ocupado}
+          aoConfirmar={confirmar} aoCancelar={() => { setAberto(false); setErro(null); }}>
+          <p>As alterações atuais e o histórico fictício <strong>serão apagados</strong> e a demonstração inicial será recuperada; a sessão atual será encerrada.</p>
           {erro && <p role="alert" className="alerta">Não foi possível restaurar: {erro}</p>}
-          <div className="acoes">
-            <button disabled={ocupado} onClick={confirmar}>Confirmar restauração</button>
-            <button disabled={ocupado} className="secundario" onClick={() => { setAberto(false); setErro(null); acionador.current?.focus(); }}>Cancelar</button>
-          </div>
-        </div>
+        </Confirmacao>
       )}
     </>
   );

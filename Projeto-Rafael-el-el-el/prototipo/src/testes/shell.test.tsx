@@ -305,7 +305,7 @@ describe('7.3 — [OA] Demonstração fictícia e restauração: aviso inicial e
     await usuario.click(screen.getByRole('button', { name: 'Simular próximo dia' }));
     expect(await screen.findByText('18/11/2026')).toBeInTheDocument();
     await usuario.click(screen.getByRole('button', { name: 'Restaurar dados de demonstração' }));
-    expect(screen.getByRole('heading', { name: 'Restaurar a demonstração?' })).toHaveFocus();
+    expect(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Cancelar' })).toHaveFocus();
     expect(screen.getByRole('alertdialog', { name: 'Restaurar a demonstração?' })).toHaveTextContent(/serão apagados/);
     await usuario.click(screen.getByRole('button', { name: 'Cancelar' }));
     expect(screen.getByRole('button', { name: 'Restaurar dados de demonstração' })).toHaveFocus();

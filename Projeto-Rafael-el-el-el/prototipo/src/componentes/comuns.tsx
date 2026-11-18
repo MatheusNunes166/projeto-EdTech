@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from 'react';
+import { cloneElement, isValidElement, useEffect, useId, type ReactNode } from 'react';
 import type { EstadoConsulta, ErroComando } from '../app/contexto';
 import { arredondarExibicao } from '../desempenho/apresentacao';
 import { NOME_DIFICULDADE, type Dificuldade } from '../dominio/tipos';
@@ -38,12 +38,13 @@ export function MensagemErro({ erro, ignorar = [] }: { erro: ErroComando | null;
 
 /** Renderiza a consulta autorizada: sem dados enquanto carrega, e nenhuma tela quando o acesso é negado. */
 export function Consulta<T>({ estado, children }: { estado: EstadoConsulta<T>; children: (dados: T, revisao: number) => ReactNode }) {
-  if (estado.situacao === 'carregando') return <p className="carregando">Carregando…</p>;
+  if (estado.situacao === 'carregando') return <p className="carregando" role="status">Carregando…</p>;
   if (estado.situacao === 'erro') {
     return (
       <div role="alert" className="alerta">
         <h1>{estado.erro.codigo === 'ACESSO_NEGADO' ? 'Acesso negado' : 'Não foi possível carregar'}</h1>
         <p>{estado.erro.codigo === 'ACESSO_NEGADO' ? 'Você não tem acesso a este recurso.' : estado.erro.mensagem}</p>
+        {estado.tentarNovamente && <button type="button" className="secundario" onClick={estado.tentarNovamente}>Tentar novamente</button>}
       </div>
     );
   }
@@ -51,13 +52,17 @@ export function Consulta<T>({ estado, children }: { estado: EstadoConsulta<T>; c
 }
 
 export function Campo({ rotulo, erro, children }: { rotulo: string; erro?: string; children: ReactNode }) {
+  const id = useId();
+  const campo = erro && isValidElement<{ 'aria-invalid'?: boolean; 'aria-describedby'?: string }>(children)
+    ? cloneElement(children, { 'aria-invalid': true, 'aria-describedby': [children.props['aria-describedby'], id].filter(Boolean).join(' ') })
+    : children;
   return (
-    <div className="linha">
+    <div className="linha campo">
       <label>
         <span className="rotulo">{rotulo}</span>
-        {children}
+        {campo}
       </label>
-      {erro && <span className="erro-campo" role="alert">{erro}</span>}
+      {erro && <span id={id} className="erro-campo" role="alert">{erro}</span>}
     </div>
   );
 }
