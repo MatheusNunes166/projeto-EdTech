@@ -3,23 +3,8 @@ import { useComando, useConsulta } from '../../app/contexto';
 import { Confirmacao } from '../../componentes/Confirmacao';
 import { ListaRegistros, PainelEdicao, Registro } from '../../componentes/Gestao';
 import { Consulta, MensagemErro, Vazio } from '../../componentes/comuns';
-import type { PedidoCandidatos } from '../../dados/contratos-consultas-academicas';
+import { SeletorCandidato } from '../../componentes/SeletorCandidato';
 import type { RepositorioApp } from '../../dados/repositorio-app';
-
-export function SeletorCandidato({ pedido, rotulo, valor, mudar }: {
-  pedido: PedidoCandidatos;
-  rotulo: string;
-  valor: string;
-  mudar: (id: string) => void;
-}) {
-  const estado = useConsulta((repo) => repo.consultarCandidatos(pedido), [pedido]);
-  return <Consulta estado={estado}>{(lista) => lista.length ? (
-    <label>{rotulo}<select value={valor} onChange={(e) => mudar(e.target.value)}>
-      <option value="">Escolha…</option>
-      {lista.map((p) => <option key={p.id} value={p.id}>{p.nome}</option>)}
-    </select></label>
-  ) : <Vazio>Nenhum candidato elegível.</Vazio>}</Consulta>;
-}
 
 type Edicao = 'coordenacao' | 'responsavel';
 type Remocao = { titulo: string; efeito: string; executar: (repo: RepositorioApp) => Promise<unknown> };

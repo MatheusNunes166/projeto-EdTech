@@ -1,120 +1,111 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useComando, useConsulta } from '../../app/contexto';
+import { Confirmacao } from '../../componentes/Confirmacao';
+import { ListaRegistros, PainelEdicao, Registro } from '../../componentes/Gestao';
+import { SeletorCandidato } from '../../componentes/SeletorCandidato';
 import { Consulta, MensagemErro, Vazio } from '../../componentes/comuns';
+import type { ContextoTurma } from '../../dados/contratos-consultas-academicas';
 
-/**
- * Gestão acadêmica de turmas (matrículas e professores), compartilhada por Coordenação e Administração.
- * A estrutura vem filtrada pelo vínculo atual: turmas de outros cursos nem são listadas.
- */
-export function GestaoTurmas({ base }: { base: '/coordenacao/gestao' | '/admin/gestao' }) {
+type Base = '/coordenacao/gestao' | '/admin/gestao';
+type Oferta = ContextoTurma & { professores: { id: string; nome: string }[] };
+const nomeOferta = (t: ContextoTurma) => t.disciplina.nome + ' — Turma ' + t.turma.codigo;
+const contextoOferta = (t: ContextoTurma) => t.graduacao.nome + ' · ' + t.periodoLetivo.nome;
+
+export function GestaoTurmas({ base }: { base: Base }) {
   const estado = useConsulta((r) => r.consultarEstruturaAdministravel());
-  return (
-    <>
-      <h1>Gestão acadêmica</h1>
-      <Consulta estado={estado}>
-        {({ turmas }) => turmas.length === 0 ? <Vazio>Nenhuma turma disponível no seu escopo.</Vazio> : (
-          <ul className="lista-limpa">
-            {turmas.map((t) => (
-              <li key={t.turma.id} className="cartao">
-                <strong>{t.graduacao.nome} — {t.disciplina.nome}</strong> · Turma {t.turma.codigo} · {t.periodoLetivo.nome}
-                <p className="meta">Professor(es): {t.professores.length ? t.professores.map((p) => p.nome).join(', ') : 'nenhum'}</p>
-                <Link to={`${base}/turmas/${t.turma.id}`}>Gerir turma {t.turma.codigo} de {t.disciplina.nome} ({t.periodoLetivo.nome})</Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </Consulta>
-    </>
-  );
+  return <>
+    <h1>Gestão acadêmica</h1>
+    <Consulta estado={estado}>{({ turmas }) => turmas.length ? (
+      <ListaRegistros rotulo="Turmas administráveis">{turmas.map((t) => (
+        <Registro key={t.turma.id} acoes={
+          <Link to={base + '/turmas/' + t.turma.id} aria-label={'Gerir turma ' + t.turma.codigo + ' de ' + t.disciplina.nome + ' (' + t.periodoLetivo.nome + ')'}>Gerir turma</Link>
+        }>
+          <strong>{nomeOferta(t)}</strong><p className="meta">{contextoOferta(t)}</p>
+          <p>Docentes: {t.professores.map((p) => p.nome).join(', ') || 'Nenhum'}</p>
+        </Registro>
+      ))}</ListaRegistros>
+    ) : <Vazio>Nenhuma turma disponível no seu escopo.</Vazio>}</Consulta>
+  </>;
 }
 
-export function GestaoDaTurma({ base }: { base: '/coordenacao/gestao' | '/admin/gestao' }) {
+export function GestaoDaTurma({ base }: { base: Base }) {
   const { turmaId = '' } = useParams();
   const estrutura = useConsulta((r) => r.consultarEstruturaAdministravel({ tipo: 'turma', turmaId }), [turmaId]);
-  return (
-    <Consulta estado={estrutura}>
-      {({ turmas }, revisao) => {
-        const t = turmas.find((x) => x.turma.id === turmaId);
-        if (!t) return <Vazio>Turma não encontrada.</Vazio>;
-        return (
-          <>
-            <p><Link to={base}>← Gestão acadêmica</Link></p>
-            <h1>{t.disciplina.nome} — Turma {t.turma.codigo}</h1>
-            <p className="meta">{t.graduacao.nome} · {t.periodoLetivo.nome}</p>
-            <Matriculas turmaId={turmaId} disciplinaId={t.disciplina.id} graduacaoId={t.graduacao.id} revisao={revisao} />
-            <Docentes turmaId={turmaId} disciplinaId={t.disciplina.id} graduacaoId={t.graduacao.id} professores={t.professores} revisao={revisao} />
-          </>
-        );
-      }}
-    </Consulta>
-  );
+  return <Consulta estado={estrutura}>{({ turmas }, revisao) => {
+    const turma = turmas.find((t) => t.turma.id === turmaId);
+    return turma ? <EdicaoDaTurma key={turmaId} base={base} oferta={turma} revisao={revisao} /> : <Vazio>Turma não encontrada.</Vazio>;
+  }}</Consulta>;
 }
 
-interface Props { turmaId: string; disciplinaId: string; graduacaoId: string; revisao: number }
-
-function Matriculas({ turmaId, disciplinaId, graduacaoId, revisao }: Props) {
-  const alvo = { turmaId, disciplinaId, graduacaoId };
-  const matriculados = useConsulta((r) => r.consultarMatriculados(alvo), [turmaId]);
-  const candidatos = useConsulta((r) => r.consultarCandidatos({ finalidade: 'matricula', turma: alvo }), [turmaId]);
-  const [aluno, setAluno] = useState('');
-  const [aviso, setAviso] = useState<string | null>(null);
-  const { rodar, erro } = useComando();
-  const matricular = async () => {
-    setAviso(null);
-    const r = await rodar((repo) => repo.matricular(alvo, { alunoId: aluno }, revisao));
-    if (r.ok) setAviso(r.valor.jaExistia ? 'O aluno já estava matriculado: o estudo existente foi preservado e nada foi reiniciado.' : 'Matrícula realizada.');
-  };
-  return (
-    <section aria-label="Matrículas">
-      <h2>Matrículas</h2>
-      <Consulta estado={matriculados}>
-        {(lista) => lista.length === 0 ? <Vazio>Nenhum aluno matriculado</Vazio> : <ul>{lista.map((m) => <li key={m.matriculaId}>{m.aluno.nome}</li>)}</ul>}
-      </Consulta>
-      <Consulta estado={candidatos}>
-        {(lista) => (
-          <div className="formulario">
-            <label>Aluno a matricular
-              <select value={aluno} onChange={(e) => setAluno(e.target.value)}>
-                <option value="">Escolha…</option>{lista.map((c) => <option key={c.id} value={c.id}>{c.nome}</option>)}
-              </select>
-            </label>
-            <button disabled={!aluno} onClick={matricular}>Matricular</button>
+function EdicaoDaTurma({ base, oferta, revisao }: { base: Base; oferta: Oferta; revisao: number }) {
+  const alvo = { turmaId: oferta.turma.id, disciplinaId: oferta.disciplina.id, graduacaoId: oferta.graduacao.id };
+  const matriculas = useConsulta((repo) => repo.consultarMatriculados(alvo), [alvo]);
+  const [edicao, setEdicao] = useState<'matricula' | 'docencia' | null>(null);
+  const [pessoa, setPessoa] = useState('');
+  const [nomePessoa, setNomePessoa] = useState('');
+  const [remocao, setRemocao] = useState<{ pessoa: Oferta['professores'][number]; revisao: number } | null>(null);
+  const [aviso, setAviso] = useState('');
+  const { rodar, erro, limpar, ocupado } = useComando();
+  const abrir = (tipo: typeof edicao) => { limpar(); setEdicao(tipo); setPessoa(''); setNomePessoa(''); if (tipo) setAviso(''); };
+  const matricular = edicao === 'matricula';
+  return <>
+    <p><Link to={base}>Voltar às turmas</Link></p>
+    <h1>{nomeOferta(oferta)}</h1>
+    <p className="meta">{contextoOferta(oferta)}</p>
+    {aviso && <p role="status">{aviso}</p>}
+    <div className="gestao-com-edicao">
+      <div className="lista-gestao cadastros-listas">
+        <section aria-label="Matrículas">
+          <h2>Matrículas</h2>
+          <Consulta estado={matriculas}>{(lista) => lista.length
+            ? <ListaRegistros rotulo="Alunos matriculados">{lista.map((m) => <Registro key={m.matriculaId}>{m.aluno.nome}</Registro>)}</ListaRegistros>
+            : <Vazio>Nenhum aluno matriculado</Vazio>}</Consulta>
+          <p><button onClick={() => abrir('matricula')}>Nova matrícula</button></p>
+        </section>
+        <section aria-label="Professores da turma">
+          <h2>Professores</h2>
+          {oferta.professores.length ? <ListaRegistros rotulo="Docentes da oferta">{oferta.professores.map((p) => (
+            <Registro key={p.id} acoes={<button type="button" className="secundario" aria-label={'Remover ' + p.nome}
+              onClick={() => { limpar(); setAviso(''); setRemocao({ pessoa: p, revisao }); }}>Remover</button>}>{p.nome}</Registro>
+          ))}</ListaRegistros> : <Vazio>Nenhum professor atribuído.</Vazio>}
+          <p><button onClick={() => abrir('docencia')}>Nova atribuição docente</button></p>
+        </section>
+      </div>
+      {edicao && <PainelEdicao key={edicao} titulo={matricular ? 'Matricular aluno' : 'Atribuir professor'}>
+        <form className="formulario" onSubmit={async (evento) => {
+          evento.preventDefault();
+          if (!pessoa || ocupado) return;
+          if (matricular) {
+            const r = await rodar((repo) => repo.matricular(alvo, { alunoId: pessoa }, revisao));
+            if (!r.ok) return;
+            setAviso((r.valor.jaExistia ? 'O aluno já estava matriculado e seu estudo foi preservado. ' : 'Matrícula realizada. ') + nomePessoa + ' · ' + nomeOferta(oferta) + ' · ' + oferta.periodoLetivo.nome + '.');
+          } else {
+            const r = await rodar((repo) => repo.definirVinculoProfessor(alvo, { professorId: pessoa }, true, revisao));
+            if (!r.ok) return;
+            setAviso(nomePessoa + ' atribuído a ' + nomeOferta(oferta) + ' · ' + oferta.periodoLetivo.nome + '.');
+          }
+          abrir(null);
+        }}>
+          <SeletorCandidato pedido={{ finalidade: edicao, turma: alvo }}
+            rotulo={matricular ? 'Aluno a matricular' : 'Professor a atribuir'} valor={pessoa} mudar={(id, nome) => { setPessoa(id); setNomePessoa(nome); }} />
+          <MensagemErro erro={erro} />
+          <div className="acoes">
+            <button type="submit" disabled={!pessoa || ocupado}>{matricular ? 'Matricular' : 'Atribuir professor'}</button>
+            <button type="button" className="secundario" onClick={() => abrir(null)}>Cancelar</button>
           </div>
-        )}
-      </Consulta>
-      {aviso && <p role="status">{aviso}</p>}
+        </form>
+      </PainelEdicao>}
+    </div>
+    {remocao && <Confirmacao titulo={'Remover ' + remocao.pessoa.nome + ' de ' + nomeOferta(oferta) + '?'}
+      acao="Confirmar remoção" ocupado={ocupado} aoCancelar={() => { limpar(); setRemocao(null); }}
+      aoConfirmar={async () => {
+        if (ocupado) return;
+        const r = await rodar((repo) => repo.definirVinculoProfessor(alvo, { professorId: remocao.pessoa.id }, false, remocao.revisao));
+        if (r.ok) { setAviso(remocao.pessoa.nome + ' removido de ' + nomeOferta(oferta) + '.'); setRemocao(null); }
+      }}>
+      <p>{contextoOferta(oferta)}. O vínculo docente com esta turma será removido. As matrículas e o histórico dos alunos serão preservados.</p>
       <MensagemErro erro={erro} />
-    </section>
-  );
-}
-
-function Docentes({ turmaId, disciplinaId, graduacaoId, professores, revisao }: Props & { professores: { id: string; nome: string }[] }) {
-  const alvo = { turmaId, disciplinaId, graduacaoId };
-  const candidatos = useConsulta((r) => r.consultarCandidatos({ finalidade: 'docencia', turma: alvo }), [turmaId]);
-  const [professor, setProfessor] = useState('');
-  const { rodar, erro } = useComando();
-  return (
-    <section aria-label="Professores da turma">
-      <h2>Professores</h2>
-      {professores.length === 0 ? <Vazio>Nenhum professor atribuído.</Vazio> : (
-        <ul>{professores.map((p) => (
-          <li key={p.id}>{p.nome} <button className="secundario" onClick={() => rodar((r) => r.definirVinculoProfessor(alvo, { professorId: p.id }, false, revisao))}>Remover {p.nome}</button></li>
-        ))}</ul>
-      )}
-      <Consulta estado={candidatos}>
-        {(lista) => (
-          <div className="formulario">
-            <label>Professor a atribuir
-              <select value={professor} onChange={(e) => setProfessor(e.target.value)}>
-                <option value="">Escolha…</option>{lista.map((c) => <option key={c.id} value={c.id}>{c.nome}</option>)}
-              </select>
-            </label>
-            <button disabled={!professor} onClick={() => rodar((r) => r.definirVinculoProfessor(alvo, { professorId: professor }, true, revisao))}>Atribuir professor</button>
-          </div>
-        )}
-      </Consulta>
-      <MensagemErro erro={erro} />
-    </section>
-  );
+    </Confirmacao>}
+  </>;
 }

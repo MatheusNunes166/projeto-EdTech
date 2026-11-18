@@ -7,7 +7,7 @@ import { Materiais } from '../telas/aluno/Materiais';
 import { MinhasTurmas } from '../telas/aluno/MinhasTurmas';
 import { Sessao } from '../telas/aluno/Sessao';
 import { Trilha } from '../telas/aluno/Trilha';
-import { CadastroGraduacoesDisciplinas, CadastroPeriodosTurmas } from '../telas/admin/Cadastros';
+import { CadastroGraduacoesDisciplinas, CadastroPeriodosTurmas, CadastrosCoordenacao } from '../telas/admin/Cadastros';
 import { Pessoas, VisaoGeral, Vinculos } from '../telas/admin/Admin';
 import { GestaoDaTurma, GestaoTurmas } from '../telas/coordenacao/Gestao';
 import { PainelCoordenador } from '../telas/coordenacao/Painel';
@@ -65,7 +65,7 @@ export function Rotas() {
             <Route path="/coordenacao" element={<PainelCoordenador />} />
             <Route path="/coordenacao/gestao" element={<GestaoTurmas base="/coordenacao/gestao" />} />
             <Route path="/coordenacao/gestao/turmas/:turmaId" element={<GestaoDaTurma base="/coordenacao/gestao" />} />
-            <Route path="/coordenacao/cadastros" element={<><CadastroGraduacoesDisciplinas /><CadastroPeriodosTurmas /></>} />
+            <Route path="/coordenacao/cadastros" element={<CadastrosCoordenacao />} />
             <Route path="/coordenacao/*" element={<Navigate to="/coordenacao" replace />} />
           </>
         ),

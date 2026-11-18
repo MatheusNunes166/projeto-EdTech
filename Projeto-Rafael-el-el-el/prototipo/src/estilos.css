@@ -306,3 +306,7 @@ dialog::backdrop { background: rgb(19 32 42 / 45%); }
 @media (min-width: 1024px) { .gestao-com-edicao:has(> .painel-edicao) { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
 @media (max-width: 1023px) { .gestao-com-edicao:has(> .painel-edicao) > .lista-gestao { display: none; } }
 @media (max-width: 639px) { .registro { grid-template-columns: minmax(0,1fr); } dialog { padding: var(--e4); } }
+
+label:has(> input:is([type='checkbox'], [type='radio'])) { flex-direction: row; align-items: center; gap: var(--e2); min-block-size: 44px; }
+.cadastros-listas { display: grid; gap: var(--e5); }
+.campo input[placeholder='AAAA-MM-DD'], .campo .campo-curto { max-inline-size: 18ch; }

@@ -95,7 +95,7 @@ describe('7.4 — [PA] Administração de usuários, Limites globais, Vínculos 
 describe('7.5 — [OA] Cadastro de graduações, Disciplinas de uma graduação, Identidade das ofertas e histórico', () => {
   it('cria graduação e valida campos obrigatórios e código duplicado, por campo', async () => {
     const { usuario, dados } = await renderizarApp('/admin/graduacoes', 'u-renata');
-    await screen.findByRole('form', { name: 'Nova graduação' });
+    await usuario.click(await screen.findByRole('button', { name: 'Nova graduação' }));
     const form = () => screen.getByRole('form', { name: 'Nova graduação' });
     await usuario.click(within(form()).getByRole('button', { name: 'Salvar graduação' }));
     expect(await within(form()).findByText('Informe o código da graduação.')).toBeInTheDocument();
@@ -111,7 +111,7 @@ describe('7.5 — [OA] Cadastro de graduações, Disciplinas de uma graduação,
 
   it('disciplina: campos obrigatórios, graduação existente, código único só dentro da graduação e sem tópicos pelo cadastro', async () => {
     const { usuario, dados } = await renderizarApp('/admin/graduacoes', 'u-renata');
-    await screen.findByRole('form', { name: 'Nova disciplina' });
+    await usuario.click(await screen.findByRole('button', { name: 'Nova disciplina' }));
     const form = () => screen.getByRole('form', { name: 'Nova disciplina' });
     await usuario.click(within(form()).getByRole('button', { name: 'Salvar disciplina' }));
     expect(await screen.findByRole('alert')).toBeInTheDocument(); // graduação inexistente: nada salvo
@@ -130,14 +130,17 @@ describe('7.5 — [OA] Cadastro de graduações, Disciplinas de uma graduação,
   });
 
   it('bloqueia trocar a graduação de disciplina com matrículas; editar nome não toca no conteúdo', async () => {
-    const { usuario, dados } = await renderizarApp('/admin/graduacoes', 'u-renata');
+    const { usuario, dados, repo } = await renderizarApp('/admin/graduacoes', 'u-renata');
     await usuario.click(await screen.findByRole('button', { name: 'Editar disciplina Algoritmos' }));
     const form = () => screen.getByRole('form', { name: 'Editar disciplina' });
-    await usuario.selectOptions(within(form()).getByLabelText('Graduação da disciplina'), 'Licenciatura em Matemática');
-    await usuario.click(within(form()).getByRole('button', { name: 'Salvar disciplina' }));
-    expect(await within(form()).findByText(/Há matrícula ou resposta/)).toBeInTheDocument();
+    expect(within(form()).getByLabelText('Graduação da disciplina')).toBeDisabled();
+    expect(within(form()).getByText(/Há matrícula ou resposta/)).toBeInTheDocument();
+    const antes = dados();
+    const d = antes.disciplinas.find((x) => x.id === 'd-alg')!;
+    const { codigo, nome, descricaoCurta, descricao, nivel } = d;
+    await expect(repo.editarDisciplina({ disciplinaId: d.id }, { codigo, nome, descricaoCurta, descricao, nivel, graduacaoId: 'g-lm' }, antes.revisao)).rejects.toBeDefined();
+    expect(dados()).toEqual(antes);
     expect(dados().disciplinas.find((d) => d.id === 'd-alg')!.graduacaoId).toBe('g-si');
-    await usuario.selectOptions(within(form()).getByLabelText('Graduação da disciplina'), 'Sistemas de Informação');
     await usuario.clear(within(form()).getByLabelText('Nome da disciplina')); await usuario.type(within(form()).getByLabelText('Nome da disciplina'), 'Algoritmos e Lógica');
     const topicosAntes = JSON.stringify(dados().disciplinas.find((d) => d.id === 'd-alg')!.topicos);
     await usuario.click(within(form()).getByRole('button', { name: 'Salvar disciplina' }));
@@ -149,7 +152,7 @@ describe('7.5 — [OA] Cadastro de graduações, Disciplinas de uma graduação,
 describe('7.6 — [OA] Períodos letivos, Ofertas de disciplinas em turmas, Identidade das ofertas e histórico', () => {
   it('período: datas obrigatórias, intervalo inválido e criação', async () => {
     const { usuario, dados } = await renderizarApp('/admin/periodos', 'u-renata');
-    await screen.findByRole('form', { name: 'Novo período' });
+    await usuario.click(await screen.findByRole('button', { name: 'Novo período' }));
     const form = () => screen.getByRole('form', { name: 'Novo período' });
     await usuario.type(within(form()).getByLabelText('Nome do período'), '2027.2');
     await usuario.click(within(form()).getByRole('button', { name: 'Salvar período' }));
@@ -166,7 +169,7 @@ describe('7.6 — [OA] Períodos letivos, Ofertas de disciplinas em turmas, Iden
 
   it('turma: código obrigatório, referências existentes e oferta duplicada', async () => {
     const { usuario, dados } = await renderizarApp('/admin/periodos', 'u-renata');
-    await screen.findByRole('form', { name: 'Nova turma' });
+    await usuario.click(await screen.findByRole('button', { name: 'Nova turma' }));
     const form = () => screen.getByRole('form', { name: 'Nova turma' });
     await usuario.click(within(form()).getByRole('button', { name: 'Salvar turma' }));
     expect(await screen.findByRole('alert')).toBeInTheDocument(); // disciplina inexistente
@@ -184,17 +187,23 @@ describe('7.6 — [OA] Períodos letivos, Ofertas de disciplinas em turmas, Iden
   });
 
   it('bloqueia trocar disciplina ou período de turma com matrícula, preservando a identidade da oferta', async () => {
-    const { usuario, dados } = await renderizarApp('/admin/periodos', 'u-renata');
+    const { usuario, dados, repo } = await renderizarApp('/admin/periodos', 'u-renata');
     await usuario.click(await screen.findByRole('button', { name: 'Editar turma A de Algoritmos (2026.2)' }));
     const form = () => screen.getByRole('form', { name: 'Editar turma' });
-    await usuario.selectOptions(within(form()).getByLabelText('Período da turma'), '2027.1');
-    await usuario.click(within(form()).getByRole('button', { name: 'Salvar turma' }));
-    expect(await within(form()).findAllByText(/Há matrícula ou resposta/)).not.toHaveLength(0);
+    expect(within(form()).getByLabelText('Período da turma')).toBeDisabled();
+    expect(within(form()).getByLabelText('Disciplina da turma')).toBeDisabled();
+    expect(within(form()).getByText(/Há matrícula ou resposta/)).toBeInTheDocument();
+    const antes = dados();
+    await expect(repo.editarTurma({ turmaId: 't-alg-a-262' }, { codigo: 'A', disciplinaId: 'd-alg', periodoLetivoId: 'p-2027-1' }, antes.revisao)).rejects.toBeDefined();
+    expect(dados()).toEqual(antes);
     expect(dados().turmas.find((t) => t.id === 't-alg-a-262')!.periodoLetivoId).toBe('p-2026-2');
   });
 
   it('o Coordenador cadastra turmas do seu curso, mas não vê o formulário de período global', async () => {
-    await renderizarApp('/coordenacao/cadastros', 'u-lucia');
+    const { usuario } = await renderizarApp('/coordenacao/cadastros', 'u-lucia');
+    expect(await screen.findByRole('button', { name: 'Editar graduação Licenciatura em Matemática' })).toBeVisible();
+    await usuario.click(screen.getByRole('link', { name: 'Períodos e turmas' }));
+    await usuario.click(await screen.findByRole('button', { name: 'Nova turma' }));
     expect(await screen.findByRole('form', { name: 'Nova turma' })).toBeInTheDocument();
     expect(screen.queryByRole('form', { name: 'Novo período' })).toBeNull();
     expect(screen.queryByRole('form', { name: 'Nova graduação' })).toBeNull();

@@ -44,6 +44,8 @@ Carla ilustra funções cumulativas em cursos diferentes: leciona Matemática B�
 
 A Visão geral liga os totais aos cadastros correspondentes. Em **Pessoas**, use **Nova pessoa** ou **Editar** na linha. Em **Vínculos**, escolha coordenação ou acompanhamento e selecione candidatos elegíveis. Remover abre uma confirmação com as duas partes da relação.
 
+Cadastros separam **Graduações e disciplinas** de **Períodos e turmas**. Em gestão, selecione a oferta antes de abrir **Nova matrícula** ou **Nova atribuição docente**. A confirmação de remoção identifica o docente, a oferta e o período.
+
 ## Estrutura acadêmica
 
 | Graduação | Disciplina | Conteúdo |

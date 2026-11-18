@@ -81,7 +81,7 @@ export const validarPeriodos = validadorDeColecao('periodosLetivos', (dados) => 
   return erros;
 });
 
-function disciplinaComEstudo(dados: LeituraProfunda<DadosAcademicos>, disciplinaId: string): boolean {
+export function disciplinaComEstudo(dados: LeituraProfunda<DadosAcademicos>, disciplinaId: string): boolean {
   const turmas = new Set(dados.turmas.filter((t) => t.disciplinaId === disciplinaId).map((t) => t.id));
   return dados.matriculas.some((m) => turmas.has(m.turmaId))
     || dados.respostas.some((r) => dados.questoes.some((q) => q.id === r.questaoId && q.disciplinaId === disciplinaId));
@@ -110,6 +110,11 @@ export const validarDisciplinas = validadorDeColecao('disciplinas', (dados, ante
   return erros;
 });
 
+export function turmaComEstudo(dados: LeituraProfunda<DadosAcademicos>, turmaId: string): boolean {
+  const matriculas = dados.matriculas.filter((m) => m.turmaId === turmaId);
+  return matriculas.length > 0 || dados.respostas.some((r) => matriculas.some((m) => m.id === r.matriculaId));
+}
+
 export const validarTurmas = validadorDeColecao('turmas', (dados, anterior) => {
   const erros: ErrosAcademicos = {};
   const copia = structuredClone(dados) as DadosAcademicos;
@@ -117,8 +122,7 @@ export const validarTurmas = validadorDeColecao('turmas', (dados, anterior) => {
   for (const t of copia.turmas) {
     acumular(erros, t.id, validarTurma(t, copia.disciplinas, copia.periodosLetivos, copia.turmas));
     const original = anterior.turmas.find((x) => x.id === t.id);
-    const matriculas = anterior.matriculas.filter((m) => m.turmaId === t.id);
-    const temEstudo = matriculas.length > 0 || anterior.respostas.some((r) => matriculas.some((m) => m.id === r.matriculaId));
+    const temEstudo = turmaComEstudo(anterior, t.id);
     if (original && temEstudo && (original.disciplinaId !== t.disciplinaId || original.periodoLetivoId !== t.periodoLetivoId)) {
       erros[`${t.id}.oferta`] = 'Há matrícula ou resposta; crie outra turma em vez de trocar disciplina ou período.';
     }

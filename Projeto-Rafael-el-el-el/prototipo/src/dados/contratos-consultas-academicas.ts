@@ -47,8 +47,8 @@ export interface DisciplinaAdministravel {
 }
 export interface EstruturaAdministravel {
   graduacoes: Graduacao[];
-  disciplinas: DisciplinaAdministravel[];
-  turmas: (ContextoTurma & { professores: IdentidadePessoa[] })[];
+  disciplinas: (DisciplinaAdministravel & { identidadeProtegida: boolean })[];
+  turmas: (ContextoTurma & { professores: IdentidadePessoa[]; identidadeProtegida: boolean })[];
   periodosLetivos: PeriodoLetivo[];
 }
 export interface MatriculadoTurma { matriculaId: string; data: string; aluno: IdentidadePessoa }

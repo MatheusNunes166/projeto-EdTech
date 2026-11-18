@@ -1,3 +1,4 @@
+import { disciplinaComEstudo, turmaComEstudo } from './validacao-comandos-academicos';
 import {
   pessoaAtiva, podeExecutar, type LeituraProfunda, type PedidoAutorizacao, type RecursoAcademico,
 } from '../dominio/autorizacao';
@@ -164,8 +165,8 @@ export class ConsultasAcademicas extends ComandosConteudo {
       const turmas = dados.turmas.filter((t) => disciplinas.some((d) => d.id === t.disciplinaId)
         && (escopo?.tipo !== 'turma' || t.id === escopo.turmaId));
       return { revisao: dados.revisao, dados: {
-        graduacoes: visiveis.map(graduacaoDTO), disciplinas: disciplinas.map(disciplinaDTO),
-        turmas: turmas.map((t) => ({ ...contextoTurma(dados, t.id), professores: professores(dados, t.id) })),
+        graduacoes: visiveis.map(graduacaoDTO), disciplinas: disciplinas.map((d) => ({ ...disciplinaDTO(d), identidadeProtegida: disciplinaComEstudo(dados, d.id) })),
+        turmas: turmas.map((t) => ({ ...contextoTurma(dados, t.id), professores: professores(dados, t.id), identidadeProtegida: turmaComEstudo(dados, t.id) })),
         periodosLetivos: visiveis.length || autor.funcoes.includes('admin') ? dados.periodosLetivos.map(periodoDTO) : [],
       } };
     });

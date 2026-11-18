@@ -28,6 +28,7 @@ describe('8.2 — fluxos integrados entre funções (PA, GC, AA, OA)', () => {
 
     // 1. Administrador prepara a oferta: disciplina, turma, docente e vínculo de responsável.
     await irPara(usuario, 'Graduações e disciplinas');
+    await usuario.click(await screen.findByRole('button', { name: 'Nova disciplina' }));
     const formDisc = async () => within(await screen.findByRole('form', { name: 'Nova disciplina' }));
     await usuario.selectOptions((await formDisc()).getByLabelText('Graduação da disciplina'), 'Sistemas de Informação');
     await usuario.type((await formDisc()).getByLabelText('Código da disciplina'), 'EDD');
@@ -37,6 +38,7 @@ describe('8.2 — fluxos integrados entre funções (PA, GC, AA, OA)', () => {
     expect(disciplina()).toMatchObject({ status: 'rascunho', topicos: [] });
 
     await irPara(usuario, 'Períodos e turmas');
+    await usuario.click(await screen.findByRole('button', { name: 'Nova turma' }));
     const formTurma = async () => within(await screen.findByRole('form', { name: 'Nova turma' }));
     await usuario.selectOptions((await formTurma()).getByLabelText('Disciplina da turma'), 'Estruturas de Dados');
     await usuario.selectOptions((await formTurma()).getByLabelText('Período da turma'), '2026.2');
@@ -46,6 +48,7 @@ describe('8.2 — fluxos integrados entre funções (PA, GC, AA, OA)', () => {
 
     await irPara(usuario, 'Matrículas e docentes');
     await usuario.click(await screen.findByRole('link', { name: 'Gerir turma A de Estruturas de Dados (2026.2)' }));
+    await usuario.click(await screen.findByRole('button', { name: 'Nova atribuição docente' }));
     await usuario.selectOptions(await screen.findByLabelText('Professor a atribuir'), 'Marcos Silva');
     await usuario.click(screen.getByRole('button', { name: 'Atribuir professor' }));
     expect(await screen.findByRole('button', { name: 'Remover Marcos Silva' })).toBeInTheDocument();
@@ -63,9 +66,10 @@ describe('8.2 — fluxos integrados entre funções (PA, GC, AA, OA)', () => {
     await irPara(usuario, 'Gestão acadêmica');
     expect(screen.queryByRole('link', { name: /Matemática Básica/ })).toBeNull(); // cursos que ela só leciona
     await usuario.click(await screen.findByRole('link', { name: 'Gerir turma A de Estruturas de Dados (2026.2)' }));
+    await usuario.click(await screen.findByRole('button', { name: 'Nova matrícula' }));
     await usuario.selectOptions(await screen.findByLabelText('Aluno a matricular'), 'Diego Martins');
     await usuario.click(screen.getByRole('button', { name: 'Matricular' }));
-    expect(await screen.findByText('Matrícula realizada.')).toBeInTheDocument();
+    expect(await screen.findByText(/Matrícula realizada./)).toBeInTheDocument();
     expect(dados().matriculas.filter((m) => m.turmaId === turma().id && m.alunoId === 'u-diego')).toHaveLength(1);
 
     // A coordenação não concede autoria pedagógica: o editor da disciplina lhe é negado.

@@ -15,3 +15,7 @@ Baseline em `8e3a65c` com 662 testes em 42 arquivos e build aprovado. Node 26 co
 ## 4
 
 61 testes administrativos, de integração e revogação e build aprovados. A 1280 px e 360 px o teclado abriu somente o formulário escolhido e cancelou a remoção contextualizada com documento idêntico. Os testes confirmaram que candidatos incompatíveis não são apresentados, os comandos rejeitam pedidos inválidos e apenas a relação confirmada é removida.
+
+## 5
+
+87 testes direcionados e build aprovados, mais o teste de revogação com a confirmação docente aberta (arquivo de coordenação com 12 aprovados). Chrome conferiu 14 aberturas de formulários por teclado a 1280 px e 360 px, e a jornada completa de Administração criando graduação, atribuindo coordenação, cancelando e confirmando remoção. O teste de contrato distingue a indicação de identidade protegida da entrada editável do comando.

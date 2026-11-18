@@ -173,7 +173,8 @@ describe('2.10 — [CC] catálogo/metadados; [PA] escopo e minimização; D2/D7'
   it('salvamento cadastral da disciplina não devolve materiais ao Coordenador', async () => {
     const a = ambienteConsultas(); await a.repo.entrar('u-carla');
     const d = (await a.repo.consultarEstruturaAdministravel()).dados.disciplinas[0];
-    const { id: _id, status: _status, ...campos } = d;
+    const { id: _id, status: _status, identidadeProtegida, ...campos } = d;
+    expect(typeof identidadeProtegida).toBe("boolean");
     const salvo = await a.repo.editarDisciplina({ disciplinaId: d.id }, { ...campos, nome: 'Civil atualizada' }, 0);
     semCampos(salvo, [...privados, 'topicos']);
     expect(salvo.status).toBe('publicado');

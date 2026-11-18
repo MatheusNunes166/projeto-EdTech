@@ -19,13 +19,15 @@ describe('7.7 — [PA] Escopo de gestão da coordenação; [OA] Gestão de gradu
     const { usuario, dados } = await renderizarApp('/coordenacao/gestao/turmas/t-mat-a-271', 'u-lucia');
     expect(await screen.findByRole('heading', { name: /Matemática Básica — Turma A/ })).toBeInTheDocument();
     await screen.findByText('Nenhum aluno matriculado');
+    await usuario.click(await screen.findByRole('button', { name: 'Nova matrícula' }));
     await usuario.selectOptions(await screen.findByLabelText('Aluno a matricular'), 'Diego Martins');
     await usuario.click(screen.getByRole('button', { name: 'Matricular' }));
-    expect(await screen.findByText('Matrícula realizada.')).toBeInTheDocument();
+    expect(await screen.findByText(/Matrícula realizada./)).toBeInTheDocument();
     expect(within(within(screen.getByRole('region', { name: 'Matrículas' })).getByRole('list')).getByText('Diego Martins')).toBeInTheDocument(); // único matriculado
     expect(dados().matriculas.filter((m) => m.turmaId === 't-mat-a-271')).toHaveLength(1);
 
-    await usuario.selectOptions(screen.getByLabelText('Professor a atribuir'), 'Marcos Silva');
+    await usuario.click(await screen.findByRole('button', { name: 'Nova atribuição docente' }));
+    await usuario.selectOptions(await screen.findByLabelText('Professor a atribuir'), 'Marcos Silva');
     await usuario.click(screen.getByRole('button', { name: 'Atribuir professor' }));
     expect(await screen.findByRole('button', { name: 'Remover Marcos Silva' })).toBeInTheDocument();
     expect(dados().vinculosProfessor).toContainEqual({ professorId: 'u-marcos', turmaId: 't-mat-a-271' });
@@ -35,6 +37,7 @@ describe('7.7 — [PA] Escopo de gestão da coordenação; [OA] Gestão de gradu
     const { usuario, dados } = await renderizarApp('/coordenacao/gestao/turmas/t-mat-a-262', 'u-lucia');
     const antes = JSON.stringify(dados().respostas);
     const total = dados().matriculas.length;
+    await usuario.click(await screen.findByRole('button', { name: 'Nova matrícula' }));
     await usuario.selectOptions(await screen.findByLabelText('Aluno a matricular'), 'Bruno Lima');
     await usuario.click(screen.getByRole('button', { name: 'Matricular' }));
     expect(await screen.findByText(/já estava matriculado.*preservado/)).toBeInTheDocument();
@@ -44,9 +47,26 @@ describe('7.7 — [PA] Escopo de gestão da coordenação; [OA] Gestão de gradu
 
   it('remove professor; remover o vínculo não apaga matrículas nem respostas', async () => {
     const { usuario, dados } = await renderizarApp('/coordenacao/gestao/turmas/t-mat-a-262', 'u-lucia');
+    const antes = dados();
     await usuario.click(await screen.findByRole('button', { name: 'Remover Carla Dias' }));
+    await usuario.click(screen.getByRole('button', { name: 'Cancelar' }));
+    expect(dados()).toEqual(antes);
+    await usuario.click(screen.getByRole('button', { name: 'Remover Carla Dias' }));
+    await usuario.click(screen.getByRole('button', { name: 'Confirmar remoção' }));
     await waitFor(() => expect(dados().vinculosProfessor.some((v) => v.turmaId === 't-mat-a-262')).toBe(false));
-    expect(dados().matriculas.some((m) => m.turmaId === 't-mat-a-262')).toBe(true);
+    expect(dados().matriculas).toEqual(antes.matriculas);
+    expect(dados().respostas).toEqual(antes.respostas);
+    expect(dados().vinculosProfessor).toContainEqual({ professorId: 'u-carla', turmaId: 't-mat-a-271' });
+  });
+
+  it('nega remoção após revogação ocorrida com a confirmação aberta', async () => {
+    const { usuario, dados, outraAba } = await renderizarApp('/coordenacao/gestao/turmas/t-alg-a-262', 'u-carla');
+    await usuario.click(await screen.findByRole('button', { name: 'Remover Marcos Silva' }));
+    await outraAba('u-renata').definirVinculoCoordenador({ coordenadorId: 'u-carla', graduacaoId: 'g-si' }, false, dados().revisao);
+    const antes = dados();
+    await usuario.click(screen.getByRole('button', { name: 'Confirmar remoção' }));
+    expect(await screen.findByRole('heading', { name: 'Acesso negado' })).toBeInTheDocument();
+    expect(dados()).toEqual(antes);
   });
 
   it('tentativa de gerir turma de outro curso, por endereço direto, é negada sem exibir dados', async () => {
