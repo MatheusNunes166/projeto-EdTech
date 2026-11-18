@@ -261,3 +261,28 @@ summary { cursor: pointer; font-weight: 600; width: fit-content; max-width: 100%
   .topo > nav { flex: 1 1 100%; }
   .topo { align-items: start; }
 }
+
+/* Cabeçalho compartilhado: um conjunto de destinos e um local fixo para a conta. */
+.topo { align-items: start; }
+.topo .identidade-app { flex: 1 1 220px; }
+.topo .secoes-area { display: flex; align-items: start; gap: var(--e3); min-inline-size: 0; flex-wrap: wrap; }
+.topo .demonstracao { margin: 0; padding: 0; max-inline-size: 330px; }
+.topo .conta { min-inline-size: 0; max-inline-size: 290px; }
+.topo .conta nav { display: grid; }
+.topo .conta-conteudo { display: grid; gap: var(--e2); padding: var(--e2); }
+.topo .conta-conteudo > p { margin: 0; }
+.topo summary, .topo nav a { min-block-size: 44px; align-content: center; }
+.topo summary { padding: var(--e2); color: var(--cor-primaria-escura); }
+.acionador-menu, .menu-celular { display: none; }
+.acionador-menu.admin-menu { display: inline-block; }
+.secoes-admin[data-aberto='false'] > nav { display: none; }
+@media (max-width: 899px) {
+  .topo { display: grid; grid-template-columns: minmax(0,1fr) auto auto; gap: var(--e2); }
+  .topo .identidade-app { grid-column: 1 / -1; }
+  .topo .acionador-menu, .menu-celular { display: inline-block; }
+  .menu-desktop { display: none; }
+  .topo .secoes-area { grid-column: 1 / -1; grid-row: 3; }
+  .topo .secoes-area[data-aberto='false'] { display: none; }
+  .topo .secoes-area > nav { display: grid; flex-basis: 100%; }
+  .topo .conta { grid-column: 2 / -1; grid-row: 2; }
+}

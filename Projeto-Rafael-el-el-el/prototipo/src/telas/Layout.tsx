@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from 'react';
+import { Expansor } from '../componentes/Expansor';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AREA_DA_FUNCAO, ROTULO_AREA, localizacaoDaPagina, nomesDasFuncoes } from '../app/areas';
 import { useApp, useConsulta, useComando, useUsuario } from '../app/contexto';
@@ -31,6 +33,10 @@ export function Layout() {
   const area = areaAtual(pathname) ?? usuario.funcoes[0];
   const localizacao = localizacaoDaPagina(pathname, area);
 
+  const [menuAberto, setMenuAberto] = useState(false);
+  const menu = useRef<HTMLButtonElement>(null);
+  useEffect(() => setMenuAberto(false), [pathname]);
+
   const sair = async () => {
     await executar((r) => r.sair());
     navegar('/', { replace: true });
@@ -43,31 +49,46 @@ export function Layout() {
         <div className="identidade-app"><div className="marca">Trilha Adaptativa</div>
           <p className="localizacao" aria-label="Localização atual"><strong>{ROTULO_AREA[area]}</strong> · {localizacao.titulo}</p>
         </div>
-        <nav aria-label="Menu principal">
-          {MENU[area].map((item) => <NavLink key={item.para} to={item.para} aria-current={localizacao.principal === item.para ? 'page' : false}
-            className={() => localizacao.principal === item.para ? 'active' : undefined}>{item.rotulo}</NavLink>)}
-        </nav>
-        <div className="usuario">
-          <span>{usuario.nome} <small className="selo">{nomesDasFuncoes(usuario.funcoes)}</small></span>
-          <button onClick={sair}>Sair</button>
+        <button type="button" ref={menu} className={area === 'admin' ? 'acionador-menu admin-menu secundario' : 'acionador-menu secundario'}
+          aria-expanded={menuAberto} aria-label="Seções da área" aria-controls="secoes-area" onClick={() => setMenuAberto(!menuAberto)}>
+          <span className="menu-celular">Menu</span><span className="menu-desktop">Seções</span>
+        </button>
+        <div id="secoes-area" className={`secoes-area ${area === 'admin' ? 'secoes-admin' : ''}`} data-aberto={menuAberto}
+          onKeyDown={(evento) => {
+            if (evento.key === 'Escape' && menuAberto && !evento.defaultPrevented) {
+              evento.preventDefault();
+              setMenuAberto(false);
+              menu.current?.focus();
+            }
+          }}>
+          <nav aria-label="Menu principal">
+            {MENU[area].map((item) => <NavLink key={item.para} to={item.para} aria-current={localizacao.principal === item.para ? 'page' : false}
+              className={() => localizacao.principal === item.para ? 'active' : undefined} >{item.rotulo}</NavLink>)}
+          </nav>
+          <Demonstracao>
+            {data.situacao === 'ok' && (
+              <>
+                <span>Data simulada: <strong>{formatarData(data.dados)}</strong></span>
+                <button className="secundario" onClick={() => rodar((r) => r.avancarDataVirtual(data.revisao))}>Simular próximo dia</button>
+              </>
+            )}
+            <MensagemErro erro={erro} />
+          </Demonstracao>
         </div>
+        <Expansor key={pathname} rotulo="Conta" classe="conta">
+          <div className="conta-conteudo">
+            <p><strong>{usuario.nome}</strong><br /><small>{nomesDasFuncoes(usuario.funcoes)}</small></p>
+            {usuario.funcoes.length > 1 && (
+              <nav aria-label="Áreas da pessoa">
+                {FUNCOES.filter((f) => usuario.funcoes.includes(f)).map((f) => (
+                  <NavLink key={f} to={AREA_DA_FUNCAO[f]} end aria-current={false}>{ROTULO_AREA[f]}</NavLink>
+                ))}
+              </nav>
+            )}
+            <button className="secundario" onClick={sair}>Sair</button>
+          </div>
+        </Expansor>
       </header>
-      {usuario.funcoes.length > 1 && (
-        <nav className="barra-demo" aria-label="Áreas da pessoa">
-          {FUNCOES.filter((f) => usuario.funcoes.includes(f)).map((f) => (
-            <NavLink key={f} to={AREA_DA_FUNCAO[f]} aria-current={false}>{ROTULO_AREA[f]}</NavLink>
-          ))}
-        </nav>
-      )}
-      <Demonstracao>
-        {data.situacao === 'ok' && (
-          <>
-            <span>Data simulada: <strong>{formatarData(data.dados)}</strong></span>
-            <button className="secundario" onClick={() => rodar((r) => r.avancarDataVirtual(data.revisao))}>Simular próximo dia</button>
-          </>
-        )}
-        <MensagemErro erro={erro} />
-      </Demonstracao>
       <main id="conteudo" tabIndex={-1} className={`conteudo ${area === 'aluno' ? 'experiencia-aluno' : ''}`}><Outlet /></main>
       <FocoDaPagina caminho={pathname} />
     </div>

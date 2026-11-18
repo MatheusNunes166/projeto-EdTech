@@ -1,16 +1,16 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ProvedorApp } from './app/contexto';
-import { Rotas } from './app/Rotas';
+import { rotasDaAplicacao } from './app/rota-raiz';
 import './estilos.css';
+
+const router = createBrowserRouter(rotasDaAplicacao());
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ProvedorApp armazenamento={window.localStorage}>
-      <BrowserRouter>
-        <Rotas />
-      </BrowserRouter>
+      <RouterProvider router={router} />
     </ProvedorApp>
   </StrictMode>,
 );

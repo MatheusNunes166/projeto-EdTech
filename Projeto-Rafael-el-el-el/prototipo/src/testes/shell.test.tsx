@@ -1,13 +1,13 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 import { ProvedorApp } from '../app/contexto';
-import { Rotas } from '../app/Rotas';
+import { rotasDaAplicacao } from '../app/rota-raiz';
 import { CHAVES_ARMAZENAMENTO as K } from '../dados/armazenamento-academico';
 import { criarSeedAcademico } from '../dados/seed-academico';
 import { criarArmazenamentoEspiao } from './armazenamento-espiao';
-import { abrirDemonstracao, escolherFuncaoEntrada, renderizarApp } from './renderizar';
+import { abrirConta, abrirDemonstracao, escolherFuncaoEntrada, renderizarApp } from './renderizar';
 import { RepositorioApp } from '../dados/repositorio-app';
 
 describe('7.1 — [PA] Entrada simulada; Acesso restrito por função e vínculo; [OA] Revogação (sessão, funções e consultas autorizadas)', () => {
@@ -17,6 +17,7 @@ describe('7.1 — [PA] Entrada simulada; Acesso restrito por função e vínculo
     await usuario.click(await screen.findByRole('button', { name: 'Entrar como Ana Souza' }));
     expect(await screen.findByRole('heading', { name: 'Minhas turmas' })).toBeInTheDocument();
     expect(rotaAtual()).toBe('/aluno');
+    await abrirConta(usuario);
     await usuario.click(screen.getByRole('button', { name: 'Sair' }));
     expect(await screen.findByRole('heading', { name: 'Trilha Adaptativa' })).toBeInTheDocument();
     expect(screen.queryByText('Algoritmos')).toBeNull();
@@ -102,6 +103,7 @@ describe('Frontend 2 — entrada por função antes de pessoa', () => {
     await a.usuario.click(screen.getByRole('button', { name: 'Entrar como Carla Dias' }));
     expect(await screen.findByRole('heading', { name: 'Painel da coordenação' })).toBeInTheDocument();
     expect(a.rotaAtual()).toBe('/coordenacao');
+    await abrirConta(a.usuario);
     await a.usuario.click(within(screen.getByRole('navigation', { name: 'Áreas da pessoa' })).getByRole('link', { name: 'Área do Professor' }));
     expect(await screen.findByRole('article', { name: 'Matemática Básica turma A 2026.2' })).toBeInTheDocument();
     expect(localStorage.getItem(K.sessaoAcademica)).toBe('u-carla');
@@ -179,6 +181,7 @@ describe('7.2 — [PA] Funções de usuário suportadas, Permissões cumulativas
     const { usuario } = await renderizarApp('/professor', 'u-carla');
     expect(await screen.findByRole('article', { name: 'Matemática Básica turma A 2026.2' })).toBeInTheDocument();
     expect(screen.queryByRole('article', { name: /Algoritmos/ })).toBeNull();
+    await abrirConta(usuario);
     const areas = screen.getByRole('navigation', { name: 'Áreas da pessoa' });
     expect(within(areas).getAllByRole('link').map((l) => l.textContent)).toEqual(['Área do Professor', 'Área da Coordenação']);
     await usuario.click(within(areas).getByRole('link', { name: 'Área da Coordenação' }));
@@ -221,12 +224,13 @@ describe('Frontend 3 — cabeçalho e Demonstração', () => {
     ['/admin/periodos', 'u-renata', 'Área do Administrador', 'Períodos e turmas', 'Períodos e turmas'],
     ['/responsavel', 'u-helena', 'Área do Responsável', 'Painel do responsável', 'Painel'],
   ])('localiza %s sem perder menus ou marcar páginas duplicadas', async (rota, pessoa, area, secao, principal) => {
-    await renderizarApp(rota, pessoa);
+    const { usuario } = await renderizarApp(rota, pessoa);
     const localizacao = await screen.findByLabelText('Localização atual');
     expect(localizacao).toHaveTextContent(area); expect(localizacao).toHaveTextContent(secao);
     const menu = within(screen.getByRole('navigation', { name: 'Menu principal' }));
     expect(menu.getAllByRole('link', { current: 'page' })).toHaveLength(1);
     expect(menu.getByRole('link', { current: 'page' })).toHaveTextContent(principal);
+    await abrirConta(usuario);
     expect(screen.getByRole('button', { name: 'Sair' })).toBeVisible();
   });
 
@@ -240,6 +244,7 @@ describe('Frontend 3 — cabeçalho e Demonstração', () => {
     await abrirDemonstracao(a.usuario);
     expect(screen.getByRole('button', { name: 'Simular próximo dia' })).not.toBeVisible();
     expect(JSON.stringify(a.dados())).toBe(antes);
+    await abrirConta(a.usuario);
     await a.usuario.click(screen.getByRole('button', { name: 'Sair' }));
     await abrirDemonstracao(a.usuario);
     expect(screen.getByRole('button', { name: 'Restaurar dados de demonstração' })).toBeVisible();
@@ -250,7 +255,7 @@ describe('Frontend 3 — cabeçalho e Demonstração', () => {
 describe('7.3 — [OA] Demonstração fictícia e restauração: aviso inicial e controles de restauração', () => {
   const legado = '{"versaoSeed":1,"usuarios":[],"cursos":[]}';
   const montar = (armazenamento: ReturnType<typeof criarArmazenamentoEspiao>) => render(
-    <ProvedorApp armazenamento={armazenamento}><MemoryRouter><Rotas /></MemoryRouter></ProvedorApp>,
+    <ProvedorApp armazenamento={armazenamento}><RouterProvider router={createMemoryRouter(rotasDaAplicacao())} /></ProvedorApp>,
   );
 
   it('dados da versão anterior: o aviso aparece antes de qualquer substituição e cancelar não altera nada', async () => {

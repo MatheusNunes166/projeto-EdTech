@@ -19,7 +19,7 @@ A interface usa fundo neutro, superfícies claras, azul para ações principais 
 
 Cada pessoa tem funções explícitas e cumulativas (não há “perfil principal”). Vínculos não concedem funções.
 
-Na entrada, escolha primeiro uma **função** disponível e depois uma **pessoa ativa** dessa função. A entrada é simulada, com dados fictícios e **sem senha**. Você pode usar **Voltar às funções** sem iniciar sessão. A área escolhida é aberta diretamente: escolher Coordenador e Carla abre a Coordenação. Em **Áreas da pessoa**, Carla pode trocar para Professor na mesma conta, mantendo os vínculos e permissões de cada função.
+Na entrada, escolha primeiro uma **função** disponível e depois uma **pessoa ativa** dessa função. A entrada é simulada, com dados fictícios e **sem senha**. Você pode usar **Voltar às funções** sem iniciar sessão. A área escolhida é aberta diretamente: escolher Coordenador e Carla abre a Coordenação. Em **Conta**, Carla pode trocar para Professor na mesma conta, mantendo os vínculos e permissões de cada função.
 
 | Nome | E-mail | Funções | Vínculos |
 | --- | --- | --- | --- |
@@ -79,7 +79,7 @@ O documento acadêmico usa o namespace `trilha-adaptativa:academico:*`. A versã
 - **Sem dados anteriores**, a demonstração nova é inicializada.
 - **Com dados da versão anterior, de esquema incompatível ou JSON inválido**, nada é escrito durante a inspeção: o aplicativo avisa que o histórico fictício antigo **será apagado/substituído e não é migrado** para a estrutura de graduações, disciplinas e turmas. Só depois de **confirmar** a demonstração nova é gravada e a sessão antiga é encerrada. **Cancelar** não altera nenhuma chave nem abre sessão sobre dados incompatíveis.
 - **Restaurar a demonstração** exige o mesmo aviso: as alterações atuais (cadastros, edições de conteúdo, respostas e data virtual) são descartadas ao confirmar, e a sessão é encerrada.
-- Os controles ficam em **Demonstração**, recolhida por padrão em todas as áreas. Expanda para ver a data e **Simular próximo dia**, que avança exatamente um dia. Na entrada, Demonstração oferece somente a restauração, com aviso e confirmação; cancelar ou falhar preserva dados e sessão. Confirmar a restauração encerra a sessão e retorna à escolha de função. O aviso inicial de dados incompatíveis continua visível antes de qualquer substituição, fora do agrupamento recolhido.
+- **Conta** reúne a identidade, a troca de área e Sair. No celular, **Menu** reúne as seções da área e o expansor **Demonstração**. A Administração também usa **Seções** para agrupar seus destinos no desktop. Os controles de teste ficam em **Demonstração**, recolhida por padrão. Expanda para ver a data e **Simular próximo dia**, que avança exatamente um dia. Na entrada, Demonstração oferece somente a restauração, com aviso e confirmação; cancelar ou falhar preserva dados e sessão. Confirmar a restauração encerra a sessão e retorna à escolha de função. O aviso inicial de dados incompatíveis continua visível antes de qualquer substituição, fora do agrupamento recolhido.
 - Os dados da versão anterior permanecem no navegador apenas como **cópia técnica de recuperação**; eles não aparecem no catálogo novo e não constituem migração. Uma falha de gravação não deixa estado parcialmente inicializado.
 
 ## Limite do rollback entre esquemas

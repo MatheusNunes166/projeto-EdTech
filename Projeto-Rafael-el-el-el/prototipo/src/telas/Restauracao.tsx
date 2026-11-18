@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { Expansor } from '../componentes/Expansor';
 import { useNavigate } from 'react-router-dom';
 import { normalizarErro, useApp } from '../app/contexto';
 
@@ -49,5 +50,5 @@ export function Restauracao({ rotulo = 'Restaurar dados de demonstração' }: { 
 }
 
 export function Demonstracao({ children }: { children?: ReactNode }) {
-  return <details className="demonstracao"><summary>Demonstração</summary><div className="conteudo-demo">{children}<Restauracao /></div></details>;
+  return <Expansor classe="demonstracao" rotulo="Demonstração"><div className="conteudo-demo">{children}<Restauracao /></div></Expansor>;
 }

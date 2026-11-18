@@ -1,8 +1,8 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider, useLocation } from 'react-router-dom';
 import { ProvedorApp } from '../app/contexto';
-import { Rotas } from '../app/Rotas';
+import { rotasDaAplicacao } from '../app/rota-raiz';
 import { CHAVES_ARMAZENAMENTO as K, criarPersistenciaLocal, criarRepositorioLocal, type ArmazenamentoEscrita } from '../dados/armazenamento-academico';
 import { RepositorioApp } from '../dados/repositorio-app';
 import { criarSeedAcademico } from '../dados/seed-academico';
@@ -26,17 +26,15 @@ export async function renderizarApp(
   armazenamento.setItem(K.academico, JSON.stringify(seed));
   if (pessoaId) armazenamento.setItem(K.sessaoAcademica, pessoaId);
   const usuario = userEvent.setup();
+  const router = createMemoryRouter(rotasDaAplicacao(<Sonda />), { initialEntries: [rota] });
   const resultado = render(
     <ProvedorApp armazenamento={armazenamento}>
-      <MemoryRouter initialEntries={[rota]}>
-        <Rotas />
-        <Sonda />
-      </MemoryRouter>
+      <RouterProvider router={router} />
     </ProvedorApp>,
   );
   await screen.findByTestId('rota');
   return {
-    usuario, ...resultado,
+    usuario, router, ...resultado,
     repo: criarRepositorioLocal(armazenamento),
     /** Outra sessão (outra aba) sobre o mesmo armazenamento. */
     outraAba: (pessoaId: string) => {
@@ -59,4 +57,9 @@ export async function escolherFuncaoEntrada(usuario: ReturnType<typeof userEvent
 
 export async function abrirDemonstracao(usuario: ReturnType<typeof userEvent.setup>) {
   await usuario.click(await screen.findByText('Demonstração', { selector: 'summary' }));
+}
+
+export async function abrirConta(usuario: ReturnType<typeof userEvent.setup>) {
+  const conta = await screen.findByText('Conta', { selector: 'summary' });
+  if (!conta.closest('details')?.open) await usuario.click(conta);
 }

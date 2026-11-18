@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { useComando, useConsulta, useUsuario } from '../../app/contexto';
+import { Link, useLocation, useParams } from 'react-router-dom';
+import { useComando, useConsulta } from '../../app/contexto';
 import { Campo, Consulta, MensagemErro } from '../../componentes/comuns';
 import type { ConfirmacaoTextual, ConteudoCandidato, QuestaoCandidata } from '../../dados/comandos-conteudo';
 import type { ConteudoEditavel } from '../../dados/contratos-consultas-academicas';
@@ -40,7 +40,7 @@ function Editor({ conteudo, revisao, salvo, aoSalvar, comando }: {
   const [pendentes, setPendentes] = useState<{ recursoId: string; rotulo: string; diferenca: DiferencaTextual[]; revisaoOriginal: number }[]>([]);
   const [confirmadas, setConfirmadas] = useState<Record<string, boolean>>({});
   const { rodar, erro, ocupado, limpar } = comando;
-  const voltar = useUsuario().funcoes.includes('professor') ? '/professor' : '/admin/graduacoes';
+  const voltar = useLocation().pathname.startsWith('/admin/') ? '/admin/graduacoes' : '/professor';
   const publicado = conteudo.disciplina.status === 'publicado';
 
   const editado = JSON.stringify({ topicos, questoes }) !== JSON.stringify(original);
