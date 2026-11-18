@@ -1,0 +1,588 @@
+{
+  "navegador": "Chrome headless via CDP",
+  "checks": [
+    {
+      "tela": "sessao-feedback",
+      "width": 1280,
+      "document": 1265,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "sessao-feedback",
+      "width": 768,
+      "document": 753,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "sessao-feedback",
+      "width": 360,
+      "document": 345,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "entrada-funcoes",
+      "width": 1280,
+      "document": 1280,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "entrada-pessoas",
+      "width": 1280,
+      "document": 1280,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "entrada-funcoes",
+      "width": 768,
+      "document": 768,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "entrada-pessoas",
+      "width": 768,
+      "document": 768,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "entrada-funcoes",
+      "width": 360,
+      "document": 360,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "entrada-pessoas",
+      "width": 360,
+      "document": 360,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "minhas-turmas",
+      "width": 1280,
+      "document": 1280,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "catalogo",
+      "width": 1280,
+      "document": 1280,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "detalhe",
+      "width": 1280,
+      "document": 1265,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "trilha",
+      "width": 1280,
+      "document": 1265,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "trilha-conquistas-abertas",
+      "width": 1280,
+      "document": 1265,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "trilha-detalhes-abertos",
+      "width": 1280,
+      "document": 1265,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "materiais",
+      "width": 1280,
+      "document": 1280,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "desempenho",
+      "width": 1280,
+      "document": 1280,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "minhas-turmas",
+      "width": 768,
+      "document": 768,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "catalogo",
+      "width": 768,
+      "document": 768,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "detalhe",
+      "width": 768,
+      "document": 753,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "trilha",
+      "width": 768,
+      "document": 753,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "trilha-conquistas-abertas",
+      "width": 768,
+      "document": 753,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "trilha-detalhes-abertos",
+      "width": 768,
+      "document": 753,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "materiais",
+      "width": 768,
+      "document": 768,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "desempenho",
+      "width": 768,
+      "document": 768,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "minhas-turmas",
+      "width": 360,
+      "document": 360,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "catalogo",
+      "width": 360,
+      "document": 345,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "detalhe",
+      "width": 360,
+      "document": 345,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "trilha",
+      "width": 360,
+      "document": 345,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "trilha-conquistas-abertas",
+      "width": 360,
+      "document": 345,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "trilha-detalhes-abertos",
+      "width": 360,
+      "document": 345,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "materiais",
+      "width": 360,
+      "document": 360,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "desempenho",
+      "width": 360,
+      "document": 360,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "texto-longo-minhas-turmas",
+      "width": 360,
+      "document": 345,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "texto-longo-catalogo",
+      "width": 360,
+      "document": 345,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "texto-longo-detalhe",
+      "width": 360,
+      "document": 345,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "texto-longo-trilha",
+      "width": 360,
+      "document": 345,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "texto-longo-materiais",
+      "width": 360,
+      "document": 360,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    },
+    {
+      "tela": "texto-longo-desempenho",
+      "width": 360,
+      "document": 345,
+      "overflow": [],
+      "cabecalho": false,
+      "colisoes": []
+    }
+  ],
+  "arvoreAcessivelSessao": [
+    {
+      "papel": "progressbar",
+      "nome": "Progresso da matrícula",
+      "valor": 0,
+      "estados": []
+    },
+    {
+      "papel": "radio",
+      "nome": "x",
+      "estados": [
+        {
+          "name": "disabled",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        {
+          "name": "checked",
+          "value": {
+            "type": "tristate",
+            "value": "false"
+          }
+        }
+      ]
+    },
+    {
+      "papel": "radio",
+      "nome": "5",
+      "estados": [
+        {
+          "name": "disabled",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        {
+          "name": "checked",
+          "value": {
+            "type": "tristate",
+            "value": "false"
+          }
+        }
+      ]
+    },
+    {
+      "papel": "radio",
+      "nome": "0",
+      "estados": [
+        {
+          "name": "disabled",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        {
+          "name": "checked",
+          "value": {
+            "type": "tristate",
+            "value": "true"
+          }
+        }
+      ]
+    },
+    {
+      "papel": "radio",
+      "nome": "indefinido",
+      "estados": [
+        {
+          "name": "disabled",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        {
+          "name": "checked",
+          "value": {
+            "type": "tristate",
+            "value": "false"
+          }
+        }
+      ]
+    },
+    {
+      "papel": "radio",
+      "nome": "Alternativa longa Alternativa longa Alternativa longa Alternativa longa Alternativa longa Alternativa longa Alternativa longa Alternativa longa Alternativa longa Alternativa longa Alternativa longa Alternativa longa ",
+      "estados": [
+        {
+          "name": "disabled",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        {
+          "name": "checked",
+          "value": {
+            "type": "tristate",
+            "value": "false"
+          }
+        }
+      ]
+    },
+    {
+      "papel": "radio",
+      "nome": "Outra alternativa adicional para conferir quantidades variáveis.",
+      "estados": [
+        {
+          "name": "disabled",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        {
+          "name": "checked",
+          "value": {
+            "type": "tristate",
+            "value": "false"
+          }
+        }
+      ]
+    },
+    {
+      "papel": "radio",
+      "nome": "Alternativa longa Alternativa longa Alternativa longa Alternativa longa Alternativa longa Alternativa longa Alternativa longa Alternativa longa Alternativa longa Alternativa longa Alternativa longa Alternativa longa ",
+      "estados": [
+        {
+          "name": "disabled",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        {
+          "name": "checked",
+          "value": {
+            "type": "tristate",
+            "value": "false"
+          }
+        }
+      ]
+    },
+    {
+      "papel": "radio",
+      "nome": "Outra alternativa adicional para conferir quantidades variáveis.",
+      "estados": [
+        {
+          "name": "disabled",
+          "value": {
+            "type": "boolean",
+            "value": true
+          }
+        },
+        {
+          "name": "checked",
+          "value": {
+            "type": "tristate",
+            "value": "false"
+          }
+        }
+      ]
+    }
+  ],
+  "arvoreAcessivelExpansores": [
+    {
+      "papel": "DisclosureTriangle",
+      "nome": "Demonstração",
+      "estados": [
+        {
+          "name": "focusable",
+          "value": {
+            "type": "booleanOrUndefined",
+            "value": true
+          }
+        },
+        {
+          "name": "expanded",
+          "value": {
+            "type": "booleanOrUndefined",
+            "value": false
+          }
+        }
+      ]
+    },
+    {
+      "papel": "DisclosureTriangle",
+      "nome": "Conquistas (1)",
+      "estados": [
+        {
+          "name": "focusable",
+          "value": {
+            "type": "booleanOrUndefined",
+            "value": true
+          }
+        },
+        {
+          "name": "focused",
+          "value": {
+            "type": "booleanOrUndefined",
+            "value": true
+          }
+        },
+        {
+          "name": "expanded",
+          "value": {
+            "type": "booleanOrUndefined",
+            "value": true
+          }
+        }
+      ]
+    }
+  ],
+  "perfis": [
+    {
+      "pessoa": "u-ana",
+      "rota": "/aluno",
+      "menu": [
+        "Minhas turmas",
+        "Catálogo"
+      ]
+    },
+    {
+      "pessoa": "u-marcos",
+      "rota": "/professor",
+      "menu": [
+        "Minhas turmas"
+      ]
+    },
+    {
+      "pessoa": "u-carla",
+      "rota": "/coordenacao",
+      "menu": [
+        "Painel",
+        "Gestão acadêmica",
+        "Cadastros"
+      ]
+    },
+    {
+      "pessoa": "u-renata",
+      "rota": "/admin/usuarios",
+      "menu": [
+        "Visão geral",
+        "Pessoas",
+        "Vínculos",
+        "Graduações e disciplinas",
+        "Períodos e turmas",
+        "Matrículas e docentes"
+      ]
+    },
+    {
+      "pessoa": "u-helena",
+      "rota": "/responsavel",
+      "menu": [
+        "Painel"
+      ]
+    }
+  ],
+  "tecladoExpansoresECancelamento": true,
+  "feedbackPreservadoEmTresLarguras": true,
+  "documentoCompativelPreservado": {
+    "sha256Antes": "c013356421a116f68a3a4222a6e48ac57cd0639363ae1b6aebc6218c1f8dad6b",
+    "sha256Depois": "c013356421a116f68a3a4222a6e48ac57cd0639363ae1b6aebc6218c1f8dad6b",
+    "dataVirtual": "2026-11-18",
+    "respostas": 61
+  },
+  "nomesLongos": "Fixture independente na origem localhost; base da regressão na origem 127.0.0.1 intacta"
+}

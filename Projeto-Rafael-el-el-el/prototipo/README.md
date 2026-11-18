@@ -60,6 +60,14 @@ Carla ilustra funções cumulativas em cursos diferentes: leciona Matemática B�
 
 A data virtual inicial é **2026-11-17**. Os históricos de respostas são gerados pelo próprio motor adaptativo (nenhum contador é inventado), de modo que os painéis mostram progresso, XP, sequência e conquistas coerentes: Elisa concluiu a trilha com sete dias seguidos; Bruno aparece como “Precisa de atenção” em Algoritmos B; Diego e as matrículas de 2027.1 não têm respostas.
 
+## Experiência de estudo
+
+Em **Minhas turmas**, cada oferta tem seu próprio estado: **Começar trilha** sem respostas, **Continuar trilha** com atividade (mesmo a 0%) ou **Ver trilha** na conclusão. **Desempenho** continua disponível como ação secundária. Indicadores carregando ou com erro não são substituídos por zero.
+
+A trilha mantém a ordem dos tópicos e destaca o **Próximo recomendado** informado pelo motor. XP e sequência aparecem em resumo; **Conquistas (N)** permite consultar nomes e datas. A sessão prioriza a questão e mantém o feedback até **Próxima questão**, **Continuar mesmo assim** ou saída. No celular, o contexto vira uma faixa acima da questão. A navegação oferece **Pular para conteúdo**, foco nos destinos e controles nativos por teclado.
+
+As [evidências da reorganização](../openspec/changes/reorganizar-experiencia-frontend/evidencias/README.md) registram testes, capturas em três larguras, contraste e preservação dos dados locais.
+
 ## Dados locais, aviso de perda e restauração
 
 O documento acadêmico usa o namespace `trilha-adaptativa:academico:*`. A versão anterior do protótipo usava `trilha-adaptativa:dados` e `trilha-adaptativa:sessao`.
