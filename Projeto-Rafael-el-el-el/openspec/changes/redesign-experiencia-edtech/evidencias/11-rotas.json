@@ -1,0 +1,411 @@
+{
+  "resultados": [
+    {
+      "rota": "/",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Trilha Adaptativa"
+    },
+    {
+      "rota": "/aluno",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Minhas turmas"
+    },
+    {
+      "rota": "/aluno/catalogo",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Catálogo"
+    },
+    {
+      "rota": "/aluno/catalogo/disciplinas/d-alg",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Algoritmos NomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisão"
+    },
+    {
+      "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262",
+      "viewport": 1280,
+      "larguraUtil": 1265,
+      "documento": 1265,
+      "caixas": [],
+      "titulo": "Algoritmos NomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisão"
+    },
+    {
+      "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/sessao",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Sessão de estudo"
+    },
+    {
+      "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/desempenho",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Desempenho em Algoritmos NomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisão"
+    },
+    {
+      "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/topicos/t-var",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Variáveis"
+    },
+    {
+      "rota": "/professor",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Minhas turmas"
+    },
+    {
+      "rota": "/professor/disciplinas/d-alg/turmas/t-alg-a-262",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Algoritmos NomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisão — Turma A"
+    },
+    {
+      "rota": "/professor/disciplinas/d-alg/turmas/t-alg-a-262/alunos/m-ana-alg-a-262",
+      "viewport": 1280,
+      "larguraUtil": 1265,
+      "documento": 1265,
+      "caixas": [],
+      "titulo": "Ana Souza NomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisão"
+    },
+    {
+      "rota": "/professor/disciplinas/d-alg/conteudo",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Conteúdo de Algoritmos NomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisão"
+    },
+    {
+      "rota": "/coordenacao",
+      "viewport": 1280,
+      "larguraUtil": 1265,
+      "documento": 1265,
+      "caixas": [],
+      "titulo": "Painel da coordenação"
+    },
+    {
+      "rota": "/coordenacao/gestao",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Gestão acadêmica"
+    },
+    {
+      "rota": "/coordenacao/gestao/turmas/t-alg-a-262",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Algoritmos NomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisão — Turma A"
+    },
+    {
+      "rota": "/coordenacao/cadastros",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Cadastros"
+    },
+    {
+      "rota": "/admin",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Visão geral"
+    },
+    {
+      "rota": "/admin/usuarios",
+      "viewport": 1280,
+      "larguraUtil": 1265,
+      "documento": 1265,
+      "caixas": [],
+      "titulo": "Pessoas e funções"
+    },
+    {
+      "rota": "/admin/vinculos",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Vínculos"
+    },
+    {
+      "rota": "/admin/graduacoes",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Graduações e disciplinas"
+    },
+    {
+      "rota": "/admin/periodos",
+      "viewport": 1280,
+      "larguraUtil": 1265,
+      "documento": 1265,
+      "caixas": [],
+      "titulo": "Períodos letivos e turmas"
+    },
+    {
+      "rota": "/admin/gestao",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Gestão acadêmica"
+    },
+    {
+      "rota": "/admin/gestao/turmas/t-alg-a-262",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Algoritmos NomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisão — Turma A"
+    },
+    {
+      "rota": "/admin/disciplinas/d-alg/conteudo",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Conteúdo de Algoritmos NomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisão"
+    },
+    {
+      "rota": "/responsavel",
+      "viewport": 1280,
+      "larguraUtil": 1280,
+      "documento": 1280,
+      "caixas": [],
+      "titulo": "Painel do responsável"
+    },
+    {
+      "rota": "/",
+      "viewport": 360,
+      "larguraUtil": 360,
+      "documento": 360,
+      "caixas": [],
+      "titulo": "Trilha Adaptativa"
+    },
+    {
+      "rota": "/aluno",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Minhas turmas"
+    },
+    {
+      "rota": "/aluno/catalogo",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Catálogo"
+    },
+    {
+      "rota": "/aluno/catalogo/disciplinas/d-alg",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Algoritmos NomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisão"
+    },
+    {
+      "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Algoritmos NomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisão"
+    },
+    {
+      "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/sessao",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Sessão de estudo"
+    },
+    {
+      "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/desempenho",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Desempenho em Algoritmos NomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisão"
+    },
+    {
+      "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/topicos/t-var",
+      "viewport": 360,
+      "larguraUtil": 360,
+      "documento": 360,
+      "caixas": [],
+      "titulo": "Variáveis"
+    },
+    {
+      "rota": "/professor",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Minhas turmas"
+    },
+    {
+      "rota": "/professor/disciplinas/d-alg/turmas/t-alg-a-262",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Algoritmos NomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisão — Turma A"
+    },
+    {
+      "rota": "/professor/disciplinas/d-alg/turmas/t-alg-a-262/alunos/m-ana-alg-a-262",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Ana Souza NomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisão"
+    },
+    {
+      "rota": "/professor/disciplinas/d-alg/conteudo",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Conteúdo de Algoritmos NomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisão"
+    },
+    {
+      "rota": "/coordenacao",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Painel da coordenação"
+    },
+    {
+      "rota": "/coordenacao/gestao",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Gestão acadêmica"
+    },
+    {
+      "rota": "/coordenacao/gestao/turmas/t-alg-a-262",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Algoritmos NomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisão — Turma A"
+    },
+    {
+      "rota": "/coordenacao/cadastros",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Cadastros"
+    },
+    {
+      "rota": "/admin",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Visão geral"
+    },
+    {
+      "rota": "/admin/usuarios",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Pessoas e funções"
+    },
+    {
+      "rota": "/admin/vinculos",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Vínculos"
+    },
+    {
+      "rota": "/admin/graduacoes",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Graduações e disciplinas"
+    },
+    {
+      "rota": "/admin/periodos",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Períodos letivos e turmas"
+    },
+    {
+      "rota": "/admin/gestao",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Gestão acadêmica"
+    },
+    {
+      "rota": "/admin/gestao/turmas/t-alg-a-262",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Algoritmos NomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisão — Turma A"
+    },
+    {
+      "rota": "/admin/disciplinas/d-alg/conteudo",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Conteúdo de Algoritmos NomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisãoNomeLongoDeRevisão"
+    },
+    {
+      "rota": "/responsavel",
+      "viewport": 360,
+      "larguraUtil": 345,
+      "documento": 345,
+      "caixas": [],
+      "titulo": "Painel do responsável"
+    }
+  ],
+  "layout": {
+    "falhas": []
+  },
+  "fixture": {
+    "hash": "56d78a1523bb1ed2074cd273a38119f4604d117c9776957e2c5c3d4a8727d1ad",
+    "respostas": 57
+  }
+}

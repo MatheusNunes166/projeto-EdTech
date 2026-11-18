@@ -39,3 +39,7 @@ Baseline em `8e3a65c` com 662 testes em 42 arquivos e build aprovado. Node 26 co
 ## 10
 
 22 testes de Responsável, indicadores e integração e build aprovados. Chrome percorreu entrada, as ofertas de Ana nos dois períodos, o expansor e a saída por teclado em 1280 px e 360 px. Documento acadêmico idêntico. O teste de revogação removeu a oferta da tela na próxima consulta e confirmou histórico intacto.
+
+## 11
+
+Suíte completa com 669 testes aprovados em 43 arquivos (baseline de 662 em 42) e tipagem/build aprovados. Chrome abriu os 25 destinos a 1280 px e 360 px com nomes longos. As 50 medições registraram zero overflow de página ou das caixas verificadas. As jornadas das cinco funções e os controles por teclado estão registrados em cada grupo. A amostra de contraste dos elementos renderizados passou, incluindo foco, borda de campo e ação principal. Sobre a demonstração isolada após avanço de dia, cancelar remoção, restaurar e sair do editor preservou o rascunho quando aplicável, e acesso indevido manteve os dados ocultos. O documento acadêmico, com 57 respostas, teve o mesmo SHA-256 antes e depois nas duas larguras. OpenSpec estrito aprovado e status com 4/4 artefatos. A consolidação de reorganizar-experiencia-frontend e a reconciliação dos deltas continuam pendentes para a etapa de arquivamento.

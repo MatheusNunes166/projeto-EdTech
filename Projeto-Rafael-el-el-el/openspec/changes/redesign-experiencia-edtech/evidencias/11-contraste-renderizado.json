@@ -1,0 +1,50 @@
+[
+  {
+    "largura": 1280,
+    "nome": "texto do título",
+    "min": 4.5,
+    "razao": 14.715144767462526
+  },
+  {
+    "largura": 1280,
+    "nome": "texto do botão",
+    "min": 4.5,
+    "razao": 6.271387698133873
+  },
+  {
+    "largura": 1280,
+    "nome": "borda de campo",
+    "min": 3,
+    "razao": 4.08893684366706
+  },
+  {
+    "largura": 1280,
+    "nome": "contorno do foco",
+    "min": 3,
+    "razao": 8.179512488370529
+  },
+  {
+    "largura": 360,
+    "nome": "texto do título",
+    "min": 4.5,
+    "razao": 14.715144767462526
+  },
+  {
+    "largura": 360,
+    "nome": "texto do botão",
+    "min": 4.5,
+    "razao": 6.271387698133873
+  },
+  {
+    "largura": 360,
+    "nome": "borda de campo",
+    "min": 3,
+    "razao": 4.08893684366706
+  },
+  {
+    "largura": 360,
+    "nome": "contorno do foco",
+    "min": 3,
+    "razao": 8.179512488370529
+  }
+]
