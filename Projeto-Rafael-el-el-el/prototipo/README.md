@@ -84,6 +84,8 @@ Use **Tópicos e materiais** ou **Banco de questões** e abra o item desejado. O
 
 Em **Minhas turmas**, cada oferta tem seu próprio estado: **Começar trilha** sem respostas, **Continuar trilha** com atividade (mesmo a 0%) ou **Ver trilha** na conclusão. **Desempenho** continua disponível como ação secundária. Indicadores carregando ou com erro não são substituídos por zero.
 
+No **Catálogo**, combine busca, área, nível e período e use **Limpar filtros** para voltar ao conjunto de ofertas. A oferta no detalhe mostra período, docentes e situação da matrícula. Em **Materiais**, abra a leitura do texto ou o link do recurso e retorne à mesma oferta.
+
 A trilha mantém a ordem dos tópicos e destaca o **Próximo recomendado** informado pelo motor. XP e sequência aparecem em resumo; **Conquistas (N)** permite consultar nomes e datas. A sessão prioriza a questão e mantém o feedback até **Próxima questão**, **Continuar mesmo assim** ou saída. No celular, o contexto vira uma faixa acima da questão. A navegação oferece **Pular para conteúdo**, foco nos destinos e controles nativos por teclado.
 
 As [evidências da reorganização](../openspec/changes/reorganizar-experiencia-frontend/evidencias/README.md) registram testes, capturas em três larguras, contraste e preservação dos dados locais.

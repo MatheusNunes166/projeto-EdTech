@@ -17,13 +17,13 @@ function TrilhaDaMatricula({ alvo }: { alvo: AlvoMatricula }) {
     <Consulta estado={estado}>
       {({ contexto, trilha, gamificacao, proxima }) => (
         <div className="experiencia-trilha">
-          <p><Link to="/aluno">← Minhas turmas</Link></p>
+          <p><Link to="/aluno">Voltar às turmas</Link></p>
           <h1>{contexto.disciplina.nome}</h1>
           <p className="meta">{contexto.graduacao.nome} · Turma {contexto.turma.codigo} · {contexto.periodoLetivo.nome}</p>
           <section className="cartao resumo-trilha" aria-label="Progresso da trilha">
             <BarraProgresso valor={trilha.progresso} rotulo={`Progresso em ${contexto.disciplina.nome} turma ${contexto.turma.codigo}`} />
             {trilha.concluido ? <p className="destaque">Trilha concluída nesta turma (isto não representa aprovação acadêmica).</p>
-              : proxima ? <p>Seu próximo passo: <strong>{proxima.topicoTitulo}</strong>.</p>
+              : proxima ? <p className="proximo-passo">Seu próximo passo: <strong>{proxima.topicoTitulo}</strong>.</p>
                 : <p role="status">Não há questões disponíveis no momento.</p>}
             <div className="acoes">
               {!trilha.concluido && proxima && <Link className="botao" to={`${base}/sessao`}>Estudar</Link>}
@@ -45,7 +45,7 @@ function TrilhaDaMatricula({ alvo }: { alvo: AlvoMatricula }) {
             <p><strong>{gamificacao.xp}</strong> XP · Sequência: <strong>{gamificacao.sequenciaDias}</strong> dia(s)</p>
             <details><summary>Conquistas ({gamificacao.conquistas.length})</summary>
               {gamificacao.conquistas.length === 0 ? <p className="meta">Nenhuma conquista ainda.</p>
-                : <ul className="conquistas lista-limpa">{gamificacao.conquistas.map((c) => <li key={c.id}>🏆 {c.nome} <small>({formatarData(c.data)})</small></li>)}</ul>}
+                : <ul className="conquistas lista-limpa">{gamificacao.conquistas.map((c) => <li key={c.id}>{c.nome} <small>({formatarData(c.data)})</small></li>)}</ul>}
             </details>
           </section>
         </div>

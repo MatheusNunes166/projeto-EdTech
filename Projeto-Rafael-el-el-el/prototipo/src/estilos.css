@@ -320,3 +320,19 @@ button[aria-pressed='true'].secundario { color: var(--cor-primaria-escura); back
 @media (max-width: 639px) {
   .alternativa-editavel { grid-template-columns: minmax(0, 1fr); gap: var(--e1); padding-block: var(--e2); border-top: 1px solid var(--cor-borda); }
 }
+
+.filtros-catalogo { grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr)); align-items: end; }
+.filtros-catalogo button { justify-self: start; }
+.ofertas-aluno .cartao { padding: var(--e5); }
+.proximo-passo { font-size: 1.125rem; }
+.material-leitura { max-inline-size: 78ch; }
+.material-leitura h2 { margin-top: var(--e2); }
+.texto-material { white-space: pre-wrap; }
+.experiencia-aluno .questao h2 { font-size: 1.5rem; }
+@media (max-width: 899px) { .filtros-catalogo { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 639px) {
+  .filtros-catalogo { grid-template-columns: minmax(0,1fr); }
+  .ofertas-aluno .cartao { padding: var(--e4); }
+  .experiencia-aluno .questao h2 { font-size: 1.375rem; }
+  .disciplina-sessao { flex-basis: 100%; }
+}

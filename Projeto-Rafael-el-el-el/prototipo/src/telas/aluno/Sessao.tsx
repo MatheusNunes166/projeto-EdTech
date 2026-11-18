@@ -78,7 +78,7 @@ function SessaoDaMatricula({ alvo, suspensa }: { alvo: AlvoMatricula; suspensa: 
       <h1>Sessão de estudo</h1>
       <div className="sessao-layout">
         <aside className="contexto-sessao" aria-label="Contexto da sessão">
-          <p><strong>{trilha.dados.contexto.disciplina.nome}</strong></p>
+          <p className="disciplina-sessao"><strong>{trilha.dados.contexto.disciplina.nome}</strong></p>
           <p>Turma {trilha.dados.contexto.turma.codigo} · {trilha.dados.contexto.periodoLetivo.nome}</p>
           <BarraProgresso valor={trilha.dados.trilha.progresso} rotulo="Progresso da matrícula" />
           <Link to={base}>Ver trilha</Link>

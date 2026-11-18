@@ -19,16 +19,17 @@ function MateriaisDoTopico({ alvo, topicoId }: { alvo: Parameters<typeof caminho
     <Consulta estado={estado}>
       {({ trilha, contexto }) => {
         const topico = trilha.topicos.find((t) => t.topicoId === topicoId && t.desbloqueado);
-        if (!topico) return <Vazio>Tópico não encontrado ou ainda bloqueado.</Vazio>;
+        if (!topico) return <><h1>Materiais indisponíveis</h1><Vazio>Tópico não encontrado ou ainda bloqueado.</Vazio><Link to={caminhoTurma(alvo)}>Voltar à trilha</Link></>;
         return (
           <>
             <p><Link to={caminhoTurma(alvo)}>← Voltar à trilha</Link></p>
             <h1>{topico.titulo}</h1>
             <p className="meta">{contexto.disciplina.nome} · Turma {contexto.turma.codigo} · {contexto.periodoLetivo.nome}</p>
             {topico.materiais.length === 0 ? <Vazio>Este tópico ainda não tem materiais.</Vazio> : topico.materiais.map((m) => (
-              <article key={m.id} className="cartao">
+              <article key={m.id} className="cartao material-leitura">
+                <p className="meta">{m.tipo === 'texto' ? 'Texto' : m.tipo === 'video' ? 'Vídeo' : 'Arquivo'}</p>
                 <h2>{m.titulo}</h2>
-                {m.tipo === 'texto' ? <p>{m.conteudo}</p> : <a href={m.conteudo} target="_blank" rel="noreferrer">{m.tipo === 'video' ? 'Assistir ao vídeo' : 'Abrir arquivo'}</a>}
+                {m.tipo === 'texto' ? <details><summary>Ler material</summary><p className="texto-material">{m.conteudo}</p></details> : <a href={m.conteudo} target="_blank" rel="noreferrer">{m.tipo === 'video' ? 'Assistir ao vídeo' : 'Abrir arquivo'}</a>}
               </article>
             ))}
           </>

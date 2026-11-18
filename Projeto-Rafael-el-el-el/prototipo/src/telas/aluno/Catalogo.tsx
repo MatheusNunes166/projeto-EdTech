@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useConsulta } from '../../app/contexto';
+import { ListaRegistros, Registro } from '../../componentes/Gestao';
 import { Consulta, Vazio } from '../../componentes/comuns';
 import type { FiltrosCatalogo } from '../../dados/contratos-consultas-academicas';
 import { NIVEIS_CURSO, type NivelCurso } from '../../dominio/tipos';
@@ -22,11 +23,14 @@ export function Catalogo() {
     periodos: [...new Map(todos.dados.flatMap((g) => g.disciplinas.flatMap((d) => d.ofertas.map((o) => [o.periodoLetivo.id, o.periodoLetivo.nome] as const)))).entries()],
   } : { areas: [], periodos: [] };
 
+  const filtrado = Boolean(busca.trim() || area || nivel || periodo);
+  const limpar = () => { setBusca(''); setArea(''); setNivel(''); setPeriodo(''); };
+
   return (
     <>
       <h1>Catálogo</h1>
       <p className="sub">Graduações e disciplinas publicadas. A matrícula nas turmas é feita pela coordenação ou administração.</p>
-      <form className="filtros" role="search" onSubmit={(e) => e.preventDefault()}>
+      <form className="filtros filtros-catalogo cartao" role="search" onSubmit={(e) => e.preventDefault()}>
         <label>Buscar <input type="search" value={busca} onChange={(e) => setBusca(e.target.value)} /></label>
         <label>Área
           <select value={area} onChange={(e) => setArea(e.target.value)}>
@@ -43,9 +47,10 @@ export function Catalogo() {
             <option value="">Todos</option>{opcoes.periodos.map(([id, nome]) => <option key={id} value={id}>{nome}</option>)}
           </select>
         </label>
+        {filtrado && <button type="button" className="secundario" onClick={limpar}>Limpar filtros</button>}
       </form>
       <Consulta estado={lista}>
-        {(graduacoes) => graduacoes.length === 0 ? <Vazio>Nenhuma graduação ou disciplina encontrada para os filtros.</Vazio> : (
+        {(graduacoes) => graduacoes.length === 0 ? <Vazio>{filtrado ? "Nenhuma graduação ou disciplina encontrada para os filtros." : "Não há graduações ou disciplinas disponíveis no catálogo."}</Vazio> : (
           <div className="grade-cartoes">
             {graduacoes.map((g) => (
               <section key={g.id} className="cartao" aria-label={g.nome}>
@@ -53,14 +58,14 @@ export function Catalogo() {
                 <p className="meta">{g.area}</p>
                 <p>{g.descricaoCurta}</p>
                 {g.disciplinas.length === 0 ? <Vazio>Sem disciplinas publicadas neste filtro.</Vazio> : (
-                  <ul className="lista-limpa">
+                  <ListaRegistros rotulo={"Disciplinas de " + g.nome}>
                     {g.disciplinas.map((d) => (
-                      <li key={d.id}>
+                      <Registro key={d.id}>
                         <Link to={`/aluno/catalogo/disciplinas/${d.id}`}>{d.nome}</Link>{' '}
-                        <small className="meta">{d.codigo} · {d.nivel} · {d.numeroTopicos} tópicos · {d.ofertas.length} oferta(s)</small>
-                      </li>
+                        <p className="meta">{d.codigo} · {d.nivel} · {d.numeroTopicos} tópicos · {d.ofertas.length} oferta(s)</p>
+                      </Registro>
                     ))}
-                  </ul>
+                  </ListaRegistros>
                 )}
               </section>
             ))}

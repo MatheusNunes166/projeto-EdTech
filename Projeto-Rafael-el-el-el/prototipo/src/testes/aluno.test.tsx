@@ -35,6 +35,9 @@ describe('7.8 — [CC] Catálogo de graduações e disciplinas publicadas, Busca
     await usuario.selectOptions(screen.getByLabelText('Período'), '2027.1');
     await waitFor(() => expect(screen.queryByRole('link', { name: 'Inglês Inicial' })).toBeNull()); // só ALG e MAT têm turma em 2027.1
     expect(screen.getByRole('link', { name: 'Algoritmos' })).toBeInTheDocument();
+    await usuario.click(screen.getByRole('button', { name: 'Limpar filtros' }));
+    expect(await screen.findByRole('link', { name: 'Inglês Inicial' })).toBeVisible();
+    expect(screen.getByLabelText('Período')).toHaveValue('');
   });
 
   it('detalhe: tópicos e ofertas; Continuar só nas ofertas matriculadas, sem botão de matrícula e sem questões', async () => {
@@ -103,7 +106,11 @@ describe('7.9 — [CC] Minhas turmas; [AC] Painel do aluno', () => {
     expect(screen.getByText(/Sistemas de Informação · Turma A · 2026\.2/)).toBeInTheDocument();
     expect(screen.getByText(/Taxa de acertos:/)).toBeInTheDocument();
     expect(screen.getByText('Domínio por tópico')).toBeInTheDocument();
-    expect(screen.getAllByText(/^(Variáveis|Condicionais|Laços de repetição|Laços).*: \d+/).length).toBe(3);
+    const dominio = screen.getByRole('list', { name: 'Domínio por tópico' });
+    const topicos = within(dominio).getAllByRole('listitem');
+    expect(topicos).toHaveLength(3);
+    for (const t of topicos) expect(t).toHaveTextContent(/Domínio: \d+/);
+    expect(topicos[0]).toHaveTextContent('Variáveis');
   });
 
   it('desempenho sem respostas indica Sem atividade e taxa zero', async () => {
@@ -400,7 +407,7 @@ describe('7.10 — [AA] Inicialização e retomada, Feedback imediato, Revisão 
     await usuario.click(within(nova).getByText(/Conquistas \(/, { selector: 'summary' }));
     expect(nova).toHaveTextContent('10 XP');
     expect(nova).toHaveTextContent('Primeira questão');
-    await usuario.click(screen.getByRole('link', { name: '← Minhas turmas' }));
+    await usuario.click(screen.getByRole('link', { name: 'Voltar às turmas' }));
     const card = await screen.findByRole('article', { name: 'Algoritmos turma A 2026.2' });
     await usuario.click(within(card).getByRole('link', { name: 'Continuar trilha' }));
     const antiga = await screen.findByRole('region', { name: 'Gamificação da turma A de 2026.2' });

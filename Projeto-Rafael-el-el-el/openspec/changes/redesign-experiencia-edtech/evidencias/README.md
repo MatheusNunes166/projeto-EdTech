@@ -27,3 +27,7 @@ Baseline em `8e3a65c` com 662 testes em 42 arquivos e build aprovado. Node 26 co
 ## 7
 
 149 testes direcionados e build aprovados. No Chrome a 1280 px e 360 px, o Professor entrou, consultou um aluno, editou material, alternou para o banco, voltou ao rascunho, cancelou a saída e salvou. O editor administrativo também foi aberto nas duas larguras. Os testes cobriram Voltar interno, Sair e restauração cancelados, falha de persistência, revisão e gabarito protegidos, cobertura indivisível e histórico imutável.
+
+## 8
+
+68 testes de Aluno, shell e integração e build aprovados. As sete rotas foram abertas em 1280 px e 360 px. A jornada por teclado passou por material, trilha, sessão e desempenho. O redimensionamento conservou seleção e feedback, a mudança de questão focou o enunciado e somente o envio registrou uma resposta.

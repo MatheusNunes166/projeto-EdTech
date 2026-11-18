@@ -11,7 +11,7 @@ export function MinhasTurmas() {
       <h1>Minhas turmas</h1>
       <Consulta estado={turmas}>
         {(lista) => lista.length === 0 ? <Vazio>Você ainda não está matriculado em nenhuma turma. A matrícula é feita pela coordenação ou administração.</Vazio> : (
-          <div className="grade-cartoes">
+          <div className="grade-cartoes ofertas-aluno">
             {lista.map((t) => {
               const base = `/aluno/disciplinas/${t.disciplina.id}/turmas/${t.turma.id}`;
               const ind = painel.situacao === 'ok' ? painel.dados.find((i) => i.matriculaId === t.matricula.id) : undefined;
@@ -23,7 +23,7 @@ export function MinhasTurmas() {
                     <>
                       {ind && <BarraProgresso valor={ind.progresso} rotulo={`Progresso em ${t.disciplina.nome} ${t.turma.codigo} ${t.periodoLetivo.nome}`} />}
                       {ind ? <p className={`estado-turma ${ind.concluido ? 'concluida' : ''}`}>{ind.concluido ? 'Trilha concluída' : ind.totalRespostas === 0 ? 'Sem atividade' : 'Em andamento'}</p>
-                        : painel.situacao === 'erro' ? <p role="alert">Não foi possível carregar os indicadores desta turma. {painel.erro.mensagem}</p>
+                        : painel.situacao === 'erro' ? <div role="alert"><p>Não foi possível carregar os indicadores desta turma. {painel.erro.mensagem}</p>{painel.tentarNovamente && <button className="secundario" onClick={painel.tentarNovamente}>Tentar novamente</button>}</div>
                           : painel.situacao === 'carregando' ? <p role="status">Carregando indicadores…</p>
                             : <p role="alert">Indicadores indisponíveis para esta turma.</p>}
                       <div className="acoes">
