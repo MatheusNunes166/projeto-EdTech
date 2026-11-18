@@ -5,7 +5,10 @@ import { ProvedorApp } from './app/contexto';
 import { rotasDaAplicacao } from './app/rota-raiz';
 import './estilos.css';
 
-const router = createBrowserRouter(rotasDaAplicacao());
+const router = createBrowserRouter(
+  rotasDaAplicacao(),
+  { basename: '/projeto-EdTech/' }
+);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
