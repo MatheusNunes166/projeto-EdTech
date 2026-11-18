@@ -1,0 +1,1127 @@
+[
+  {
+    "nome": "01-entrada-1280",
+    "rota": "/",
+    "largura": 1280,
+    "texto": "Trilha Adaptativa\n\nAprendizagem no seu ritmo, em cada turma.\n\nProtótipo com dados fictícios e entrada simulada, sem senha. Escolha uma função e depois uma pessoa para entrar.\n\nEscolha sua função\nAluno\nProfessor\nCoordenador\nAdministrador\nResponsável\nDemonstração",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H2",
+      "texto": "Escolha sua função"
+    }
+  },
+  {
+    "nome": "02-minhas-turmas-1280",
+    "rota": "/aluno",
+    "largura": 1280,
+    "texto": "Minhas turmas\nAlgoritmos\n\nSistemas de Informação · Turma A · 2026.2\n\n33%\n\nEm andamento\n\nContinuar trilha\nDesempenho\nAlgoritmos\n\nSistemas de Informação · Turma A · 2027.1\n\n0%\n\nSem atividade\n\nComeçar trilha\nDesempenho\nInglês Inicial\n\nSistemas de Informação · Turma A · 2026.2\n\n0%\n\nEm andamento\n\nContinuar trilha\nDesempenho",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Minhas turmas"
+    }
+  },
+  {
+    "nome": "03-catalogo-1280",
+    "rota": "/aluno/catalogo",
+    "largura": 1280,
+    "texto": "Catálogo\n\nGraduações e disciplinas publicadas. A matrícula nas turmas é feita pela coordenação ou administração.\n\nBuscar\nÁrea\nTodas\nExatas\nTecnologia\nNível\nTodos\nIniciante\nIntermediário\nAvançado\nPeríodo\nTodos\n2026.2\n2027.1\nSistemas de Informação\n\nTecnologia\n\nFormação em desenvolvimento e análise de sistemas.\n\nInglês Inicial\n\nING · Iniciante · 3 tópicos · 1 oferta(s)\n\nAlgoritmos\n\nALG · Iniciante · 3 tópicos · 3 oferta(s)\n\nLicenciatura em Matemática\n\nExatas\n\nFormação de professores de Matemática.\n\nMatemática Básica\n\nMAT · Iniciante · 3 tópicos · 2 oferta(s)",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Catálogo"
+    }
+  },
+  {
+    "nome": "04-disciplina-1280",
+    "rota": "/aluno/catalogo/disciplinas/d-alg",
+    "largura": 1280,
+    "texto": "Voltar ao catálogo\n\nAlgoritmos\n\nSistemas de Informação · ALG · Iniciante\n\nEntenda os conceitos que estão por trás de qualquer linguagem de programação: variáveis, decisões com condicionais e repetição com laços.\n\nTópicos\nVariáveis\nCondicionais\nLaços de repetição\nOfertas\nTurma A · 2026.2\n\nProfessor(es): Marcos Silva\n\nMatrícula ativa\n\nContinuar\nTurma B · 2026.2\n\nProfessor(es): Marcos Silva\n\nVocê não está matriculado nesta turma. A matrícula é feita pela coordenação ou administração.\n\nTurma A · 2027.1\n\nProfessor(es): Marcos Silva\n\nMatrícula ativa\n\nContinuar",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Algoritmos"
+    }
+  },
+  {
+    "nome": "05-trilha-1280",
+    "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262",
+    "largura": 1280,
+    "texto": "Voltar às turmas\n\nAlgoritmos\n\nSistemas de Informação · Turma A · 2026.2\n\n33%\n\nSeu próximo passo: Condicionais.\n\nEstudar\nDesempenho\nTópicos\nVariáveis\nDominado · domínio 95\nMateriais\nCondicionais\nDesbloqueado · domínio 10\nPróximo recomendado\nMateriais\nLaços de repetição\nBloqueado · domínio 0\n\n160 XP · Sequência: 3 dia(s)\n\nConquistas (2)",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Algoritmos"
+    }
+  },
+  {
+    "nome": "06-sessao-1280",
+    "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/sessao",
+    "largura": 1280,
+    "texto": "Sessão de estudo\n\nAlgoritmos\n\nTurma A · 2026.2\n\n33%\nVer trilha\n\nTópico: Condicionais · Fácil\n\nQual operador testa igualdade em muitas linguagens?\nAlternativas\n=>\n=+\n<>=\n==\nResponder",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Sessão de estudo"
+    }
+  },
+  {
+    "nome": "07-desempenho-1280",
+    "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/desempenho",
+    "largura": 1280,
+    "texto": "← Voltar à trilha\n\nDesempenho em Algoritmos\n\nSistemas de Informação · Turma A · 2026.2\n\n33%\n\nTaxa de acertos: 79% (14 respostas registradas) · XP: 160\n\nDomínio por tópico\nVariáveis\nDomínio: 95\nCondicionais\nDomínio: 10\nLaços de repetição\nDomínio: 0",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Desempenho em Algoritmos"
+    }
+  },
+  {
+    "nome": "08-materiais-1280",
+    "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/topicos/t-var",
+    "largura": 1280,
+    "texto": "← Voltar à trilha\n\nVariáveis\n\nAlgoritmos · Turma A · 2026.2\n\nTexto\n\nVariáveis e tipos\nLer material",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Variáveis"
+    }
+  },
+  {
+    "nome": "09-turmas-docentes-1280",
+    "rota": "/professor",
+    "largura": 1280,
+    "texto": "Minhas turmas\nAlgoritmos\n\nSistemas de Informação · Turma A · 2026.2 · Publicada\n\nPainel\nConteúdo\nAlgoritmos\n\nSistemas de Informação · Turma B · 2026.2 · Publicada\n\nPainel\nConteúdo\nAlgoritmos\n\nSistemas de Informação · Turma A · 2027.1 · Publicada\n\nPainel\nConteúdo",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Minhas turmas"
+    }
+  },
+  {
+    "nome": "10-painel-docente-1280",
+    "rota": "/professor/disciplinas/d-alg/turmas/t-alg-a-262",
+    "largura": 1280,
+    "texto": "Voltar às turmas\n\nAlgoritmos — Turma A\n\nSistemas de Informação · 2026.2\n\n3 matriculado(s)\nConteúdo da disciplina\nIndicadores da turma\n\nProgresso médio: 44%\n\nDomínio médio por tópico\nAna Souza\nProgresso\n33%\nTaxa de acertos\n79%\nSituação\nRegular\nÚltima atividade\n16/11/2026\nDetalhe\nElisa Prado\nProgresso\n100%\nTaxa de acertos\n100%\nSituação\nRegular\nÚltima atividade\n13/11/2026\nDetalhe\nDiego Martins\nProgresso\n0%\nTaxa de acertos\nSem atividade\nSituação\nSem atividade\nÚltima atividade\nSem atividade\nDetalhe",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Algoritmos — Turma A"
+    }
+  },
+  {
+    "nome": "11-aluno-docente-1280",
+    "rota": "/professor/disciplinas/d-alg/turmas/t-alg-a-262/alunos/m-ana-alg-a-262",
+    "largura": 1280,
+    "texto": "Voltar à turma\n\nAna Souza\n\nAlgoritmos · Turma A · 2026.2\n\nDomínio por tópico\nVariáveis: 95\nCondicionais: 10\nLaços de repetição: 0\nÚltimas respostas\n16/11/2026 · Fácil · Acertou\n16/11/2026 · Fácil · Errou\n16/11/2026 · Fácil · Errou\n16/11/2026 · Fácil · Acertou\n16/11/2026 · Fácil · Acertou\n15/11/2026 · Difícil · Acertou\n15/11/2026 · Médio · Acertou\n15/11/2026 · Médio · Acertou\n15/11/2026 · Médio · Errou\n15/11/2026 · Médio · Acertou",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Ana Souza"
+    }
+  },
+  {
+    "nome": "12-editor-docente-1280",
+    "rota": "/professor/disciplinas/d-alg/conteudo",
+    "largura": 1280,
+    "texto": "Voltar às turmas\n\nConteúdo de Algoritmos\n\nSistemas de Informação · ALG · Publicada · Compartilhado entre turmas\n\nTópicos e materiais\nBanco de questões\nTópicos\n\nO estudo já foi iniciado em uma turma desta disciplina. A estrutura dos tópicos está protegida.\n\nAdicionar tópico\n\n1. Variáveis\n\nMateriais: 1\n\nEditar\n2. Condicionais\n\nMateriais: 1\n\nEditar\n3. Laços de repetição\n\nMateriais: 2\n\nEditar\nSalvar alterações\nDescartar alterações",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Conteúdo de Algoritmos"
+    }
+  },
+  {
+    "nome": "13-painel-coordenacao-1280",
+    "rota": "/coordenacao",
+    "largura": 1280,
+    "texto": "Painel da coordenação\n\nIndicadores por turma dos cursos que você coordena.\n\nGraduação\nTodas\nLicenciatura em Matemática\nDisciplina\nTodas\nMatemática Básica\nGeometria Plana\nPeríodo\nTodos\n2026.2\n2027.1\nTurma\nTodas\nTurma A · Matemática Básica · 2026.2\nTurma A · Matemática Básica · 2027.1\nTurma A · Geometria Plana · 2026.2\nMatemática Básica · Turma A · 2026.2\n\nLicenciatura em Matemática\n\nMatrículas\n1\nProgresso médio\n0%\n\nAs médias incluem quem ainda não iniciou.\n\nDomínio por tópico\nGerir turma\nMatemática Básica · Turma A · 2027.1\n\nLicenciatura em Matemática\n\nMatrículas\n0\nProgresso médio\nSem dados\nDomínio médio por tópico\nSem dados\n\nNenhum aluno matriculado\n\nGerir turma\nGeometria Plana · Turma A · 2026.2\n\nLicenciatura em Matemática\n\nMatrículas\n0\nProgresso médio\nSem dados\nDomínio médio por tópico\nSem dados\n\nNenhum aluno matriculado\n\nGerir turma",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Painel da coordenação"
+    }
+  },
+  {
+    "nome": "14-gestao-coordenacao-1280",
+    "rota": "/coordenacao/gestao",
+    "largura": 1280,
+    "texto": "Gestão acadêmica\nMatemática Básica — Turma A\n\nLicenciatura em Matemática · 2026.2\n\nDocentes: Carla Dias\n\nGerir turma\nMatemática Básica — Turma A\n\nLicenciatura em Matemática · 2027.1\n\nDocentes: Carla Dias\n\nGerir turma\nGeometria Plana — Turma A\n\nLicenciatura em Matemática · 2026.2\n\nDocentes: Júlia Rocha\n\nGerir turma",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Gestão acadêmica"
+    }
+  },
+  {
+    "nome": "15-oferta-coordenacao-1280",
+    "rota": "/coordenacao/gestao/turmas/t-mat-a-262",
+    "largura": 1280,
+    "texto": "Voltar às turmas\nVoltar aos indicadores\nMatemática Básica — Turma A\n\nLicenciatura em Matemática · 2026.2\n\nMatrículas\nBruno Lima\n\nNova matrícula\n\nProfessores\nCarla Dias\nRemover\n\nNova atribuição docente",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Matemática Básica — Turma A"
+    }
+  },
+  {
+    "nome": "16-cadastros-coordenacao-1280",
+    "rota": "/coordenacao/cadastros",
+    "largura": 1280,
+    "texto": "Cadastros\nGraduações e disciplinas\nPeríodos e turmas\nGraduações e disciplinas\nGraduações\nLM — Licenciatura em Matemática\n\nExatas\n\nEditar\nDisciplinas\n\nNova disciplina\n\nMAT — Matemática Básica\n\nLicenciatura em Matemática · Iniciante · Publicada\n\nEditar\nGEO — Geometria Plana\n\nLicenciatura em Matemática · Intermediário · Em rascunho\n\nEditar",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Cadastros"
+    }
+  },
+  {
+    "nome": "17-admin-1280",
+    "rota": "/admin",
+    "largura": 1280,
+    "texto": "Visão geral\nPessoas\n\n12 pessoas distintas\n\nAluno: 4\nProfessor: 4\nCoordenador: 2\nAdministrador: 1\nResponsável: 2\n\nGerir pessoas · Gerir vínculos\n\nEstrutura acadêmica\nGraduações: 2\nDisciplinas publicadas: 3\nDisciplinas em rascunho: 1\nPeríodos letivos: 2\nTurmas: 7\nMatrículas: 7\nGraduações e disciplinas\nPeríodos e turmas\nMatrículas e docentes",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Visão geral"
+    }
+  },
+  {
+    "nome": "18-pessoas-1280",
+    "rota": "/admin/usuarios",
+    "largura": 1280,
+    "texto": "Pessoas e funções\n\nNova pessoa\n\nAna Souza\nE-mail\nana@exemplo.com\nFunções\nAluno\nSituação\nAtiva\nEditar\nDesativar\nBruno Lima\nE-mail\nbruno@exemplo.com\nFunções\nAluno\nSituação\nAtiva\nEditar\nDesativar\nElisa Prado\nE-mail\nelisa@exemplo.com\nFunções\nAluno\nSituação\nAtiva\nEditar\nDesativar\nDiego Martins\nE-mail\ndiego@exemplo.com\nFunções\nAluno\nSituação\nAtiva\nEditar\nDesativar\nCarla Dias\nE-mail\ncarla@exemplo.com\nFunções\nProfessor, Coordenador\nSituação\nAtiva\nEditar\nDesativar\nLúcia Ferraz\nE-mail\nlucia@exemplo.com\nFunções\nCoordenador\nSituação\nAtiva\nEditar\nDesativar\nMarcos Silva\nE-mail\nmarcos@exemplo.com\nFunções\nProfessor\nSituação\nAtiva\nEditar\nDesativar\nJúlia Rocha\nE-mail\njulia@exemplo.com\nFunções\nProfessor\nSituação\nAtiva\nEditar\nDesativar\nPaulo Antunes\nE-mail\npaulo@exemplo.com\nFunções\nProfessor\nSituação\nInativa\nEditar\nAtivar\nRenata Alves\nE-mail\nrenata@exemplo.com\nFunções\nAdministrador\nSituação\nAtiva\nEditar\nDesativar\nHelena Souza\nE-mail\nhelena@exemplo.com\nFunções\nResponsável\nSituação\nAtiva\nEditar\nDesativar\nRoberto Lima\nE-mail\nroberto@exemplo.com\nFunções\nResponsável\nSituação\nAtiva\nEditar\nDesativar",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Pessoas e funções"
+    }
+  },
+  {
+    "nome": "19-vinculos-1280",
+    "rota": "/admin/vinculos",
+    "largura": 1280,
+    "texto": "Vínculos\nCoordenação de graduações\n\nNova coordenação\n\nCarla Dias coordena Sistemas de Informação\nRemover\nLúcia Ferraz coordena Licenciatura em Matemática\nRemover\nResponsável–Aluno\n\nNovo vínculo de acompanhamento\n\nHelena Souza acompanha Ana Souza\nRemover\nRoberto Lima acompanha Bruno Lima\nRemover\nRoberto Lima acompanha Elisa Prado\nRemover",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Vínculos"
+    }
+  },
+  {
+    "nome": "20-graduacoes-1280",
+    "rota": "/admin/graduacoes",
+    "largura": 1280,
+    "texto": "Graduações e disciplinas\nGraduações\n\nNova graduação\n\nSI — Sistemas de Informação\n\nTecnologia\n\nEditar\nLM — Licenciatura em Matemática\n\nExatas\n\nEditar\nDisciplinas\n\nNova disciplina\n\nMAT — Matemática Básica\n\nLicenciatura em Matemática · Iniciante · Publicada\n\nEditar\nConteúdo\nING — Inglês Inicial\n\nSistemas de Informação · Iniciante · Publicada\n\nEditar\nConteúdo\nALG — Algoritmos\n\nSistemas de Informação · Iniciante · Publicada\n\nEditar\nConteúdo\nGEO — Geometria Plana\n\nLicenciatura em Matemática · Intermediário · Em rascunho\n\nEditar\nConteúdo",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Graduações e disciplinas"
+    }
+  },
+  {
+    "nome": "21-periodos-1280",
+    "rota": "/admin/periodos",
+    "largura": 1280,
+    "texto": "Períodos letivos e turmas\nPeríodos letivos\n\nNovo período\n\n2026.2 (2026-08-03 a 2026-12-18)\nEditar\n2027.1 (2027-02-01 a 2027-06-30)\nEditar\nTurmas\n\nNova turma\n\nAlgoritmos — Turma A — 2026.2\n\nSistemas de Informação\n\nEditar\nAlgoritmos — Turma B — 2026.2\n\nSistemas de Informação\n\nEditar\nAlgoritmos — Turma A — 2027.1\n\nSistemas de Informação\n\nEditar\nInglês Inicial — Turma A — 2026.2\n\nSistemas de Informação\n\nEditar\nMatemática Básica — Turma A — 2026.2\n\nLicenciatura em Matemática\n\nEditar\nMatemática Básica — Turma A — 2027.1\n\nLicenciatura em Matemática\n\nEditar\nGeometria Plana — Turma A — 2026.2\n\nLicenciatura em Matemática\n\nEditar",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Períodos letivos e turmas"
+    }
+  },
+  {
+    "nome": "22-gestao-admin-1280",
+    "rota": "/admin/gestao",
+    "largura": 1280,
+    "texto": "Gestão acadêmica\nAlgoritmos — Turma A\n\nSistemas de Informação · 2026.2\n\nDocentes: Marcos Silva\n\nGerir turma\nAlgoritmos — Turma B\n\nSistemas de Informação · 2026.2\n\nDocentes: Marcos Silva\n\nGerir turma\nAlgoritmos — Turma A\n\nSistemas de Informação · 2027.1\n\nDocentes: Marcos Silva\n\nGerir turma\nInglês Inicial — Turma A\n\nSistemas de Informação · 2026.2\n\nDocentes: Júlia Rocha\n\nGerir turma\nMatemática Básica — Turma A\n\nLicenciatura em Matemática · 2026.2\n\nDocentes: Carla Dias\n\nGerir turma\nMatemática Básica — Turma A\n\nLicenciatura em Matemática · 2027.1\n\nDocentes: Carla Dias\n\nGerir turma\nGeometria Plana — Turma A\n\nLicenciatura em Matemática · 2026.2\n\nDocentes: Júlia Rocha\n\nGerir turma",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Gestão acadêmica"
+    }
+  },
+  {
+    "nome": "23-oferta-admin-1280",
+    "rota": "/admin/gestao/turmas/t-alg-a-262",
+    "largura": 1280,
+    "texto": "Voltar às turmas\nAlgoritmos — Turma A\n\nSistemas de Informação · 2026.2\n\nMatrículas\nAna Souza\nElisa Prado\nDiego Martins\n\nNova matrícula\n\nProfessores\nMarcos Silva\nRemover\n\nNova atribuição docente",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Algoritmos — Turma A"
+    }
+  },
+  {
+    "nome": "24-editor-admin-1280",
+    "rota": "/admin/disciplinas/d-alg/conteudo",
+    "largura": 1280,
+    "texto": "Voltar aos cadastros\n\nConteúdo de Algoritmos\n\nSistemas de Informação · ALG · Publicada · Compartilhado entre turmas\n\nTópicos e materiais\nBanco de questões\nTópicos\n\nO estudo já foi iniciado em uma turma desta disciplina. A estrutura dos tópicos está protegida.\n\nAdicionar tópico\n\n1. Variáveis\n\nMateriais: 1\n\nEditar\n2. Condicionais\n\nMateriais: 1\n\nEditar\n3. Laços de repetição\n\nMateriais: 2\n\nEditar\nSalvar alterações\nDescartar alterações",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Conteúdo de Algoritmos"
+    }
+  },
+  {
+    "nome": "25-responsavel-1280",
+    "rota": "/responsavel",
+    "largura": 1280,
+    "texto": "Painel do responsável\nAna Souza\nAlgoritmos\n\nTurma A · 2026.2\n\n33%\n\nSequência: 3 dia(s) · Última atividade: 16/11/2026\n\nDetalhes da oferta\nAlgoritmos\n\nTurma A · 2027.1\n\n0%\n\nSequência: 0 dia(s) · Última atividade: Sem atividade\n\nDetalhes da oferta\nInglês Inicial\n\nTurma A · 2026.2\n\n0%\n\nSequência: 1 dia(s) · Última atividade: 16/11/2026\n\nDetalhes da oferta",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Painel do responsável"
+    }
+  },
+  {
+    "nome": "01-entrada-768",
+    "rota": "/",
+    "largura": 768,
+    "texto": "Trilha Adaptativa\n\nAprendizagem no seu ritmo, em cada turma.\n\nProtótipo com dados fictícios e entrada simulada, sem senha. Escolha uma função e depois uma pessoa para entrar.\n\nEscolha sua função\nAluno\nProfessor\nCoordenador\nAdministrador\nResponsável\nDemonstração",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H2",
+      "texto": "Escolha sua função"
+    }
+  },
+  {
+    "nome": "02-minhas-turmas-768",
+    "rota": "/aluno",
+    "largura": 768,
+    "texto": "Minhas turmas\nAlgoritmos\n\nSistemas de Informação · Turma A · 2026.2\n\n33%\n\nEm andamento\n\nContinuar trilha\nDesempenho\nAlgoritmos\n\nSistemas de Informação · Turma A · 2027.1\n\n0%\n\nSem atividade\n\nComeçar trilha\nDesempenho\nInglês Inicial\n\nSistemas de Informação · Turma A · 2026.2\n\n0%\n\nEm andamento\n\nContinuar trilha\nDesempenho",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Minhas turmas"
+    }
+  },
+  {
+    "nome": "03-catalogo-768",
+    "rota": "/aluno/catalogo",
+    "largura": 768,
+    "texto": "Catálogo\n\nGraduações e disciplinas publicadas. A matrícula nas turmas é feita pela coordenação ou administração.\n\nBuscar\nÁrea\nTodas\nExatas\nTecnologia\nNível\nTodos\nIniciante\nIntermediário\nAvançado\nPeríodo\nTodos\n2026.2\n2027.1\nSistemas de Informação\n\nTecnologia\n\nFormação em desenvolvimento e análise de sistemas.\n\nInglês Inicial\n\nING · Iniciante · 3 tópicos · 1 oferta(s)\n\nAlgoritmos\n\nALG · Iniciante · 3 tópicos · 3 oferta(s)\n\nLicenciatura em Matemática\n\nExatas\n\nFormação de professores de Matemática.\n\nMatemática Básica\n\nMAT · Iniciante · 3 tópicos · 2 oferta(s)",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Catálogo"
+    }
+  },
+  {
+    "nome": "04-disciplina-768",
+    "rota": "/aluno/catalogo/disciplinas/d-alg",
+    "largura": 768,
+    "texto": "Voltar ao catálogo\n\nAlgoritmos\n\nSistemas de Informação · ALG · Iniciante\n\nEntenda os conceitos que estão por trás de qualquer linguagem de programação: variáveis, decisões com condicionais e repetição com laços.\n\nTópicos\nVariáveis\nCondicionais\nLaços de repetição\nOfertas\nTurma A · 2026.2\n\nProfessor(es): Marcos Silva\n\nMatrícula ativa\n\nContinuar\nTurma B · 2026.2\n\nProfessor(es): Marcos Silva\n\nVocê não está matriculado nesta turma. A matrícula é feita pela coordenação ou administração.\n\nTurma A · 2027.1\n\nProfessor(es): Marcos Silva\n\nMatrícula ativa\n\nContinuar",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Algoritmos"
+    }
+  },
+  {
+    "nome": "05-trilha-768",
+    "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262",
+    "largura": 768,
+    "texto": "Voltar às turmas\n\nAlgoritmos\n\nSistemas de Informação · Turma A · 2026.2\n\n33%\n\nSeu próximo passo: Condicionais.\n\nEstudar\nDesempenho\nTópicos\nVariáveis\nDominado · domínio 95\nMateriais\nCondicionais\nDesbloqueado · domínio 10\nPróximo recomendado\nMateriais\nLaços de repetição\nBloqueado · domínio 0\n\n160 XP · Sequência: 3 dia(s)\n\nConquistas (2)",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Algoritmos"
+    }
+  },
+  {
+    "nome": "06-sessao-768",
+    "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/sessao",
+    "largura": 768,
+    "texto": "Sessão de estudo\n\nAlgoritmos\n\nTurma A · 2026.2\n\n33%\nVer trilha\n\nTópico: Condicionais · Fácil\n\nQual operador testa igualdade em muitas linguagens?\nAlternativas\n=>\n=+\n<>=\n==\nResponder",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Sessão de estudo"
+    }
+  },
+  {
+    "nome": "07-desempenho-768",
+    "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/desempenho",
+    "largura": 768,
+    "texto": "← Voltar à trilha\n\nDesempenho em Algoritmos\n\nSistemas de Informação · Turma A · 2026.2\n\n33%\n\nTaxa de acertos: 79% (14 respostas registradas) · XP: 160\n\nDomínio por tópico\nVariáveis\nDomínio: 95\nCondicionais\nDomínio: 10\nLaços de repetição\nDomínio: 0",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Desempenho em Algoritmos"
+    }
+  },
+  {
+    "nome": "08-materiais-768",
+    "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/topicos/t-var",
+    "largura": 768,
+    "texto": "← Voltar à trilha\n\nVariáveis\n\nAlgoritmos · Turma A · 2026.2\n\nTexto\n\nVariáveis e tipos\nLer material",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Variáveis"
+    }
+  },
+  {
+    "nome": "09-turmas-docentes-768",
+    "rota": "/professor",
+    "largura": 768,
+    "texto": "Minhas turmas\nAlgoritmos\n\nSistemas de Informação · Turma A · 2026.2 · Publicada\n\nPainel\nConteúdo\nAlgoritmos\n\nSistemas de Informação · Turma B · 2026.2 · Publicada\n\nPainel\nConteúdo\nAlgoritmos\n\nSistemas de Informação · Turma A · 2027.1 · Publicada\n\nPainel\nConteúdo",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Minhas turmas"
+    }
+  },
+  {
+    "nome": "10-painel-docente-768",
+    "rota": "/professor/disciplinas/d-alg/turmas/t-alg-a-262",
+    "largura": 768,
+    "texto": "Voltar às turmas\n\nAlgoritmos — Turma A\n\nSistemas de Informação · 2026.2\n\n3 matriculado(s)\nConteúdo da disciplina\nIndicadores da turma\n\nProgresso médio: 44%\n\nDomínio médio por tópico\nAna Souza\nProgresso\n33%\nTaxa de acertos\n79%\nSituação\nRegular\nÚltima atividade\n16/11/2026\nDetalhe\nElisa Prado\nProgresso\n100%\nTaxa de acertos\n100%\nSituação\nRegular\nÚltima atividade\n13/11/2026\nDetalhe\nDiego Martins\nProgresso\n0%\nTaxa de acertos\nSem atividade\nSituação\nSem atividade\nÚltima atividade\nSem atividade\nDetalhe",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Algoritmos — Turma A"
+    }
+  },
+  {
+    "nome": "11-aluno-docente-768",
+    "rota": "/professor/disciplinas/d-alg/turmas/t-alg-a-262/alunos/m-ana-alg-a-262",
+    "largura": 768,
+    "texto": "Voltar à turma\n\nAna Souza\n\nAlgoritmos · Turma A · 2026.2\n\nDomínio por tópico\nVariáveis: 95\nCondicionais: 10\nLaços de repetição: 0\nÚltimas respostas\n16/11/2026 · Fácil · Acertou\n16/11/2026 · Fácil · Errou\n16/11/2026 · Fácil · Errou\n16/11/2026 · Fácil · Acertou\n16/11/2026 · Fácil · Acertou\n15/11/2026 · Difícil · Acertou\n15/11/2026 · Médio · Acertou\n15/11/2026 · Médio · Acertou\n15/11/2026 · Médio · Errou\n15/11/2026 · Médio · Acertou",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Ana Souza"
+    }
+  },
+  {
+    "nome": "12-editor-docente-768",
+    "rota": "/professor/disciplinas/d-alg/conteudo",
+    "largura": 768,
+    "texto": "Voltar às turmas\n\nConteúdo de Algoritmos\n\nSistemas de Informação · ALG · Publicada · Compartilhado entre turmas\n\nTópicos e materiais\nBanco de questões\nTópicos\n\nO estudo já foi iniciado em uma turma desta disciplina. A estrutura dos tópicos está protegida.\n\nAdicionar tópico\n\n1. Variáveis\n\nMateriais: 1\n\nEditar\n2. Condicionais\n\nMateriais: 1\n\nEditar\n3. Laços de repetição\n\nMateriais: 2\n\nEditar\nSalvar alterações\nDescartar alterações",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Conteúdo de Algoritmos"
+    }
+  },
+  {
+    "nome": "13-painel-coordenacao-768",
+    "rota": "/coordenacao",
+    "largura": 768,
+    "texto": "Painel da coordenação\n\nIndicadores por turma dos cursos que você coordena.\n\nGraduação\nTodas\nLicenciatura em Matemática\nDisciplina\nTodas\nMatemática Básica\nGeometria Plana\nPeríodo\nTodos\n2026.2\n2027.1\nTurma\nTodas\nTurma A · Matemática Básica · 2026.2\nTurma A · Matemática Básica · 2027.1\nTurma A · Geometria Plana · 2026.2\nMatemática Básica · Turma A · 2026.2\n\nLicenciatura em Matemática\n\nMatrículas\n1\nProgresso médio\n0%\n\nAs médias incluem quem ainda não iniciou.\n\nDomínio por tópico\nGerir turma\nMatemática Básica · Turma A · 2027.1\n\nLicenciatura em Matemática\n\nMatrículas\n0\nProgresso médio\nSem dados\nDomínio médio por tópico\nSem dados\n\nNenhum aluno matriculado\n\nGerir turma\nGeometria Plana · Turma A · 2026.2\n\nLicenciatura em Matemática\n\nMatrículas\n0\nProgresso médio\nSem dados\nDomínio médio por tópico\nSem dados\n\nNenhum aluno matriculado\n\nGerir turma",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Painel da coordenação"
+    }
+  },
+  {
+    "nome": "14-gestao-coordenacao-768",
+    "rota": "/coordenacao/gestao",
+    "largura": 768,
+    "texto": "Gestão acadêmica\nMatemática Básica — Turma A\n\nLicenciatura em Matemática · 2026.2\n\nDocentes: Carla Dias\n\nGerir turma\nMatemática Básica — Turma A\n\nLicenciatura em Matemática · 2027.1\n\nDocentes: Carla Dias\n\nGerir turma\nGeometria Plana — Turma A\n\nLicenciatura em Matemática · 2026.2\n\nDocentes: Júlia Rocha\n\nGerir turma",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Gestão acadêmica"
+    }
+  },
+  {
+    "nome": "15-oferta-coordenacao-768",
+    "rota": "/coordenacao/gestao/turmas/t-mat-a-262",
+    "largura": 768,
+    "texto": "Voltar às turmas\nVoltar aos indicadores\nMatemática Básica — Turma A\n\nLicenciatura em Matemática · 2026.2\n\nMatrículas\nBruno Lima\n\nNova matrícula\n\nProfessores\nCarla Dias\nRemover\n\nNova atribuição docente",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Matemática Básica — Turma A"
+    }
+  },
+  {
+    "nome": "16-cadastros-coordenacao-768",
+    "rota": "/coordenacao/cadastros",
+    "largura": 768,
+    "texto": "Cadastros\nGraduações e disciplinas\nPeríodos e turmas\nGraduações e disciplinas\nGraduações\nLM — Licenciatura em Matemática\n\nExatas\n\nEditar\nDisciplinas\n\nNova disciplina\n\nMAT — Matemática Básica\n\nLicenciatura em Matemática · Iniciante · Publicada\n\nEditar\nGEO — Geometria Plana\n\nLicenciatura em Matemática · Intermediário · Em rascunho\n\nEditar",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Cadastros"
+    }
+  },
+  {
+    "nome": "17-admin-768",
+    "rota": "/admin",
+    "largura": 768,
+    "texto": "Visão geral\nPessoas\n\n12 pessoas distintas\n\nAluno: 4\nProfessor: 4\nCoordenador: 2\nAdministrador: 1\nResponsável: 2\n\nGerir pessoas · Gerir vínculos\n\nEstrutura acadêmica\nGraduações: 2\nDisciplinas publicadas: 3\nDisciplinas em rascunho: 1\nPeríodos letivos: 2\nTurmas: 7\nMatrículas: 7\nGraduações e disciplinas\nPeríodos e turmas\nMatrículas e docentes",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Visão geral"
+    }
+  },
+  {
+    "nome": "18-pessoas-768",
+    "rota": "/admin/usuarios",
+    "largura": 768,
+    "texto": "Pessoas e funções\n\nNova pessoa\n\nAna Souza\nE-mail\nana@exemplo.com\nFunções\nAluno\nSituação\nAtiva\nEditar\nDesativar\nBruno Lima\nE-mail\nbruno@exemplo.com\nFunções\nAluno\nSituação\nAtiva\nEditar\nDesativar\nElisa Prado\nE-mail\nelisa@exemplo.com\nFunções\nAluno\nSituação\nAtiva\nEditar\nDesativar\nDiego Martins\nE-mail\ndiego@exemplo.com\nFunções\nAluno\nSituação\nAtiva\nEditar\nDesativar\nCarla Dias\nE-mail\ncarla@exemplo.com\nFunções\nProfessor, Coordenador\nSituação\nAtiva\nEditar\nDesativar\nLúcia Ferraz\nE-mail\nlucia@exemplo.com\nFunções\nCoordenador\nSituação\nAtiva\nEditar\nDesativar\nMarcos Silva\nE-mail\nmarcos@exemplo.com\nFunções\nProfessor\nSituação\nAtiva\nEditar\nDesativar\nJúlia Rocha\nE-mail\njulia@exemplo.com\nFunções\nProfessor\nSituação\nAtiva\nEditar\nDesativar\nPaulo Antunes\nE-mail\npaulo@exemplo.com\nFunções\nProfessor\nSituação\nInativa\nEditar\nAtivar\nRenata Alves\nE-mail\nrenata@exemplo.com\nFunções\nAdministrador\nSituação\nAtiva\nEditar\nDesativar\nHelena Souza\nE-mail\nhelena@exemplo.com\nFunções\nResponsável\nSituação\nAtiva\nEditar\nDesativar\nRoberto Lima\nE-mail\nroberto@exemplo.com\nFunções\nResponsável\nSituação\nAtiva\nEditar\nDesativar",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Pessoas e funções"
+    }
+  },
+  {
+    "nome": "19-vinculos-768",
+    "rota": "/admin/vinculos",
+    "largura": 768,
+    "texto": "Vínculos\nCoordenação de graduações\n\nNova coordenação\n\nCarla Dias coordena Sistemas de Informação\nRemover\nLúcia Ferraz coordena Licenciatura em Matemática\nRemover\nResponsável–Aluno\n\nNovo vínculo de acompanhamento\n\nHelena Souza acompanha Ana Souza\nRemover\nRoberto Lima acompanha Bruno Lima\nRemover\nRoberto Lima acompanha Elisa Prado\nRemover",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Vínculos"
+    }
+  },
+  {
+    "nome": "20-graduacoes-768",
+    "rota": "/admin/graduacoes",
+    "largura": 768,
+    "texto": "Graduações e disciplinas\nGraduações\n\nNova graduação\n\nSI — Sistemas de Informação\n\nTecnologia\n\nEditar\nLM — Licenciatura em Matemática\n\nExatas\n\nEditar\nDisciplinas\n\nNova disciplina\n\nMAT — Matemática Básica\n\nLicenciatura em Matemática · Iniciante · Publicada\n\nEditar\nConteúdo\nING — Inglês Inicial\n\nSistemas de Informação · Iniciante · Publicada\n\nEditar\nConteúdo\nALG — Algoritmos\n\nSistemas de Informação · Iniciante · Publicada\n\nEditar\nConteúdo\nGEO — Geometria Plana\n\nLicenciatura em Matemática · Intermediário · Em rascunho\n\nEditar\nConteúdo",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Graduações e disciplinas"
+    }
+  },
+  {
+    "nome": "21-periodos-768",
+    "rota": "/admin/periodos",
+    "largura": 768,
+    "texto": "Períodos letivos e turmas\nPeríodos letivos\n\nNovo período\n\n2026.2 (2026-08-03 a 2026-12-18)\nEditar\n2027.1 (2027-02-01 a 2027-06-30)\nEditar\nTurmas\n\nNova turma\n\nAlgoritmos — Turma A — 2026.2\n\nSistemas de Informação\n\nEditar\nAlgoritmos — Turma B — 2026.2\n\nSistemas de Informação\n\nEditar\nAlgoritmos — Turma A — 2027.1\n\nSistemas de Informação\n\nEditar\nInglês Inicial — Turma A — 2026.2\n\nSistemas de Informação\n\nEditar\nMatemática Básica — Turma A — 2026.2\n\nLicenciatura em Matemática\n\nEditar\nMatemática Básica — Turma A — 2027.1\n\nLicenciatura em Matemática\n\nEditar\nGeometria Plana — Turma A — 2026.2\n\nLicenciatura em Matemática\n\nEditar",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Períodos letivos e turmas"
+    }
+  },
+  {
+    "nome": "22-gestao-admin-768",
+    "rota": "/admin/gestao",
+    "largura": 768,
+    "texto": "Gestão acadêmica\nAlgoritmos — Turma A\n\nSistemas de Informação · 2026.2\n\nDocentes: Marcos Silva\n\nGerir turma\nAlgoritmos — Turma B\n\nSistemas de Informação · 2026.2\n\nDocentes: Marcos Silva\n\nGerir turma\nAlgoritmos — Turma A\n\nSistemas de Informação · 2027.1\n\nDocentes: Marcos Silva\n\nGerir turma\nInglês Inicial — Turma A\n\nSistemas de Informação · 2026.2\n\nDocentes: Júlia Rocha\n\nGerir turma\nMatemática Básica — Turma A\n\nLicenciatura em Matemática · 2026.2\n\nDocentes: Carla Dias\n\nGerir turma\nMatemática Básica — Turma A\n\nLicenciatura em Matemática · 2027.1\n\nDocentes: Carla Dias\n\nGerir turma\nGeometria Plana — Turma A\n\nLicenciatura em Matemática · 2026.2\n\nDocentes: Júlia Rocha\n\nGerir turma",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Gestão acadêmica"
+    }
+  },
+  {
+    "nome": "23-oferta-admin-768",
+    "rota": "/admin/gestao/turmas/t-alg-a-262",
+    "largura": 768,
+    "texto": "Voltar às turmas\nAlgoritmos — Turma A\n\nSistemas de Informação · 2026.2\n\nMatrículas\nAna Souza\nElisa Prado\nDiego Martins\n\nNova matrícula\n\nProfessores\nMarcos Silva\nRemover\n\nNova atribuição docente",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Algoritmos — Turma A"
+    }
+  },
+  {
+    "nome": "24-editor-admin-768",
+    "rota": "/admin/disciplinas/d-alg/conteudo",
+    "largura": 768,
+    "texto": "Voltar aos cadastros\n\nConteúdo de Algoritmos\n\nSistemas de Informação · ALG · Publicada · Compartilhado entre turmas\n\nTópicos e materiais\nBanco de questões\nTópicos\n\nO estudo já foi iniciado em uma turma desta disciplina. A estrutura dos tópicos está protegida.\n\nAdicionar tópico\n\n1. Variáveis\n\nMateriais: 1\n\nEditar\n2. Condicionais\n\nMateriais: 1\n\nEditar\n3. Laços de repetição\n\nMateriais: 2\n\nEditar\nSalvar alterações\nDescartar alterações",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Conteúdo de Algoritmos"
+    }
+  },
+  {
+    "nome": "25-responsavel-768",
+    "rota": "/responsavel",
+    "largura": 768,
+    "texto": "Painel do responsável\nAna Souza\nAlgoritmos\n\nTurma A · 2026.2\n\n33%\n\nSequência: 3 dia(s) · Última atividade: 16/11/2026\n\nDetalhes da oferta\nAlgoritmos\n\nTurma A · 2027.1\n\n0%\n\nSequência: 0 dia(s) · Última atividade: Sem atividade\n\nDetalhes da oferta\nInglês Inicial\n\nTurma A · 2026.2\n\n0%\n\nSequência: 1 dia(s) · Última atividade: 16/11/2026\n\nDetalhes da oferta",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Painel do responsável"
+    }
+  },
+  {
+    "nome": "01-entrada-360",
+    "rota": "/",
+    "largura": 360,
+    "texto": "Trilha Adaptativa\n\nAprendizagem no seu ritmo, em cada turma.\n\nProtótipo com dados fictícios e entrada simulada, sem senha. Escolha uma função e depois uma pessoa para entrar.\n\nEscolha sua função\nAluno\nProfessor\nCoordenador\nAdministrador\nResponsável\nDemonstração",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H2",
+      "texto": "Escolha sua função"
+    }
+  },
+  {
+    "nome": "02-minhas-turmas-360",
+    "rota": "/aluno",
+    "largura": 360,
+    "texto": "Minhas turmas\nAlgoritmos\n\nSistemas de Informação · Turma A · 2026.2\n\n33%\n\nEm andamento\n\nContinuar trilha\nDesempenho\nAlgoritmos\n\nSistemas de Informação · Turma A · 2027.1\n\n0%\n\nSem atividade\n\nComeçar trilha\nDesempenho\nInglês Inicial\n\nSistemas de Informação · Turma A · 2026.2\n\n0%\n\nEm andamento\n\nContinuar trilha\nDesempenho",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Minhas turmas"
+    }
+  },
+  {
+    "nome": "03-catalogo-360",
+    "rota": "/aluno/catalogo",
+    "largura": 360,
+    "texto": "Catálogo\n\nGraduações e disciplinas publicadas. A matrícula nas turmas é feita pela coordenação ou administração.\n\nBuscar\nÁrea\nTodas\nExatas\nTecnologia\nNível\nTodos\nIniciante\nIntermediário\nAvançado\nPeríodo\nTodos\n2026.2\n2027.1\nSistemas de Informação\n\nTecnologia\n\nFormação em desenvolvimento e análise de sistemas.\n\nInglês Inicial\n\nING · Iniciante · 3 tópicos · 1 oferta(s)\n\nAlgoritmos\n\nALG · Iniciante · 3 tópicos · 3 oferta(s)\n\nLicenciatura em Matemática\n\nExatas\n\nFormação de professores de Matemática.\n\nMatemática Básica\n\nMAT · Iniciante · 3 tópicos · 2 oferta(s)",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Catálogo"
+    }
+  },
+  {
+    "nome": "04-disciplina-360",
+    "rota": "/aluno/catalogo/disciplinas/d-alg",
+    "largura": 360,
+    "texto": "Voltar ao catálogo\n\nAlgoritmos\n\nSistemas de Informação · ALG · Iniciante\n\nEntenda os conceitos que estão por trás de qualquer linguagem de programação: variáveis, decisões com condicionais e repetição com laços.\n\nTópicos\nVariáveis\nCondicionais\nLaços de repetição\nOfertas\nTurma A · 2026.2\n\nProfessor(es): Marcos Silva\n\nMatrícula ativa\n\nContinuar\nTurma B · 2026.2\n\nProfessor(es): Marcos Silva\n\nVocê não está matriculado nesta turma. A matrícula é feita pela coordenação ou administração.\n\nTurma A · 2027.1\n\nProfessor(es): Marcos Silva\n\nMatrícula ativa\n\nContinuar",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Algoritmos"
+    }
+  },
+  {
+    "nome": "05-trilha-360",
+    "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262",
+    "largura": 360,
+    "texto": "Voltar às turmas\n\nAlgoritmos\n\nSistemas de Informação · Turma A · 2026.2\n\n33%\n\nSeu próximo passo: Condicionais.\n\nEstudar\nDesempenho\nTópicos\nVariáveis\nDominado · domínio 95\nMateriais\nCondicionais\nDesbloqueado · domínio 10\nPróximo recomendado\nMateriais\nLaços de repetição\nBloqueado · domínio 0\n\n160 XP · Sequência: 3 dia(s)\n\nConquistas (2)",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Algoritmos"
+    }
+  },
+  {
+    "nome": "06-sessao-360",
+    "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/sessao",
+    "largura": 360,
+    "texto": "Sessão de estudo\n\nAlgoritmos\n\nTurma A · 2026.2\n\n33%\nVer trilha\n\nTópico: Condicionais · Fácil\n\nQual operador testa igualdade em muitas linguagens?\nAlternativas\n=>\n=+\n<>=\n==\nResponder",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Sessão de estudo"
+    }
+  },
+  {
+    "nome": "07-desempenho-360",
+    "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/desempenho",
+    "largura": 360,
+    "texto": "← Voltar à trilha\n\nDesempenho em Algoritmos\n\nSistemas de Informação · Turma A · 2026.2\n\n33%\n\nTaxa de acertos: 79% (14 respostas registradas) · XP: 160\n\nDomínio por tópico\nVariáveis\nDomínio: 95\nCondicionais\nDomínio: 10\nLaços de repetição\nDomínio: 0",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Desempenho em Algoritmos"
+    }
+  },
+  {
+    "nome": "08-materiais-360",
+    "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/topicos/t-var",
+    "largura": 360,
+    "texto": "← Voltar à trilha\n\nVariáveis\n\nAlgoritmos · Turma A · 2026.2\n\nTexto\n\nVariáveis e tipos\nLer material",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Variáveis"
+    }
+  },
+  {
+    "nome": "09-turmas-docentes-360",
+    "rota": "/professor",
+    "largura": 360,
+    "texto": "Minhas turmas\nAlgoritmos\n\nSistemas de Informação · Turma A · 2026.2 · Publicada\n\nPainel\nConteúdo\nAlgoritmos\n\nSistemas de Informação · Turma B · 2026.2 · Publicada\n\nPainel\nConteúdo\nAlgoritmos\n\nSistemas de Informação · Turma A · 2027.1 · Publicada\n\nPainel\nConteúdo",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Minhas turmas"
+    }
+  },
+  {
+    "nome": "10-painel-docente-360",
+    "rota": "/professor/disciplinas/d-alg/turmas/t-alg-a-262",
+    "largura": 360,
+    "texto": "Voltar às turmas\n\nAlgoritmos — Turma A\n\nSistemas de Informação · 2026.2\n\n3 matriculado(s)\nConteúdo da disciplina\nIndicadores da turma\n\nProgresso médio: 44%\n\nDomínio médio por tópico\nAna Souza\nProgresso\n33%\nTaxa de acertos\n79%\nSituação\nRegular\nÚltima atividade\n16/11/2026\nDetalhe\nElisa Prado\nProgresso\n100%\nTaxa de acertos\n100%\nSituação\nRegular\nÚltima atividade\n13/11/2026\nDetalhe\nDiego Martins\nProgresso\n0%\nTaxa de acertos\nSem atividade\nSituação\nSem atividade\nÚltima atividade\nSem atividade\nDetalhe",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Algoritmos — Turma A"
+    }
+  },
+  {
+    "nome": "11-aluno-docente-360",
+    "rota": "/professor/disciplinas/d-alg/turmas/t-alg-a-262/alunos/m-ana-alg-a-262",
+    "largura": 360,
+    "texto": "Voltar à turma\n\nAna Souza\n\nAlgoritmos · Turma A · 2026.2\n\nDomínio por tópico\nVariáveis: 95\nCondicionais: 10\nLaços de repetição: 0\nÚltimas respostas\n16/11/2026 · Fácil · Acertou\n16/11/2026 · Fácil · Errou\n16/11/2026 · Fácil · Errou\n16/11/2026 · Fácil · Acertou\n16/11/2026 · Fácil · Acertou\n15/11/2026 · Difícil · Acertou\n15/11/2026 · Médio · Acertou\n15/11/2026 · Médio · Acertou\n15/11/2026 · Médio · Errou\n15/11/2026 · Médio · Acertou",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Ana Souza"
+    }
+  },
+  {
+    "nome": "12-editor-docente-360",
+    "rota": "/professor/disciplinas/d-alg/conteudo",
+    "largura": 360,
+    "texto": "Voltar às turmas\n\nConteúdo de Algoritmos\n\nSistemas de Informação · ALG · Publicada · Compartilhado entre turmas\n\nTópicos e materiais\nBanco de questões\nTópicos\n\nO estudo já foi iniciado em uma turma desta disciplina. A estrutura dos tópicos está protegida.\n\nAdicionar tópico\n\n1. Variáveis\n\nMateriais: 1\n\nEditar\n2. Condicionais\n\nMateriais: 1\n\nEditar\n3. Laços de repetição\n\nMateriais: 2\n\nEditar\nSalvar alterações\nDescartar alterações",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Conteúdo de Algoritmos"
+    }
+  },
+  {
+    "nome": "13-painel-coordenacao-360",
+    "rota": "/coordenacao",
+    "largura": 360,
+    "texto": "Painel da coordenação\n\nIndicadores por turma dos cursos que você coordena.\n\nGraduação\nTodas\nLicenciatura em Matemática\nDisciplina\nTodas\nMatemática Básica\nGeometria Plana\nPeríodo\nTodos\n2026.2\n2027.1\nTurma\nTodas\nTurma A · Matemática Básica · 2026.2\nTurma A · Matemática Básica · 2027.1\nTurma A · Geometria Plana · 2026.2\nMatemática Básica · Turma A · 2026.2\n\nLicenciatura em Matemática\n\nMatrículas\n1\nProgresso médio\n0%\n\nAs médias incluem quem ainda não iniciou.\n\nDomínio por tópico\nGerir turma\nMatemática Básica · Turma A · 2027.1\n\nLicenciatura em Matemática\n\nMatrículas\n0\nProgresso médio\nSem dados\nDomínio médio por tópico\nSem dados\n\nNenhum aluno matriculado\n\nGerir turma\nGeometria Plana · Turma A · 2026.2\n\nLicenciatura em Matemática\n\nMatrículas\n0\nProgresso médio\nSem dados\nDomínio médio por tópico\nSem dados\n\nNenhum aluno matriculado\n\nGerir turma",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Painel da coordenação"
+    }
+  },
+  {
+    "nome": "14-gestao-coordenacao-360",
+    "rota": "/coordenacao/gestao",
+    "largura": 360,
+    "texto": "Gestão acadêmica\nMatemática Básica — Turma A\n\nLicenciatura em Matemática · 2026.2\n\nDocentes: Carla Dias\n\nGerir turma\nMatemática Básica — Turma A\n\nLicenciatura em Matemática · 2027.1\n\nDocentes: Carla Dias\n\nGerir turma\nGeometria Plana — Turma A\n\nLicenciatura em Matemática · 2026.2\n\nDocentes: Júlia Rocha\n\nGerir turma",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Gestão acadêmica"
+    }
+  },
+  {
+    "nome": "15-oferta-coordenacao-360",
+    "rota": "/coordenacao/gestao/turmas/t-mat-a-262",
+    "largura": 360,
+    "texto": "Voltar às turmas\nVoltar aos indicadores\nMatemática Básica — Turma A\n\nLicenciatura em Matemática · 2026.2\n\nMatrículas\nBruno Lima\n\nNova matrícula\n\nProfessores\nCarla Dias\nRemover\n\nNova atribuição docente",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Matemática Básica — Turma A"
+    }
+  },
+  {
+    "nome": "16-cadastros-coordenacao-360",
+    "rota": "/coordenacao/cadastros",
+    "largura": 360,
+    "texto": "Cadastros\nGraduações e disciplinas\nPeríodos e turmas\nGraduações e disciplinas\nGraduações\nLM — Licenciatura em Matemática\n\nExatas\n\nEditar\nDisciplinas\n\nNova disciplina\n\nMAT — Matemática Básica\n\nLicenciatura em Matemática · Iniciante · Publicada\n\nEditar\nGEO — Geometria Plana\n\nLicenciatura em Matemática · Intermediário · Em rascunho\n\nEditar",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Cadastros"
+    }
+  },
+  {
+    "nome": "17-admin-360",
+    "rota": "/admin",
+    "largura": 360,
+    "texto": "Visão geral\nPessoas\n\n12 pessoas distintas\n\nAluno: 4\nProfessor: 4\nCoordenador: 2\nAdministrador: 1\nResponsável: 2\n\nGerir pessoas · Gerir vínculos\n\nEstrutura acadêmica\nGraduações: 2\nDisciplinas publicadas: 3\nDisciplinas em rascunho: 1\nPeríodos letivos: 2\nTurmas: 7\nMatrículas: 7\nGraduações e disciplinas\nPeríodos e turmas\nMatrículas e docentes",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Visão geral"
+    }
+  },
+  {
+    "nome": "18-pessoas-360",
+    "rota": "/admin/usuarios",
+    "largura": 360,
+    "texto": "Pessoas e funções\n\nNova pessoa\n\nAna Souza\nE-mail\nana@exemplo.com\nFunções\nAluno\nSituação\nAtiva\nEditar\nDesativar\nBruno Lima\nE-mail\nbruno@exemplo.com\nFunções\nAluno\nSituação\nAtiva\nEditar\nDesativar\nElisa Prado\nE-mail\nelisa@exemplo.com\nFunções\nAluno\nSituação\nAtiva\nEditar\nDesativar\nDiego Martins\nE-mail\ndiego@exemplo.com\nFunções\nAluno\nSituação\nAtiva\nEditar\nDesativar\nCarla Dias\nE-mail\ncarla@exemplo.com\nFunções\nProfessor, Coordenador\nSituação\nAtiva\nEditar\nDesativar\nLúcia Ferraz\nE-mail\nlucia@exemplo.com\nFunções\nCoordenador\nSituação\nAtiva\nEditar\nDesativar\nMarcos Silva\nE-mail\nmarcos@exemplo.com\nFunções\nProfessor\nSituação\nAtiva\nEditar\nDesativar\nJúlia Rocha\nE-mail\njulia@exemplo.com\nFunções\nProfessor\nSituação\nAtiva\nEditar\nDesativar\nPaulo Antunes\nE-mail\npaulo@exemplo.com\nFunções\nProfessor\nSituação\nInativa\nEditar\nAtivar\nRenata Alves\nE-mail\nrenata@exemplo.com\nFunções\nAdministrador\nSituação\nAtiva\nEditar\nDesativar\nHelena Souza\nE-mail\nhelena@exemplo.com\nFunções\nResponsável\nSituação\nAtiva\nEditar\nDesativar\nRoberto Lima\nE-mail\nroberto@exemplo.com\nFunções\nResponsável\nSituação\nAtiva\nEditar\nDesativar",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Pessoas e funções"
+    }
+  },
+  {
+    "nome": "19-vinculos-360",
+    "rota": "/admin/vinculos",
+    "largura": 360,
+    "texto": "Vínculos\nCoordenação de graduações\n\nNova coordenação\n\nCarla Dias coordena Sistemas de Informação\nRemover\nLúcia Ferraz coordena Licenciatura em Matemática\nRemover\nResponsável–Aluno\n\nNovo vínculo de acompanhamento\n\nHelena Souza acompanha Ana Souza\nRemover\nRoberto Lima acompanha Bruno Lima\nRemover\nRoberto Lima acompanha Elisa Prado\nRemover",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Vínculos"
+    }
+  },
+  {
+    "nome": "20-graduacoes-360",
+    "rota": "/admin/graduacoes",
+    "largura": 360,
+    "texto": "Graduações e disciplinas\nGraduações\n\nNova graduação\n\nSI — Sistemas de Informação\n\nTecnologia\n\nEditar\nLM — Licenciatura em Matemática\n\nExatas\n\nEditar\nDisciplinas\n\nNova disciplina\n\nMAT — Matemática Básica\n\nLicenciatura em Matemática · Iniciante · Publicada\n\nEditar\nConteúdo\nING — Inglês Inicial\n\nSistemas de Informação · Iniciante · Publicada\n\nEditar\nConteúdo\nALG — Algoritmos\n\nSistemas de Informação · Iniciante · Publicada\n\nEditar\nConteúdo\nGEO — Geometria Plana\n\nLicenciatura em Matemática · Intermediário · Em rascunho\n\nEditar\nConteúdo",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Graduações e disciplinas"
+    }
+  },
+  {
+    "nome": "21-periodos-360",
+    "rota": "/admin/periodos",
+    "largura": 360,
+    "texto": "Períodos letivos e turmas\nPeríodos letivos\n\nNovo período\n\n2026.2 (2026-08-03 a 2026-12-18)\nEditar\n2027.1 (2027-02-01 a 2027-06-30)\nEditar\nTurmas\n\nNova turma\n\nAlgoritmos — Turma A — 2026.2\n\nSistemas de Informação\n\nEditar\nAlgoritmos — Turma B — 2026.2\n\nSistemas de Informação\n\nEditar\nAlgoritmos — Turma A — 2027.1\n\nSistemas de Informação\n\nEditar\nInglês Inicial — Turma A — 2026.2\n\nSistemas de Informação\n\nEditar\nMatemática Básica — Turma A — 2026.2\n\nLicenciatura em Matemática\n\nEditar\nMatemática Básica — Turma A — 2027.1\n\nLicenciatura em Matemática\n\nEditar\nGeometria Plana — Turma A — 2026.2\n\nLicenciatura em Matemática\n\nEditar",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Períodos letivos e turmas"
+    }
+  },
+  {
+    "nome": "22-gestao-admin-360",
+    "rota": "/admin/gestao",
+    "largura": 360,
+    "texto": "Gestão acadêmica\nAlgoritmos — Turma A\n\nSistemas de Informação · 2026.2\n\nDocentes: Marcos Silva\n\nGerir turma\nAlgoritmos — Turma B\n\nSistemas de Informação · 2026.2\n\nDocentes: Marcos Silva\n\nGerir turma\nAlgoritmos — Turma A\n\nSistemas de Informação · 2027.1\n\nDocentes: Marcos Silva\n\nGerir turma\nInglês Inicial — Turma A\n\nSistemas de Informação · 2026.2\n\nDocentes: Júlia Rocha\n\nGerir turma\nMatemática Básica — Turma A\n\nLicenciatura em Matemática · 2026.2\n\nDocentes: Carla Dias\n\nGerir turma\nMatemática Básica — Turma A\n\nLicenciatura em Matemática · 2027.1\n\nDocentes: Carla Dias\n\nGerir turma\nGeometria Plana — Turma A\n\nLicenciatura em Matemática · 2026.2\n\nDocentes: Júlia Rocha\n\nGerir turma",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Gestão acadêmica"
+    }
+  },
+  {
+    "nome": "23-oferta-admin-360",
+    "rota": "/admin/gestao/turmas/t-alg-a-262",
+    "largura": 360,
+    "texto": "Voltar às turmas\nAlgoritmos — Turma A\n\nSistemas de Informação · 2026.2\n\nMatrículas\nAna Souza\nElisa Prado\nDiego Martins\n\nNova matrícula\n\nProfessores\nMarcos Silva\nRemover\n\nNova atribuição docente",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Algoritmos — Turma A"
+    }
+  },
+  {
+    "nome": "24-editor-admin-360",
+    "rota": "/admin/disciplinas/d-alg/conteudo",
+    "largura": 360,
+    "texto": "Voltar aos cadastros\n\nConteúdo de Algoritmos\n\nSistemas de Informação · ALG · Publicada · Compartilhado entre turmas\n\nTópicos e materiais\nBanco de questões\nTópicos\n\nO estudo já foi iniciado em uma turma desta disciplina. A estrutura dos tópicos está protegida.\n\nAdicionar tópico\n\n1. Variáveis\n\nMateriais: 1\n\nEditar\n2. Condicionais\n\nMateriais: 1\n\nEditar\n3. Laços de repetição\n\nMateriais: 2\n\nEditar\nSalvar alterações\nDescartar alterações",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Conteúdo de Algoritmos"
+    }
+  },
+  {
+    "nome": "25-responsavel-360",
+    "rota": "/responsavel",
+    "largura": 360,
+    "texto": "Painel do responsável\nAna Souza\nAlgoritmos\n\nTurma A · 2026.2\n\n33%\n\nSequência: 3 dia(s) · Última atividade: 16/11/2026\n\nDetalhes da oferta\nAlgoritmos\n\nTurma A · 2027.1\n\n0%\n\nSequência: 0 dia(s) · Última atividade: Sem atividade\n\nDetalhes da oferta\nInglês Inicial\n\nTurma A · 2026.2\n\n0%\n\nSequência: 1 dia(s) · Última atividade: 16/11/2026\n\nDetalhes da oferta",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Painel do responsável"
+    }
+  }
+]

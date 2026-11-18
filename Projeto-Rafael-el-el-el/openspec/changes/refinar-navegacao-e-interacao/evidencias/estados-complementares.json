@@ -1,0 +1,93 @@
+[
+  {
+    "nome": "48-cadastros-ofertas-coordenacao-1280",
+    "rota": "/coordenacao/cadastros?secao=ofertas",
+    "largura": 1280,
+    "texto": "Cadastros\nGraduações e disciplinas\nPeríodos e turmas\nPeríodos letivos e turmas\nPeríodos letivos\n2026.2 (2026-08-03 a 2026-12-18)\n2027.1 (2027-02-01 a 2027-06-30)\nTurmas\n\nNova turma\n\nMatemática Básica — Turma A — 2026.2\n\nLicenciatura em Matemática\n\nEditar\nMatemática Básica — Turma A — 2027.1\n\nLicenciatura em Matemática\n\nEditar\nGeometria Plana — Turma A — 2026.2\n\nLicenciatura em Matemática\n\nEditar",
+    "geometria": {
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Cadastros"
+    }
+  },
+  {
+    "nome": "48-cadastros-ofertas-coordenacao-768",
+    "rota": "/coordenacao/cadastros?secao=ofertas",
+    "largura": 768,
+    "texto": "Cadastros\nGraduações e disciplinas\nPeríodos e turmas\nPeríodos letivos e turmas\nPeríodos letivos\n2026.2 (2026-08-03 a 2026-12-18)\n2027.1 (2027-02-01 a 2027-06-30)\nTurmas\n\nNova turma\n\nMatemática Básica — Turma A — 2026.2\n\nLicenciatura em Matemática\n\nEditar\nMatemática Básica — Turma A — 2027.1\n\nLicenciatura em Matemática\n\nEditar\nGeometria Plana — Turma A — 2026.2\n\nLicenciatura em Matemática\n\nEditar",
+    "geometria": {
+      "width": 768,
+      "document": 768,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Cadastros"
+    }
+  },
+  {
+    "nome": "48-cadastros-ofertas-coordenacao-360",
+    "rota": "/coordenacao/cadastros?secao=ofertas",
+    "largura": 360,
+    "texto": "Cadastros\nGraduações e disciplinas\nPeríodos e turmas\nPeríodos letivos e turmas\nPeríodos letivos\n2026.2 (2026-08-03 a 2026-12-18)\n2027.1 (2027-02-01 a 2027-06-30)\nTurmas\n\nNova turma\n\nMatemática Básica — Turma A — 2026.2\n\nLicenciatura em Matemática\n\nEditar\nMatemática Básica — Turma A — 2027.1\n\nLicenciatura em Matemática\n\nEditar\nGeometria Plana — Turma A — 2026.2\n\nLicenciatura em Matemática\n\nEditar",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Cadastros"
+    }
+  },
+  {
+    "nome": "49-remocao-apos-cancelar-360",
+    "rota": "/admin/vinculos",
+    "largura": 360,
+    "texto": "Vínculos\nCoordenação de graduações\n\nNova coordenação\n\nCarla Dias coordena Sistemas de Informação\nRemover\nLúcia Ferraz coordena Licenciatura em Matemática\nRemover\nResponsável–Aluno\n\nNovo vínculo de acompanhamento\n\nHelena Souza acompanha Ana Souza\nRemover\nRoberto Lima acompanha Bruno Lima\nRemover\nRoberto Lima acompanha Elisa Prado\nRemover",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Vínculos"
+    }
+  },
+  {
+    "nome": "51-escape-acionador-menu-360",
+    "rota": "/professor/disciplinas/d-alg/conteudo",
+    "largura": 360,
+    "texto": "Voltar às turmas\n\nConteúdo de Algoritmos\n\nSistemas de Informação · ALG · Publicada · Compartilhado entre turmas\n\nTópicos e materiais\nBanco de questões\nTópicos\n\nO estudo já foi iniciado em uma turma desta disciplina. A estrutura dos tópicos está protegida.\n\nAdicionar tópico\n\n1. Variáveis\n\nMateriais: 1\n\nEditar\n2. Condicionais\n\nMateriais: 1\n\nEditar\n3. Laços de repetição\n\nMateriais: 2\n\nEditar\nSalvar alterações\nDescartar alterações",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "BUTTON",
+      "texto": "MenuSeções"
+    },
+    "menuAberto": "true"
+  },
+  {
+    "nome": "50-menu-fechado-teclado-360",
+    "rota": "/professor/disciplinas/d-alg/conteudo",
+    "largura": 360,
+    "texto": "Voltar às turmas\n\nConteúdo de Algoritmos\n\nSistemas de Informação · ALG · Publicada · Compartilhado entre turmas\n\nTópicos e materiais\nBanco de questões\nTópicos\n\nO estudo já foi iniciado em uma turma desta disciplina. A estrutura dos tópicos está protegida.\n\nAdicionar tópico\n\n1. Variáveis\n\nMateriais: 1\n\nEditar\n2. Condicionais\n\nMateriais: 1\n\nEditar\n3. Laços de repetição\n\nMateriais: 2\n\nEditar\nSalvar alterações\nDescartar alterações",
+    "geometria": {
+      "width": 360,
+      "document": 345,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "BUTTON",
+      "texto": "MenuSeções"
+    }
+  }
+]

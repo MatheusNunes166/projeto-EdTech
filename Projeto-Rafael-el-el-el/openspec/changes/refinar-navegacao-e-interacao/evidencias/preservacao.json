@@ -1,0 +1,6 @@
+{
+  "documentoInicialIgualAoFinal": true,
+  "respostasIniciais": 57,
+  "perfis": "Perfil Chrome separado refinamento-browser; seed automático apenas nesse perfil; snapshots restaurados entre jornadas",
+  "observacao": "Uma resposta e um material alterados somente no perfil isolado; históricos de resposta iguais após edição de material; cancelamentos e validação inválida sem gravação"
+}

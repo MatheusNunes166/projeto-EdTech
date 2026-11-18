@@ -1,0 +1,87 @@
+[
+  {
+    "uso": "texto",
+    "frente": "#1e293b",
+    "fundo": "#ffffff",
+    "razao": 14.63
+  },
+  {
+    "uso": "secundário",
+    "frente": "#475569",
+    "fundo": "#f8fafc",
+    "razao": 7.24
+  },
+  {
+    "uso": "primária",
+    "frente": "#ffffff",
+    "fundo": "#4338ca",
+    "razao": 7.9
+  },
+  {
+    "uso": "hover",
+    "frente": "#ffffff",
+    "fundo": "#3730a3",
+    "razao": 9.93
+  },
+  {
+    "uso": "pressionado",
+    "frente": "#ffffff",
+    "fundo": "#312e81",
+    "razao": 11.42
+  },
+  {
+    "uso": "destaque informativo",
+    "frente": "#0f766e",
+    "fundo": "#f0fdfa",
+    "razao": 5.25
+  },
+  {
+    "uso": "seleção",
+    "frente": "#3730a3",
+    "fundo": "#eef2ff",
+    "razao": 8.88
+  },
+  {
+    "uso": "sucesso",
+    "frente": "#166534",
+    "fundo": "#f0fdf4",
+    "razao": 6.81
+  },
+  {
+    "uso": "atenção",
+    "frente": "#92400e",
+    "fundo": "#fffbeb",
+    "razao": 6.84
+  },
+  {
+    "uso": "erro",
+    "frente": "#b91c1c",
+    "fundo": "#fef2f2",
+    "razao": 5.91
+  },
+  {
+    "uso": "destrutiva",
+    "frente": "#ffffff",
+    "fundo": "#b91c1c",
+    "razao": 6.47
+  },
+  {
+    "uso": "borda funcional",
+    "frente": "#64748b",
+    "fundo": "#ffffff",
+    "razao": 4.76
+  },
+  {
+    "uso": "foco",
+    "frente": "#4338ca",
+    "fundo": "#ffffff",
+    "razao": 7.9
+  },
+  {
+    "uso": "indisponível",
+    "frente": "#475569",
+    "fundo": "#e2e8f0",
+    "razao": 6.15
+  }
+]
+

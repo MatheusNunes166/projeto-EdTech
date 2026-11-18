@@ -1,0 +1,215 @@
+{
+  "jornadas": [
+    {
+      "perfil": "Aluno",
+      "largura": 1280,
+      "tarefa": "Entrada por teclado, oferta, material liberado expandido e retorno à trilha",
+      "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262",
+      "semMutacao": true,
+      "overflow": {
+        "width": 1280,
+        "document": 1265,
+        "overflow": []
+      },
+      "foco": "Algoritmos"
+    },
+    {
+      "perfil": "Professor",
+      "largura": 1280,
+      "tarefa": "Entrada por teclado, turma, histórico expandido e abertura de questão protegida",
+      "rota": "/professor/disciplinas/d-alg/conteudo",
+      "semMutacao": true,
+      "overflow": {
+        "width": 1280,
+        "document": 1265,
+        "overflow": []
+      },
+      "foco": "Editar questão"
+    },
+    {
+      "perfil": "Coordenação",
+      "largura": 1280,
+      "tarefa": "Entrada por teclado, seleção de oferta, gestão e retorno aos indicadores",
+      "rota": "/coordenacao?graduacao=g-lm&disciplina=d-mat&periodo=p-2026-2&turma=t-mat-a-262",
+      "semMutacao": true,
+      "overflow": {
+        "width": 1280,
+        "document": 1280,
+        "overflow": []
+      },
+      "foco": "Painel da coordenação"
+    },
+    {
+      "perfil": "Administração",
+      "largura": 1280,
+      "tarefa": "Entrada por teclado, menu, lista e edição de pessoa sem salvar",
+      "rota": "/admin/usuarios",
+      "semMutacao": true,
+      "overflow": {
+        "width": 1280,
+        "document": 1265,
+        "overflow": []
+      },
+      "foco": "Editar Ana Souza"
+    },
+    {
+      "perfil": "Responsável",
+      "largura": 1280,
+      "tarefa": "Entrada por teclado e expansão da oferta da aluna vinculada",
+      "rota": "/responsavel",
+      "semMutacao": true,
+      "overflow": {
+        "width": 1280,
+        "document": 1280,
+        "overflow": []
+      },
+      "foco": "Detalhes da oferta"
+    },
+    {
+      "perfil": "Aluno",
+      "largura": 768,
+      "tarefa": "Entrada por teclado, oferta, material liberado expandido e retorno à trilha",
+      "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262",
+      "semMutacao": true,
+      "overflow": {
+        "width": 768,
+        "document": 753,
+        "overflow": []
+      },
+      "foco": "Algoritmos"
+    },
+    {
+      "perfil": "Professor",
+      "largura": 768,
+      "tarefa": "Entrada por teclado, turma, histórico expandido e abertura de questão protegida",
+      "rota": "/professor/disciplinas/d-alg/conteudo",
+      "semMutacao": true,
+      "overflow": {
+        "width": 768,
+        "document": 753,
+        "overflow": []
+      },
+      "foco": "Editar questão"
+    },
+    {
+      "perfil": "Coordenação",
+      "largura": 768,
+      "tarefa": "Entrada por teclado, seleção de oferta, gestão e retorno aos indicadores",
+      "rota": "/coordenacao?graduacao=g-lm&disciplina=d-mat&periodo=p-2026-2&turma=t-mat-a-262",
+      "semMutacao": true,
+      "overflow": {
+        "width": 768,
+        "document": 768,
+        "overflow": []
+      },
+      "foco": "Painel da coordenação"
+    },
+    {
+      "perfil": "Administração",
+      "largura": 768,
+      "tarefa": "Entrada por teclado, menu, lista e edição de pessoa sem salvar",
+      "rota": "/admin/usuarios",
+      "semMutacao": true,
+      "overflow": {
+        "width": 768,
+        "document": 768,
+        "overflow": []
+      },
+      "foco": "Editar Ana Souza"
+    },
+    {
+      "perfil": "Responsável",
+      "largura": 768,
+      "tarefa": "Entrada por teclado e expansão da oferta da aluna vinculada",
+      "rota": "/responsavel",
+      "semMutacao": true,
+      "overflow": {
+        "width": 768,
+        "document": 768,
+        "overflow": []
+      },
+      "foco": "Detalhes da oferta"
+    },
+    {
+      "perfil": "Aluno",
+      "largura": 360,
+      "tarefa": "Entrada por teclado, oferta, material liberado expandido e retorno à trilha",
+      "rota": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262",
+      "semMutacao": true,
+      "overflow": {
+        "width": 360,
+        "document": 345,
+        "overflow": []
+      },
+      "foco": "Algoritmos"
+    },
+    {
+      "perfil": "Professor",
+      "largura": 360,
+      "tarefa": "Entrada por teclado, turma, histórico expandido e abertura de questão protegida",
+      "rota": "/professor/disciplinas/d-alg/conteudo",
+      "semMutacao": true,
+      "overflow": {
+        "width": 360,
+        "document": 345,
+        "overflow": []
+      },
+      "foco": "Editar questão"
+    },
+    {
+      "perfil": "Coordenação",
+      "largura": 360,
+      "tarefa": "Entrada por teclado, seleção de oferta, gestão e retorno aos indicadores",
+      "rota": "/coordenacao?graduacao=g-lm&disciplina=d-mat&periodo=p-2026-2&turma=t-mat-a-262",
+      "semMutacao": true,
+      "overflow": {
+        "width": 360,
+        "document": 360,
+        "overflow": []
+      },
+      "foco": "Painel da coordenação"
+    },
+    {
+      "perfil": "Administração",
+      "largura": 360,
+      "tarefa": "Entrada por teclado, menu, lista e edição de pessoa sem salvar",
+      "rota": "/admin/usuarios",
+      "semMutacao": true,
+      "overflow": {
+        "width": 360,
+        "document": 345,
+        "overflow": []
+      },
+      "foco": "Editar Ana Souza"
+    },
+    {
+      "perfil": "Responsável",
+      "largura": 360,
+      "tarefa": "Entrada por teclado e expansão da oferta da aluna vinculada",
+      "rota": "/responsavel",
+      "semMutacao": true,
+      "overflow": {
+        "width": 360,
+        "document": 360,
+        "overflow": []
+      },
+      "foco": "Detalhes da oferta"
+    }
+  ],
+  "acessoNegado": {
+    "nome": "47-acesso-direto-negado-360",
+    "rota": "/professor/disciplinas/d-alg/turmas/t-alg-a-262/alunos/m-ana-alg-a-262",
+    "largura": 360,
+    "texto": "Acesso negado\n\nVocê não tem acesso a este recurso.",
+    "geometria": {
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    },
+    "foco": {
+      "tag": "H1",
+      "texto": "Acesso negado"
+    }
+  },
+  "observacao": "Percursos de consulta/abertura de edição em cada largura; envio de resposta e salvamento/falha do material foram conferidos separadamente a 1280 px"
+}
