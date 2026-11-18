@@ -26,10 +26,10 @@ Lista de implementação futura, após revisão desta change. Nenhuma tarefa foi
 
 ## 4. Minhas turmas e acesso ao desempenho
 
-- [ ] 4.1 Reorganizar os cartões de `MinhasTurmas.tsx` com identificação acadêmica completa e associação dos indicadores por `matriculaId`; verificar ofertas de Ana em 2026.2 e 2027.1 separadas e mensagens de carregamento ou erro sem valores zero presumidos.
-- [ ] 4.2 Aplicar a tabela de estados de D4 e os rótulos Começar trilha, Continuar trilha e Ver trilha com Desempenho secundário; verificar Diego sem respostas, fixture com respostas e 0% de progresso, Elisa concluída e conteúdo em rascunho sem ação de estudo.
-- [ ] 4.3 Preservar o painel `Desempenho.tsx`, seu retorno à matrícula e a distinção entre taxa zero com e sem respostas; verificar indicadores acadêmicos completos, Sem atividade somente sem respostas e indicação de atividade para fixture com apenas erros.
-- [ ] 4.4 Adaptar e ampliar os testes correspondentes em `src/testes/aluno.test.tsx`; verificar `npm test -- src/testes/aluno.test.tsx` com os três destinos na matrícula correta, estado vazio, rascunho, atraso/falha de indicadores e catálogo sem automatrícula.
+- [x] 4.1 Reorganizar os cartões de `MinhasTurmas.tsx` com identificação acadêmica completa e associação dos indicadores por `matriculaId`; verificar ofertas de Ana em 2026.2 e 2027.1 separadas e mensagens de carregamento ou erro sem valores zero presumidos.
+- [x] 4.2 Aplicar a tabela de estados de D4 e os rótulos Começar trilha, Continuar trilha e Ver trilha com Desempenho secundário; verificar Diego sem respostas, fixture com respostas e 0% de progresso, Elisa concluída e conteúdo em rascunho sem ação de estudo.
+- [x] 4.3 Preservar o painel `Desempenho.tsx`, seu retorno à matrícula e a distinção entre taxa zero com e sem respostas; verificar indicadores acadêmicos completos, Sem atividade somente sem respostas e indicação de atividade para fixture com apenas erros.
+- [x] 4.4 Adaptar e ampliar os testes correspondentes em `src/testes/aluno.test.tsx`; verificar `npm test -- src/testes/aluno.test.tsx` com os três destinos na matrícula correta, estado vazio, rascunho, atraso/falha de indicadores e catálogo sem automatrícula.
 
 ## 5. Trilha e gamificação sob demanda
 

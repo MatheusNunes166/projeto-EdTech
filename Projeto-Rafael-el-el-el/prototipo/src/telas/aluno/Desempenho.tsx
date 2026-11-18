@@ -20,7 +20,7 @@ function DesempenhoDaMatricula({ alvo }: { alvo: AlvoMatricula }) {
           <h1>Desempenho em {i.contexto.disciplina.nome}</h1>
           <p className="meta">{i.contexto.graduacao.nome} · Turma {i.contexto.turma.codigo} · {i.contexto.periodoLetivo.nome}</p>
           <BarraProgresso valor={i.progresso} rotulo="Progresso" />
-          <p>Taxa de acertos: <strong>{arredondarExibicao(i.taxaAcertos)}%</strong> {i.totalRespostas === 0 && <em>(Sem atividade)</em>} · XP: <strong>{i.xp}</strong></p>
+          <p>Taxa de acertos: <strong>{arredondarExibicao(i.taxaAcertos)}%</strong> {i.totalRespostas === 0 ? <em>(Sem atividade)</em> : <span>({i.totalRespostas} respostas registradas)</span>} · XP: <strong>{i.xp}</strong></p>
           <h2>Domínio por tópico</h2>
           <ul className="lista-limpa">
             {i.dominioPorTopico.map((t) => <li key={t.topicoId}>{t.titulo}: {t.dominio}</li>)}

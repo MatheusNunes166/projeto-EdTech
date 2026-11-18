@@ -92,7 +92,7 @@ describe('8.2 — fluxos integrados entre funções (PA, GC, AA, OA)', () => {
     // 4. Aluno estuda a turma recém-publicada.
     await entrarComo(usuario, 'Diego Martins');
     const minha = await screen.findByRole('article', { name: 'Estruturas de Dados turma A 2026.2' });
-    await usuario.click(await within(minha).findByRole('link', { name: 'Abrir trilha' }));
+    await usuario.click(await within(minha).findByRole('link', { name: 'Começar trilha' }));
     await usuario.click(await screen.findByRole('link', { name: 'Estudar' }));
     const enunciado = (await screen.findByRole('heading', { level: 2, name: (n) => n.length > 0 })).textContent!;
     expect(enunciado).toContain('Pilhas facil'); // início sem diagnóstico, nível Fácil

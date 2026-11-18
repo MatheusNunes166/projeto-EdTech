@@ -1,8 +1,9 @@
-import { screen, waitFor, within } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { gerarHistoricoMatricula } from '../dados/seed-academico';
 import type { DadosAcademicos } from '../dominio/tipos';
+import { RepositorioApp } from '../dados/repositorio-app';
 import { renderizarApp, T_ALG_A } from './renderizar';
 
 describe('7.8 — [CC] Catálogo de graduações e disciplinas publicadas, Busca e filtro, Detalhe acadêmico e ofertas, Acesso às turmas sem automatrícula', () => {
@@ -81,7 +82,7 @@ describe('7.9 — [CC] Minhas turmas; [AC] Painel do aluno', () => {
     const card = await screen.findByRole('article', { name: 'Algoritmos turma A 2026.2' });
     expect(await within(card).findByRole('progressbar')).toHaveAttribute('aria-valuenow', '0');
     expect(within(card).getByText('Sem atividade')).toBeInTheDocument();
-    expect(within(card).getByRole('link', { name: 'Abrir trilha' })).toBeInTheDocument();
+    expect(within(card).getByRole('link', { name: 'Começar trilha' })).toBeInTheDocument();
   });
 
   it('turma com conteúdo em rascunho aparece sem ação de estudo', async () => {
@@ -109,6 +110,69 @@ describe('7.9 — [CC] Minhas turmas; [AC] Painel do aluno', () => {
     await renderizarApp('/aluno/disciplinas/d-alg/turmas/t-alg-a-262/desempenho', 'u-diego');
     expect(await screen.findByText('(Sem atividade)')).toBeInTheDocument();
     expect(screen.getByText(/Taxa de acertos:/)).toHaveTextContent('Taxa de acertos: 0%');
+  });
+});
+
+describe('Frontend 4 — ação por matrícula, estados e indicadores parciais', () => {
+  it.each([
+    ['u-diego', 'Começar trilha', 'Sem atividade'], ['u-ana', 'Continuar trilha', 'Em andamento'], ['u-elisa', 'Ver trilha', 'Trilha concluída'],
+  ])('%s abre a própria trilha por %s e mantém Desempenho secundário', async (id, acao, estado) => {
+    const a = await renderizarApp('/aluno', id);
+    const card = await screen.findByRole('article', { name: 'Algoritmos turma A 2026.2' });
+    expect(await within(card).findByText(estado)).toBeInTheDocument();
+    expect(within(card).getByRole('link', { name: 'Desempenho' })).toHaveAttribute('href', `${T_ALG_A}/desempenho`);
+    const antes = JSON.stringify(a.dados());
+    await a.usuario.click(within(card).getByRole('link', { name: acao }));
+    expect(a.rotaAtual()).toBe(T_ALG_A);
+    expect(JSON.stringify(a.dados())).toBe(antes);
+  });
+
+  it('respostas erradas com 0% mantêm Em andamento e indicam atividade no desempenho', async () => {
+    const a = await renderizarApp('/aluno', 'u-diego', (d) => {
+      d.respostas.push(...gerarHistoricoMatricula(d, 'm-diego-alg-a-262', [[1, [false, false]]], { valor: 1000 }));
+    });
+    const card = await screen.findByRole('article', { name: 'Algoritmos turma A 2026.2' });
+    expect(await within(card).findByText('Em andamento')).toBeInTheDocument();
+    expect(within(card).getByRole('progressbar')).toHaveAttribute('aria-valuenow', '0');
+    expect(within(card).getByRole('link', { name: 'Continuar trilha' })).toBeInTheDocument();
+    expect(within(card).queryByText('Sem atividade')).toBeNull();
+    await a.usuario.click(within(card).getByRole('link', { name: 'Desempenho' }));
+    expect(await screen.findByText(/2 respostas registradas/)).toBeInTheDocument();
+    expect(screen.getByText(/Taxa de acertos:/)).toHaveTextContent('0%');
+    expect(screen.queryByText('(Sem atividade)')).toBeNull();
+    await a.usuario.click(screen.getByRole('link', { name: '← Voltar à trilha' }));
+    expect(a.rotaAtual()).toBe(T_ALG_A);
+  });
+
+  it('carregamento dos indicadores não inventa zero, início ou estado sem atividade', async () => {
+    const original = RepositorioApp.prototype.consultarPainelAluno;
+    const liberar: (() => Promise<void>)[] = [];
+    const sonda = vi.spyOn(RepositorioApp.prototype, 'consultarPainelAluno').mockImplementation(function (this: RepositorioApp) {
+      const real = original.call(this);
+      return new Promise((resolve) => { liberar.push(async () => resolve(await real)); });
+    });
+    try {
+      await renderizarApp('/aluno', 'u-diego');
+      const card = await screen.findByRole('article', { name: 'Algoritmos turma A 2026.2' });
+      expect(within(card).getByRole('status')).toHaveTextContent('Carregando indicadores');
+      expect(within(card).queryByRole('progressbar')).toBeNull();
+      expect(within(card).queryByRole('link', { name: 'Começar trilha' })).toBeNull();
+      expect(within(card).queryByText('Sem atividade')).toBeNull();
+      await act(async () => { await Promise.all(liberar.map((f) => f())); });
+      expect(await within(card).findByRole('link', { name: 'Começar trilha' })).toBeInTheDocument();
+    } finally { sonda.mockRestore(); }
+  });
+
+  it('falha de indicadores é um erro, sem zero ou ação principal presumidos', async () => {
+    const sonda = vi.spyOn(RepositorioApp.prototype, 'consultarPainelAluno').mockRejectedValue(new Error('Consulta indisponível'));
+    try {
+      await renderizarApp('/aluno', 'u-diego');
+      const card = await screen.findByRole('article', { name: 'Algoritmos turma A 2026.2' });
+      expect(await within(card).findByRole('alert')).toHaveTextContent('Consulta indisponível');
+      expect(within(card).queryByRole('progressbar')).toBeNull();
+      expect(within(card).queryByText('Sem atividade')).toBeNull();
+      expect(within(card).queryByRole('link', { name: 'Começar trilha' })).toBeNull();
+    } finally { sonda.mockRestore(); }
   });
 });
 
@@ -187,7 +251,7 @@ describe('7.10 — [AA] Inicialização e retomada, Feedback imediato, Revisão 
     expect(nova).toHaveTextContent('Primeira questão');
     await usuario.click(screen.getByRole('link', { name: '← Minhas turmas' }));
     const card = await screen.findByRole('article', { name: 'Algoritmos turma A 2026.2' });
-    await usuario.click(within(card).getByRole('link', { name: 'Abrir trilha' }));
+    await usuario.click(within(card).getByRole('link', { name: 'Continuar trilha' }));
     const antiga = await screen.findByRole('region', { name: 'Gamificação da turma A de 2026.2' });
     expect(antiga).toHaveTextContent(`${xpAntigo} XP`);
     expect(antiga).not.toHaveTextContent('Sequência: 1 dia');

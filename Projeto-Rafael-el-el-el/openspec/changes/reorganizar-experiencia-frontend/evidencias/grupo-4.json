@@ -1,0 +1,56 @@
+{
+  "estados": [
+    {
+      "pessoa": "u-diego",
+      "texto": "Algoritmos\n\nSistemas de Informação · Turma A · 2026.2\n\n0%\n\nSem atividade\n\nComeçar trilha\nDesempenho",
+      "acoes": [
+        {
+          "rotulo": "Começar trilha",
+          "destino": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262"
+        },
+        {
+          "rotulo": "Desempenho",
+          "destino": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/desempenho"
+        }
+      ],
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    {
+      "pessoa": "u-ana",
+      "texto": "Algoritmos\n\nSistemas de Informação · Turma A · 2026.2\n\n33%\n\nEm andamento\n\nContinuar trilha\nDesempenho",
+      "acoes": [
+        {
+          "rotulo": "Continuar trilha",
+          "destino": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262"
+        },
+        {
+          "rotulo": "Desempenho",
+          "destino": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/desempenho"
+        }
+      ],
+      "width": 1280,
+      "document": 1280,
+      "overflow": []
+    },
+    {
+      "pessoa": "u-elisa",
+      "texto": "Algoritmos\n\nSistemas de Informação · Turma A · 2026.2\n\n100%\n\nTrilha concluída\n\nVer trilha\nDesempenho",
+      "acoes": [
+        {
+          "rotulo": "Ver trilha",
+          "destino": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262"
+        },
+        {
+          "rotulo": "Desempenho",
+          "destino": "/aluno/disciplinas/d-alg/turmas/t-alg-a-262/desempenho"
+        }
+      ],
+      "width": 360,
+      "document": 360,
+      "overflow": []
+    }
+  ],
+  "dadosPreservados": true
+}

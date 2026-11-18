@@ -22,9 +22,12 @@ export function MinhasTurmas() {
                   {!t.conteudoDisponivel ? <p className="meta">Conteúdo em preparação: ainda não há atividades de estudo.</p> : (
                     <>
                       {ind && <BarraProgresso valor={ind.progresso} rotulo={`Progresso em ${t.disciplina.nome} ${t.turma.codigo} ${t.periodoLetivo.nome}`} />}
-                      {ind && ind.totalRespostas === 0 && <p className="meta">Sem atividade</p>}
+                      {ind ? <p className={`estado-turma ${ind.concluido ? 'concluida' : ''}`}>{ind.concluido ? 'Trilha concluída' : ind.totalRespostas === 0 ? 'Sem atividade' : 'Em andamento'}</p>
+                        : painel.situacao === 'erro' ? <p role="alert">Não foi possível carregar os indicadores desta turma. {painel.erro.mensagem}</p>
+                          : painel.situacao === 'carregando' ? <p role="status">Carregando indicadores…</p>
+                            : <p role="alert">Indicadores indisponíveis para esta turma.</p>}
                       <div className="acoes">
-                        <Link className="botao" to={base}>Abrir trilha</Link>
+                        {ind && <Link className="botao" to={base}>{ind.concluido ? 'Ver trilha' : ind.totalRespostas === 0 ? 'Começar trilha' : 'Continuar trilha'}</Link>}
                         <Link className="botao secundario" to={`${base}/desempenho`}>Desempenho</Link>
                       </div>
                     </>

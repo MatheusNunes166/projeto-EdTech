@@ -170,6 +170,11 @@ tr.inativo td { color: var(--cor-suave); }
 .funcoes-entrada, .pessoas-entrada { margin-top: 24px; }
 .cartao-funcao { background: #fff; color: var(--cor-texto); padding: 24px; font-weight: 650; border-color: #747e91; }
 .cartao-funcao:hover:not(:disabled) { background: #eef2fd; color: var(--cor-primaria-escura); }
+.estado-turma { font-size: 0.9rem; font-weight: 600; color: var(--cor-suave); margin: 12px 0; }
+.estado-turma.concluida { color: var(--cor-ok); }
+.experiencia-aluno .grade-cartoes article { display: flex; flex-direction: column; gap: 4px; }
+.experiencia-aluno .grade-cartoes article h2 { margin: 0 0 8px; }
+.experiencia-aluno .grade-cartoes article .acoes { margin-top: auto; padding-top: 16px; }
 .experiencia-aluno :is(.cartao, article, section, fieldset, label, .grade-cartoes, .indicadores) { min-width: 0; }
 .experiencia-aluno .grade-cartoes { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 24px; }
 .experiencia-aluno .cartao { padding: 24px; }
