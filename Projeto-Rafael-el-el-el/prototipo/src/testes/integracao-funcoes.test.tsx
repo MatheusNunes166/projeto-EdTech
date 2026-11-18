@@ -3,7 +3,7 @@ import type { UserEvent } from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { diferencaTextualQuestao } from '../conteudo/regras-disciplina';
 import type { ConteudoCandidato } from '../dados/comandos-conteudo';
-import { renderizarApp } from './renderizar';
+import { escolherFuncaoEntrada, renderizarApp } from './renderizar';
 
 /**
  * 8.2 — Validação integrada entre funções, pela interface e com o armazenamento real do aplicativo.
@@ -13,6 +13,7 @@ import { renderizarApp } from './renderizar';
  */
 const entrarComo = async (usuario: UserEvent, nome: string) => {
   await usuario.click(await screen.findByRole('button', { name: 'Sair' }));
+  await escolherFuncaoEntrada(usuario, nome === 'Diego Martins' ? 'Aluno' : nome === 'Helena Souza' ? 'Responsável' : nome === 'Renata Alves' ? 'Administrador' : 'Professor');
   await usuario.click(await screen.findByRole('button', { name: `Entrar como ${nome}` }));
 };
 const irPara = async (usuario: UserEvent, menu: string) =>

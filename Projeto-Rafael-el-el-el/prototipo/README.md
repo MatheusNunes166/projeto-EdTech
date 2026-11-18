@@ -15,6 +15,8 @@ npm run build    # verificação de tipos e build de produção
 
 Cada pessoa tem funções explícitas e cumulativas (não há “perfil principal”). Vínculos não concedem funções.
 
+Na entrada, escolha primeiro uma **função** disponível e depois uma **pessoa ativa** dessa função. A entrada é simulada, com dados fictícios e **sem senha**. Você pode usar **Voltar às funções** sem iniciar sessão. A área escolhida é aberta diretamente: escolher Coordenador e Carla abre a Coordenação. Em **Áreas da pessoa**, Carla pode trocar para Professor na mesma conta, mantendo os vínculos e permissões de cada função.
+
 | Nome | E-mail | Funções | Vínculos |
 | --- | --- | --- | --- |
 | Ana Souza | ana@exemplo.com | Aluno | Algoritmos A e Inglês Inicial A (2026.2); Algoritmos A (2027.1, sem respostas) |

@@ -1,23 +1,26 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { ProvedorApp } from '../app/contexto';
 import { Rotas } from '../app/Rotas';
 import { CHAVES_ARMAZENAMENTO as K } from '../dados/armazenamento-academico';
 import { criarSeedAcademico } from '../dados/seed-academico';
 import { criarArmazenamentoEspiao } from './armazenamento-espiao';
-import { renderizarApp } from './renderizar';
+import { escolherFuncaoEntrada, renderizarApp } from './renderizar';
+import { RepositorioApp } from '../dados/repositorio-app';
 
 describe('7.1 — [PA] Entrada simulada; Acesso restrito por função e vínculo; [OA] Revogação (sessão, funções e consultas autorizadas)', () => {
   it('entra sem senha por pessoa de demonstração, troca de pessoa e a área anterior não permanece', async () => {
     const { usuario, rotaAtual } = await renderizarApp('/');
+    await escolherFuncaoEntrada(usuario);
     await usuario.click(await screen.findByRole('button', { name: 'Entrar como Ana Souza' }));
     expect(await screen.findByRole('heading', { name: 'Minhas turmas' })).toBeInTheDocument();
     expect(rotaAtual()).toBe('/aluno');
     await usuario.click(screen.getByRole('button', { name: 'Sair' }));
     expect(await screen.findByRole('heading', { name: 'Trilha Adaptativa' })).toBeInTheDocument();
     expect(screen.queryByText('Algoritmos')).toBeNull();
+    await escolherFuncaoEntrada(usuario, 'Professor');
     await usuario.click(screen.getByRole('button', { name: 'Entrar como Marcos Silva' }));
     expect(await screen.findByRole('article', { name: 'Algoritmos turma A 2026.2' })).toBeInTheDocument();
     expect(rotaAtual()).toBe('/professor');
@@ -25,7 +28,10 @@ describe('7.1 — [PA] Entrada simulada; Acesso restrito por função e vínculo
   });
 
   it('a entrada lista só pessoas ativas, sem e-mail ou vínculos', async () => {
-    const { container } = await renderizarApp('/');
+    const { container, usuario } = await renderizarApp('/');
+    expect(await screen.findByRole('button', { name: 'Aluno' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Entrar como/ })).toBeNull();
+    await escolherFuncaoEntrada(usuario);
     await screen.findByRole('button', { name: 'Entrar como Ana Souza' });
     expect(screen.queryByRole('button', { name: /Paulo Antunes/ })).toBeNull(); // inativo
     expect(container.textContent).not.toContain('@exemplo.com');
@@ -40,11 +46,12 @@ describe('7.1 — [PA] Entrada simulada; Acesso restrito por função e vínculo
   });
 
   it('pessoa desativada durante a sessão perde o acesso e volta à entrada, sem dados da sessão anterior', async () => {
-    const { outraAba, avisarOutraAba, rotaAtual } = await renderizarApp('/aluno', 'u-ana');
+    const { outraAba, avisarOutraAba, rotaAtual, usuario } = await renderizarApp('/aluno', 'u-ana');
     await screen.findByRole('article', { name: 'Algoritmos turma A 2026.2' });
     const admin = outraAba('u-renata');
     await admin.definirAtivo('u-ana', false, (await admin.consultarPessoas()).revisao);
     avisarOutraAba();
+    await escolherFuncaoEntrada(usuario);
     expect(await screen.findByRole('button', { name: 'Entrar como Bruno Lima' })).toBeInTheDocument();
     expect(rotaAtual()).toBe('/');
     expect(screen.queryByRole('article')).toBeNull();
@@ -71,6 +78,73 @@ describe('7.1 — [PA] Entrada simulada; Acesso restrito por função e vínculo
     avisarOutraAba();
     expect(await screen.findByRole('heading', { name: 'Acesso negado' })).toBeInTheDocument();
     expect(screen.queryByText(/Bruno Lima/)).toBeNull();
+  });
+});
+
+describe('Frontend 2 — entrada por função antes de pessoa', () => {
+  it('omite função sem candidatos e permite voltar sem iniciar sessão ou conservar candidatos anteriores', async () => {
+    const a = await renderizarApp('/', undefined, (d) => { d.usuarios.filter((u) => u.funcoes.includes('responsavel')).forEach((u) => { u.ativo = false; }); });
+    await escolherFuncaoEntrada(a.usuario, 'Professor');
+    expect(screen.queryByRole('button', { name: /Entrar como Ana/ })).toBeNull();
+    expect(screen.queryByRole('button', { name: /Paulo Antunes/ })).toBeNull();
+    expect(localStorage.getItem(K.sessaoAcademica)).toBeNull();
+    await a.usuario.click(screen.getByRole('button', { name: 'Voltar às funções' }));
+    expect(screen.queryByRole('button', { name: 'Responsável' })).toBeNull();
+    expect(screen.queryByRole('button', { name: /Entrar como/ })).toBeNull();
+    await escolherFuncaoEntrada(a.usuario);
+    expect(await screen.findByRole('button', { name: 'Entrar como Ana Souza' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Marcos/ })).toBeNull();
+  });
+
+  it('Carla entra diretamente na Coordenação e muda para Professor na mesma identidade', async () => {
+    const a = await renderizarApp('/');
+    await escolherFuncaoEntrada(a.usuario, 'Coordenador');
+    await a.usuario.click(screen.getByRole('button', { name: 'Entrar como Carla Dias' }));
+    expect(await screen.findByRole('heading', { name: 'Painel da coordenação' })).toBeInTheDocument();
+    expect(a.rotaAtual()).toBe('/coordenacao');
+    await a.usuario.click(within(screen.getByRole('navigation', { name: 'Áreas da pessoa' })).getByRole('link', { name: 'Área do Professor' }));
+    expect(await screen.findByRole('article', { name: 'Matemática Básica turma A 2026.2' })).toBeInTheDocument();
+    expect(localStorage.getItem(K.sessaoAcademica)).toBe('u-carla');
+  });
+
+  it.each(['funcao', 'atividade'])('seleção fica desatualizada por %s: não entra na área e atualiza candidatos', async (mudanca) => {
+    const a = await renderizarApp('/');
+    await escolherFuncaoEntrada(a.usuario, 'Coordenador');
+    const admin = a.outraAba('u-renata');
+    if (mudanca === 'atividade') await admin.definirAtivo('u-carla', false, a.dados().revisao);
+    else {
+      const carla = a.dados().usuarios.find((u) => u.id === 'u-carla')!;
+      await admin.editarUsuario(carla.id, { nome: carla.nome, email: carla.email, ativo: true, funcoes: ['professor'] }, a.dados().revisao);
+    }
+    await a.usuario.click(screen.getByRole('button', { name: 'Entrar como Carla Dias' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent(/indisponível/);
+    expect(a.rotaAtual()).toBe('/');
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Entrar como Carla Dias' })).toBeNull());
+    expect(screen.queryByRole('heading', { name: 'Painel da coordenação' })).toBeNull();
+    expect(localStorage.getItem(K.sessaoAcademica)).toBeNull();
+  });
+
+  it('falha na listagem tem erro explícito e permite tentar novamente', async () => {
+    const sonda = vi.spyOn(RepositorioApp.prototype, 'listarPessoasEntrada').mockRejectedValueOnce(new Error('Falha de leitura'));
+    try {
+      const a = await renderizarApp('/');
+      expect(await screen.findByRole('alert')).toHaveTextContent(/carregar as opções/);
+      await a.usuario.click(screen.getByRole('button', { name: 'Tentar novamente' }));
+      expect(await screen.findByRole('button', { name: 'Aluno' })).toBeInTheDocument();
+    } finally { sonda.mockRestore(); }
+  });
+
+  it('lista selecionada fica vazia após atualização que desativa todos os candidatos', async () => {
+    const a = await renderizarApp('/', undefined, (d) => {
+      d.usuarios.filter((u) => u.funcoes.includes('responsavel') && u.id !== 'u-helena').forEach((u) => { u.ativo = false; });
+    });
+    await escolherFuncaoEntrada(a.usuario, 'Responsável');
+    const admin = a.outraAba('u-renata');
+    await admin.definirAtivo('u-helena', false, a.dados().revisao);
+    a.avisarOutraAba();
+    expect(await screen.findByText('Nenhuma pessoa ativa disponível para esta função.')).toBeInTheDocument();
+    await a.usuario.click(screen.getByRole('button', { name: 'Voltar às funções' }));
+    expect(screen.queryByRole('button', { name: 'Responsável' })).toBeNull();
   });
 });
 
@@ -143,6 +217,7 @@ describe('7.3 — [OA] Demonstração fictícia e restauração: aviso inicial e
     const storage = criarArmazenamentoEspiao({ [K.legadoDados]: legado, [K.legadoSessao]: 'u-ana' });
     const usuario = userEvent.setup(); montar(storage);
     await usuario.click(await screen.findByRole('button', { name: 'Substituir pela demonstração nova' }));
+    await escolherFuncaoEntrada(usuario);
     expect(await screen.findByRole('button', { name: 'Entrar como Ana Souza' })).toBeInTheDocument();
     expect(storage.retrato()[K.legadoDados]).toBe(legado);
     expect(storage.retrato()[K.legadoSessao]).toBeUndefined();
@@ -161,6 +236,7 @@ describe('7.3 — [OA] Demonstração fictícia e restauração: aviso inicial e
 
   it('sem dados anteriores inicializa a demonstração sem aviso', async () => {
     const storage = criarArmazenamentoEspiao(); montar(storage);
+    await escolherFuncaoEntrada(userEvent.setup());
     expect(await screen.findByRole('button', { name: 'Entrar como Ana Souza' })).toBeInTheDocument();
     expect(screen.queryByRole('alertdialog')).toBeNull();
   });
@@ -184,6 +260,7 @@ describe('7.3 — [OA] Demonstração fictícia e restauração: aviso inicial e
     await screen.findByText('18/11/2026');
     await usuario.click(screen.getByRole('button', { name: 'Restaurar dados de demonstração' }));
     await usuario.click(screen.getByRole('button', { name: 'Confirmar restauração' }));
+    await escolherFuncaoEntrada(usuario);
     expect(await screen.findByRole('button', { name: 'Entrar como Ana Souza' })).toBeInTheDocument();
     expect(rotaAtual()).toBe('/');
     expect(dados().dataVirtual).toBe('2026-11-17');

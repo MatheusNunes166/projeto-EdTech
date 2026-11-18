@@ -167,6 +167,9 @@ tr.inativo td { color: var(--cor-suave); }
 /* Superfícies reorganizadas: sem alterar a estrutura dos formulários de gestão. */
 .entrada, .experiencia-aluno { overflow-wrap: anywhere; min-width: 0; }
 .entrada { max-width: 1180px; padding: 24px; }
+.funcoes-entrada, .pessoas-entrada { margin-top: 24px; }
+.cartao-funcao { background: #fff; color: var(--cor-texto); padding: 24px; font-weight: 650; border-color: #747e91; }
+.cartao-funcao:hover:not(:disabled) { background: #eef2fd; color: var(--cor-primaria-escura); }
 .experiencia-aluno :is(.cartao, article, section, fieldset, label, .grade-cartoes, .indicadores) { min-width: 0; }
 .experiencia-aluno .grade-cartoes { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 24px; }
 .experiencia-aluno .cartao { padding: 24px; }

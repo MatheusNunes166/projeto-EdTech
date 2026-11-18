@@ -51,3 +51,8 @@ export async function renderizarApp(
 }
 
 export const T_ALG_A = '/aluno/disciplinas/d-alg/turmas/t-alg-a-262';
+
+/** Entrada em duas etapas; escolher função ainda não inicia sessão. */
+export async function escolherFuncaoEntrada(usuario: ReturnType<typeof userEvent.setup>, funcao = 'Aluno') {
+  await usuario.click(await screen.findByRole('button', { name: funcao }));
+}

@@ -10,11 +10,11 @@ Lista de implementação futura, após revisão desta change. Nenhuma tarefa foi
 
 ## 2. Entrada por função e pessoa
 
-- [ ] 2.1 Reorganizar `Entrada.tsx` para derivar funções disponíveis da consulta pública existente e filtrar candidatos ativos após a escolha; verificar ausência de pessoas na primeira etapa, exclusão de Paulo inativo e ausência de e-mails ou vínculos na segunda.
-- [ ] 2.2 Implementar Voltar às funções, estados de carregamento, erro e lista vazia após atualização; verificar a troca Professor → Aluno sem iniciar sessão e sem conservar candidatos ou mensagens da função anterior.
-- [ ] 2.3 Navegar para a função selecionada após conferir as funções retornadas pela entrada, tratando perda da função ou desativação entre listagem e seleção; verificar Carla entrando diretamente em Coordenação, troca para Professor na mesma conta e rejeição da seleção desatualizada sem dados restritos.
-- [ ] 2.4 Adaptar os helpers de entrada e os testes afetados em `src/testes/`, acrescentando cenários de função sem candidatos, volta de etapa, seleção desatualizada e entrada cumulativa; verificar `npm test -- src/testes/shell.test.tsx src/testes/integracao-funcoes.test.tsx` sem remover as asserções de autorização, saída ou revogação.
-- [ ] 2.5 Atualizar a orientação de entrada no `README.md` do protótipo; verificar que descreve função antes da pessoa, dados fictícios sem senha, área escolhida e troca de áreas da mesma conta.
+- [x] 2.1 Reorganizar `Entrada.tsx` para derivar funções disponíveis da consulta pública existente e filtrar candidatos ativos após a escolha; verificar ausência de pessoas na primeira etapa, exclusão de Paulo inativo e ausência de e-mails ou vínculos na segunda.
+- [x] 2.2 Implementar Voltar às funções, estados de carregamento, erro e lista vazia após atualização; verificar a troca Professor → Aluno sem iniciar sessão e sem conservar candidatos ou mensagens da função anterior.
+- [x] 2.3 Navegar para a função selecionada após conferir as funções retornadas pela entrada, tratando perda da função ou desativação entre listagem e seleção; verificar Carla entrando diretamente em Coordenação, troca para Professor na mesma conta e rejeição da seleção desatualizada sem dados restritos.
+- [x] 2.4 Adaptar os helpers de entrada e os testes afetados em `src/testes/`, acrescentando cenários de função sem candidatos, volta de etapa, seleção desatualizada e entrada cumulativa; verificar `npm test -- src/testes/shell.test.tsx src/testes/integracao-funcoes.test.tsx` sem remover as asserções de autorização, saída ou revogação.
+- [x] 2.5 Atualizar a orientação de entrada no `README.md` do protótipo; verificar que descreve função antes da pessoa, dados fictícios sem senha, área escolhida e troca de áreas da mesma conta.
 
 ## 3. Navegação compartilhada e Demonstração
 
