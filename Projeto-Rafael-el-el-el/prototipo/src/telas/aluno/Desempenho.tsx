@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Retorno } from '../../componentes/Interacao';
 import { useConsulta } from '../../app/contexto';
 import { BarraProgresso, Consulta } from '../../componentes/comuns';
 import type { AlvoMatricula } from '../../dados/comandos-estudo';
@@ -16,7 +16,7 @@ function DesempenhoDaMatricula({ alvo }: { alvo: AlvoMatricula }) {
     <Consulta estado={estado}>
       {(i) => (
         <>
-          <p><Link to={caminhoTurma(alvo)}>← Voltar à trilha</Link></p>
+          <p><Retorno to={caminhoTurma(alvo)}>Voltar à trilha</Retorno></p>
           <h1>Desempenho em {i.contexto.disciplina.nome}</h1>
           <p className="meta">{i.contexto.graduacao.nome} · Turma {i.contexto.turma.codigo} · {i.contexto.periodoLetivo.nome}</p>
           <section className="cartao" aria-label="Indicadores da matrícula">

@@ -1,3 +1,4 @@
+import { MensagemSucesso } from '../../componentes/Interacao';
 import { useState } from 'react';
 import { useComando, useConsulta } from '../../app/contexto';
 import { Confirmacao } from '../../componentes/Confirmacao';
@@ -25,7 +26,7 @@ export function Vinculos() {
 
   return <>
     <h1>Vínculos</h1>
-    {aviso && <p role="status">{aviso}</p>}
+    {aviso && <MensagemSucesso>{aviso}</MensagemSucesso>}
     <Consulta estado={estado}>{({ pessoas, coordenacao, responsaveis, graduacoes }, revisao) => {
       const nome = (id: string) => pessoas.find((p) => p.id === id)?.nome ?? id;
       const graduacao = (id: string) => graduacoes.find((g) => g.id === id)?.nome ?? id;
@@ -38,7 +39,7 @@ export function Vinculos() {
             {coordenacao.length ? <ListaRegistros rotulo="Coordenações">{coordenacao.map((v) => {
               const contexto = nome(v.coordenadorId) + ' em ' + graduacao(v.graduacaoId);
               return <Registro key={v.coordenadorId + ':' + v.graduacaoId} acoes={
-                <button className="secundario" aria-label={'Remover coordenação de ' + contexto}
+                <button className="secundario destrutivo" aria-label={'Remover coordenação de ' + contexto}
                   onClick={() => solicitar({
                     titulo: 'Remover coordenação de ' + contexto + '?',
                     efeito: 'A pessoa perde o acesso concedido por esta coordenação. Outras relações e históricos são preservados.',
@@ -53,7 +54,7 @@ export function Vinculos() {
             {responsaveis.length ? <ListaRegistros rotulo="Vínculos de acompanhamento">{responsaveis.map((v) => {
               const contexto = nome(v.responsavelId) + ' com ' + nome(v.alunoId);
               return <Registro key={v.responsavelId + ':' + v.alunoId} acoes={
-                <button className="secundario" aria-label={'Remover vínculo de ' + contexto}
+                <button className="secundario destrutivo" aria-label={'Remover vínculo de ' + contexto}
                   onClick={() => solicitar({
                     titulo: 'Remover vínculo de ' + contexto + '?',
                     efeito: 'O responsável perde o acesso concedido por este vínculo. Os dados do aluno continuam disponíveis para as pessoas autorizadas.',
@@ -88,7 +89,7 @@ export function Vinculos() {
             </>}
             <MensagemErro erro={erro} />
             <div className="acoes">
-              <button type="submit" disabled={ocupado || !origem || !destino}>{edicao === 'coordenacao' ? 'Atribuir coordenação' : 'Vincular responsável'}</button>
+              <button type="submit" disabled={ocupado || !origem || !destino} aria-busy={ocupado}>{ocupado ? 'Salvando vínculo…' : edicao === 'coordenacao' ? 'Atribuir coordenação' : 'Vincular responsável'}</button>
               <button type="button" className="secundario" onClick={fechar}>Cancelar</button>
             </div>
           </form>

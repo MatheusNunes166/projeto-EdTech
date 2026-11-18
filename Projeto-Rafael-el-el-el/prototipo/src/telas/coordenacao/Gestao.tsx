@@ -1,3 +1,4 @@
+import { MensagemSucesso, Retorno } from '../../componentes/Interacao';
 import { selecaoDaOferta } from './selecao';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -18,7 +19,7 @@ export function GestaoTurmas({ base }: { base: Base }) {
   return <>
     <h1>Gestão acadêmica</h1>
     <Consulta estado={estado}>{({ turmas }) => turmas.length ? (
-      <ListaRegistros rotulo="Turmas administráveis">{turmas.map((t) => (
+      <ListaRegistros buscavel rotulo="Turmas administráveis">{turmas.map((t) => (
         <Registro key={t.turma.id} acoes={
           <Link to={base + '/turmas/' + t.turma.id} aria-label={'Gerir turma ' + t.turma.codigo + ' de ' + t.disciplina.nome + ' (' + t.periodoLetivo.nome + ')'}>Gerir turma</Link>
         }>
@@ -51,10 +52,10 @@ function EdicaoDaTurma({ base, oferta, revisao }: { base: Base; oferta: Oferta; 
   const abrir = (tipo: typeof edicao) => { limpar(); setEdicao(tipo); setPessoa(''); setNomePessoa(''); if (tipo) setAviso(''); };
   const matricular = edicao === 'matricula';
   return <>
-    <div className="acoes"><Link to={base}>Voltar às turmas</Link>{base === "/coordenacao/gestao" && <Link to={"/coordenacao?" + selecaoDaOferta(oferta)}>Voltar aos indicadores</Link>}</div>
+    <div className="acoes"><Retorno to={base}>Voltar às turmas</Retorno>{base === "/coordenacao/gestao" && <Retorno to={"/coordenacao?" + selecaoDaOferta(oferta)}>Voltar aos indicadores</Retorno>}</div>
     <h1>{nomeOferta(oferta)}</h1>
     <p className="meta">{contextoOferta(oferta)}</p>
-    {aviso && <p role="status">{aviso}</p>}
+    {aviso && <MensagemSucesso>{aviso}</MensagemSucesso>}
     <div className="gestao-com-edicao">
       <div className="lista-gestao cadastros-listas">
         <section aria-label="Matrículas">
@@ -67,7 +68,7 @@ function EdicaoDaTurma({ base, oferta, revisao }: { base: Base; oferta: Oferta; 
         <section aria-label="Professores da turma">
           <h2>Professores</h2>
           {oferta.professores.length ? <ListaRegistros rotulo="Docentes da oferta">{oferta.professores.map((p) => (
-            <Registro key={p.id} acoes={<button type="button" className="secundario" aria-label={'Remover ' + p.nome}
+            <Registro key={p.id} acoes={<button type="button" className="secundario destrutivo" aria-label={'Remover ' + p.nome}
               onClick={() => { limpar(); setAviso(''); setRemocao({ pessoa: p, revisao }); }}>Remover</button>}>{p.nome}</Registro>
           ))}</ListaRegistros> : <Vazio>Nenhum professor atribuído.</Vazio>}
           <p><button onClick={() => abrir('docencia')}>Nova atribuição docente</button></p>
@@ -92,7 +93,7 @@ function EdicaoDaTurma({ base, oferta, revisao }: { base: Base; oferta: Oferta; 
             rotulo={matricular ? 'Aluno a matricular' : 'Professor a atribuir'} valor={pessoa} mudar={(id, nome) => { setPessoa(id); setNomePessoa(nome); }} />
           <MensagemErro erro={erro} />
           <div className="acoes">
-            <button type="submit" disabled={!pessoa || ocupado}>{matricular ? 'Matricular' : 'Atribuir professor'}</button>
+            <button type="submit" disabled={!pessoa || ocupado} aria-busy={ocupado}>{ocupado ? (matricular ? 'Matriculando…' : 'Atribuindo…') : matricular ? 'Matricular' : 'Atribuir professor'}</button>
             <button type="button" className="secundario" onClick={() => abrir(null)}>Cancelar</button>
           </div>
         </form>

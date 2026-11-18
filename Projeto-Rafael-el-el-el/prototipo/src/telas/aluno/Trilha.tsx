@@ -1,3 +1,4 @@
+import { Retorno } from '../../componentes/Interacao';
 import { Link } from 'react-router-dom';
 import { useConsulta } from '../../app/contexto';
 import { BarraProgresso, Consulta } from '../../componentes/comuns';
@@ -17,7 +18,7 @@ function TrilhaDaMatricula({ alvo }: { alvo: AlvoMatricula }) {
     <Consulta estado={estado}>
       {({ contexto, trilha, gamificacao, proxima }) => (
         <div className="experiencia-trilha">
-          <p><Link to="/aluno">Voltar às turmas</Link></p>
+          <p><Retorno to="/aluno">Voltar às turmas</Retorno></p>
           <h1>{contexto.disciplina.nome}</h1>
           <p className="meta">{contexto.graduacao.nome} · Turma {contexto.turma.codigo} · {contexto.periodoLetivo.nome}</p>
           <section className="cartao resumo-trilha" aria-label="Progresso da trilha">

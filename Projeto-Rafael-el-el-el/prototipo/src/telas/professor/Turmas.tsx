@@ -1,3 +1,4 @@
+import { Retorno } from '../../componentes/Interacao';
 import { Link, useParams } from 'react-router-dom';
 import { useConsulta } from '../../app/contexto';
 import { DadoRegistro, ListaRegistros, Registro } from '../../componentes/Gestao';
@@ -14,7 +15,7 @@ export function ListaTurmas() {
       <h1>Minhas turmas</h1>
       <Consulta estado={estado}>
         {(turmas) => turmas.length === 0 ? <Vazio>Você não tem turmas vinculadas.</Vazio> : (
-          <ListaRegistros rotulo="Ofertas docentes">
+          <ListaRegistros buscavel rotulo="Ofertas docentes">
             {turmas.map((t) => (
               <Registro key={t.turma.id} rotulo={t.disciplina.nome + ' turma ' + t.turma.codigo + ' ' + t.periodoLetivo.nome}
                 acoes={<>
@@ -44,7 +45,7 @@ export function PainelTurma() {
         const titulos = p.matriculados[0]?.dominioPorTopico ?? [];
         return (
           <>
-            <p><Link to="/professor">Voltar às turmas</Link></p>
+            <p><Retorno to="/professor">Voltar às turmas</Retorno></p>
             <h1>{p.contexto.disciplina.nome} — Turma {p.contexto.turma.codigo}</h1>
             <p className="meta">{p.contexto.graduacao.nome} · {p.contexto.periodoLetivo.nome}</p>
             <div className="acoes"><strong>{p.quantidadeMatriculados} matriculado(s)</strong><Link to={"/professor/disciplinas/" + disciplinaId + "/conteudo"}>Conteúdo da disciplina</Link></div>
@@ -93,7 +94,7 @@ export function DetalheAluno() {
     <Consulta estado={estado}>
       {(h) => (
         <>
-          <p><Link to={`/professor/disciplinas/${disciplinaId}/turmas/${turmaId}`}>Voltar à turma</Link></p>
+          <p><Retorno to={`/professor/disciplinas/${disciplinaId}/turmas/${turmaId}`}>Voltar à turma</Retorno></p>
           <h1>{h.aluno.nome}</h1>
           <p className="meta">{h.contexto.disciplina.nome} · Turma {h.contexto.turma.codigo} · {h.contexto.periodoLetivo.nome}</p>
           <h2>Domínio por tópico</h2>

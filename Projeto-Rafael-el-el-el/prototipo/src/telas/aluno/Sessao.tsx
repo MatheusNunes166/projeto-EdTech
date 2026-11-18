@@ -1,3 +1,4 @@
+import { Retorno } from '../../componentes/Interacao';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { normalizarErro, useApp, useComando, useConsulta, type ErroComando } from '../../app/contexto';
@@ -34,6 +35,8 @@ function SessaoDaMatricula({ alvo, suspensa }: { alvo: AlvoMatricula; suspensa: 
   const [erroAvanco, setErroAvanco] = useState<ErroComando | null>(null);
   const [avancos, setAvancos] = useState(0);
   const enunciado = useRef<HTMLHeadingElement>(null);
+  const feedback = useRef<HTMLElement>(null);
+  const revelado = useRef<ResultadoResposta | null>(null);
   const base = caminhoTurma(alvo);
 
   useEffect(() => {
@@ -42,8 +45,14 @@ function SessaoDaMatricula({ alvo, suspensa }: { alvo: AlvoMatricula; suspensa: 
   useEffect(() => {
     if (avancos > 0 && atividade?.valor && !resultado && !suspensa && trilha.situacao === 'ok') enunciado.current?.focus();
   }, [avancos, atividade, resultado, suspensa, trilha.situacao]);
+  useEffect(() => {
+    if (!resultado || !feedback.current || revelado.current === resultado) return;
+    const limites = feedback.current.getBoundingClientRect();
+    if (limites.top < 0 || limites.bottom > window.innerHeight) feedback.current.scrollIntoView?.({ block: 'nearest' });
+    revelado.current = resultado;
+  }, [resultado, suspensa, trilha.situacao]);
 
-  const voltar = <p><Link to={base}>← Voltar à trilha</Link></p>;
+  const voltar = <p><Retorno to={base}>Voltar à trilha</Retorno></p>;
   if (suspensa || trilha.situacao === 'carregando' || avancando) return <p className="carregando" role="status">Carregando…</p>;
   if (trilha.situacao === 'erro') return <Consulta estado={trilha}>{() => null}</Consulta>;
   if (erroAvanco && ['ACESSO_NEGADO', 'SESSAO_INVALIDA', 'SEM_SESSAO'].includes(erroAvanco.codigo)) return <Consulta estado={{ situacao: 'erro', erro: erroAvanco }}>{() => null}</Consulta>;
@@ -75,6 +84,7 @@ function SessaoDaMatricula({ alvo, suspensa }: { alvo: AlvoMatricula; suspensa: 
 
   return (
     <>
+      {voltar}
       <h1>Sessão de estudo</h1>
       <div className="sessao-layout">
         <aside className="contexto-sessao" aria-label="Contexto da sessão">
@@ -99,13 +109,13 @@ function SessaoDaMatricula({ alvo, suspensa }: { alvo: AlvoMatricula; suspensa: 
             );
           })}
         </fieldset>
-        <button onClick={responder} disabled={selecionada === null || ocupado || Boolean(resultado)}>Responder</button>
+        <button onClick={responder} disabled={selecionada === null || ocupado || Boolean(resultado)} aria-busy={ocupado}>{ocupado ? 'Enviando…' : 'Responder'}</button>
         <MensagemErro erro={erro} />
       </article>
 
       <div aria-live="polite" aria-atomic="true">
       {resultado && (
-        <section className={`feedback ${resultado.acertou ? 'acerto' : 'erro'}`} aria-label="Resultado da resposta">
+        <section ref={feedback} className={`feedback ${resultado.acertou ? 'acerto' : 'erro'}`} aria-label="Resultado da resposta">
           <h2>{resultado.acertou ? '✔ Você acertou!' : '✘ Você errou.'}</h2>
           {resultado.alternativaCorreta && <p>Alternativa correta: <strong>{resultado.alternativaCorreta.texto}</strong></p>}
           <p><strong>Explicação:</strong> {resultado.explicacao}</p>

@@ -1,4 +1,5 @@
-import { Link, useParams } from 'react-router-dom';
+import { Retorno } from '../../componentes/Interacao';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useConsulta } from '../../app/contexto';
 import { ListaRegistros, Registro } from '../../componentes/Gestao';
 import { Consulta, Vazio } from '../../componentes/comuns';
@@ -6,12 +7,14 @@ import { Consulta, Vazio } from '../../componentes/comuns';
 /** Metadados da disciplina e suas ofertas. "Continuar" existe somente para oferta em que o aluno já está matriculado. */
 export function DetalheDisciplina() {
   const { disciplinaId = '' } = useParams();
+  const [params] = useSearchParams();
+  const criterios = new URLSearchParams([...params].filter(([k]) => ['busca', 'area', 'nivel', 'periodo'].includes(k)));
   const estado = useConsulta((r) => r.consultarMetadadosDisciplina({ disciplinaId }), [disciplinaId]);
   return (
     <Consulta estado={estado}>
       {({ graduacao, disciplina, topicos, ofertas }) => (
         <>
-          <p><Link to="/aluno/catalogo">Voltar ao catálogo</Link></p>
+          <p><Retorno to={{ pathname: "/aluno/catalogo", search: criterios.toString() }}>Voltar ao catálogo</Retorno></p>
           <h1>{disciplina.nome}</h1>
           <p className="meta">{graduacao.nome} · {disciplina.codigo} · {disciplina.nivel}</p>
           <p>{disciplina.descricao}</p>

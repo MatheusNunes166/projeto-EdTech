@@ -1,3 +1,4 @@
+import { MensagemSucesso } from '../../componentes/Interacao';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useComando, useConsulta } from '../../app/contexto';
@@ -63,7 +64,7 @@ export function Pessoas() {
       <Consulta estado={estado}>
         {({ pessoas }, revisao) => (
           <>
-            {aviso && <p role="status">{aviso}</p>}
+            {aviso && <MensagemSucesso>{aviso}</MensagemSucesso>}
             {!editando && <MensagemErro erro={erro} />}
             <div className="gestao-com-edicao">
             <section className="lista-gestao" aria-label="Cadastro de pessoas">
@@ -103,7 +104,7 @@ export function Pessoas() {
               <label><input type="checkbox" checked={form.ativo} onChange={(e) => setForm({ ...form, ativo: e.target.checked })} /> Pessoa ativa</label>
               <MensagemErro erro={erro} ignorar={['nome', 'email']} />
               <div className="acoes">
-                <button type="submit" disabled={ocupado}>Salvar pessoa</button>
+                <button type="submit" disabled={ocupado} aria-busy={ocupado}>{ocupado ? 'Salvando…' : 'Salvar pessoa'}</button>
                 <button type="button" className="secundario" onClick={fechar}>Cancelar edição</button>
               </div>
             </form>

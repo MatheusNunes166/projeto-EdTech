@@ -1,5 +1,6 @@
+import { AcoesEditor, Icone, MensagemSucesso, Retorno } from '../../componentes/Interacao';
 import { useEffect, useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useApp, useComando, useConsulta, type EstadoConsulta } from '../../app/contexto';
 import { useRascunhoPendente } from '../../app/rascunho';
 import { Confirmacao } from '../../componentes/Confirmacao';
@@ -149,14 +150,20 @@ function Editor({ inicial, leitura }: { inicial: Leitura; leitura: EstadoConsult
   if (!autorizada) return <Consulta estado={leitura}>{() => null}</Consulta>;
 
   return <>
-    <p><Link to={admin ? '/admin/graduacoes' : '/professor'}>{admin ? 'Voltar aos cadastros' : 'Voltar às turmas'}</Link></p>
+    <p><Retorno to={admin ? '/admin/graduacoes' : '/professor'}>{admin ? 'Voltar aos cadastros' : 'Voltar às turmas'}</Retorno></p>
     <h1>Conteúdo de {disciplina.nome}</h1>
     <p className="meta">{graduacao.nome} · {disciplina.codigo} · {publicado ? 'Publicada' : 'Em rascunho'} · Compartilhado entre turmas</p>
-    {editado && <p className="selo alerta-selo" role="status">Edição pendente</p>}
-    {salvo && <p role="status">Alterações salvas.</p>}
-    {desatualizado && editado
-      ? <div role="alert" className="alerta">O conteúdo ou a revisão mudou. Recarregue a versão atual antes de salvar novamente.</div>
-      : <MensagemErro erro={precisaConfirmar && erro ? { ...erro, detalhes: Object.fromEntries(Object.entries(erro.detalhes).filter(([chave]) => !chave.endsWith('.confirmacao'))) } : erro} />}
+    <AcoesEditor>
+      <div className="estado-editor"><strong>{disciplina.nome}</strong><span role="status" className={editado ? 'selo alerta-selo' : 'selo'}>{editado ? 'Edição pendente' : 'Sem alterações pendentes'}</span></div>
+      <div className="acoes">
+        <button disabled={ocupado || !editado || desatualizado} onClick={salvar} aria-busy={ocupado}><Icone nome="check" />{ocupado ? 'Salvando…' : 'Salvar alterações'}</button>
+        <button className="secundario" disabled={!editado || ocupado} onClick={() => setDescarte(true)}>{desatualizado ? 'Recarregar versão salva' : 'Descartar alterações'}</button>
+      </div>
+      {salvo && <MensagemSucesso>Alterações salvas.</MensagemSucesso>}
+      {desatualizado && editado
+        ? <div role="alert" className="alerta">O conteúdo ou a revisão mudou. Recarregue a versão atual antes de salvar novamente.</div>
+        : <MensagemErro erro={precisaConfirmar && erro ? { ...erro, detalhes: Object.fromEntries(Object.entries(erro.detalhes).filter(([chave]) => !chave.endsWith('.confirmacao'))) } : erro} />}
+    </AcoesEditor>
     <div className="acoes" aria-label="Seções do editor">
       <button className="secundario" aria-pressed={secao === 'topicos'} onClick={() => selecionarSecao('topicos')}>Tópicos e materiais</button>
       <button className="secundario" aria-pressed={secao === 'questoes'} onClick={() => selecionarSecao('questoes')}>Banco de questões</button>
@@ -172,7 +179,7 @@ function Editor({ inicial, leitura }: { inicial: Leitura; leitura: EstadoConsult
             mudar((c) => ({ ...c, topicos: [...c.topicos, novo] }));
             selecionar({ tipo: 'topico', id: novo.id });
           }}>Adicionar tópico</button></p>
-          {topicos.length ? <ListaRegistros rotulo="Tópicos">{topicos.map((t, i) => (
+          {topicos.length ? <ListaRegistros buscavel rotulo="Tópicos">{topicos.map((t, i) => (
             <Registro key={t.id} acoes={<button className="secundario" aria-label={'Editar tópico ' + (t.titulo || i + 1)}
               onClick={() => selecionar({ tipo: 'topico', id: t.id })}>Editar</button>}>
               <strong>{i + 1}. {t.titulo || 'Tópico sem título'}</strong><p className="meta">Materiais: {t.materiais.length}</p>
@@ -185,7 +192,7 @@ function Editor({ inicial, leitura }: { inicial: Leitura; leitura: EstadoConsult
             mudar((c) => ({ ...c, questoes: [...c.questoes, nova] }));
             selecionar({ tipo: 'questao', id: nova.id });
           }}>Adicionar questão</button></p>
-          {questoes.length ? <ListaRegistros rotulo="Questões">{questoes.map((q) => (
+          {questoes.length ? <ListaRegistros buscavel rotulo="Questões">{questoes.map((q) => (
             <Registro key={q.id} acoes={<button className="secundario" aria-label={'Editar questão ' + q.id} aria-describedby={'resumo-' + q.id}
               onClick={() => selecionar({ tipo: 'questao', id: q.id })}>Editar</button>}>
               <strong id={'resumo-' + q.id}>{q.enunciado || 'Questão sem enunciado'}</strong><p className="meta">{topicos.find((t) => t.id === q.topicoId)?.titulo} · {NOME_DIFICULDADE[q.dificuldade]}</p>
@@ -202,7 +209,7 @@ function Editor({ inicial, leitura }: { inicial: Leitura; leitura: EstadoConsult
           <div className="acoes">
             <button className="secundario" disabled={ocupado || protegida || indiceTopico === 0} aria-label={'Mover ' + topico.titulo + ' para cima'} onClick={() => mover(-1)}>Subir</button>
             <button className="secundario" disabled={ocupado || protegida || indiceTopico === topicos.length - 1} aria-label={'Mover ' + topico.titulo + ' para baixo'} onClick={() => mover(1)}>Descer</button>
-            <button className="secundario" disabled={ocupado || protegida} onClick={() => setRemocao({
+            <button className="secundario destrutivo" disabled={ocupado || protegida} onClick={() => setRemocao({
               titulo: 'Remover tópico ' + topico.titulo + '?', efeito: 'O tópico, seus materiais e questões serão retirados do rascunho.',
               remover: () => { mudar((c) => ({ topicos: c.topicos.filter((t) => t.id !== topico.id), questoes: c.questoes.filter((q) => q.topicoId !== topico.id) })); selecionar(null); },
             })}>Remover tópico</button>
@@ -231,7 +238,7 @@ function Editor({ inicial, leitura }: { inicial: Leitura; leitura: EstadoConsult
             {material.tipo === 'texto' ? <textarea rows={6} disabled={ocupado} value={material.conteudo} onChange={(e) => mudarMaterial((m) => ({ ...m, conteudo: e.target.value }))} />
               : <input type="url" disabled={ocupado} value={material.conteudo} onChange={(e) => mudarMaterial((m) => ({ ...m, conteudo: e.target.value }))} />}
           </Campo>
-          <button className="secundario" disabled={ocupado} onClick={() => setRemocao({
+          <button className="secundario destrutivo" disabled={ocupado} onClick={() => setRemocao({
             titulo: 'Remover material ' + material.titulo + '?', efeito: 'O material será retirado do rascunho deste tópico.',
             remover: () => { mudarTopico((t) => ({ ...t, materiais: t.materiais.filter((m) => m.id !== material.id) })); selecionar({ tipo: 'topico', id: topico.id }); },
           })}>Remover material</button>
@@ -258,7 +265,7 @@ function Editor({ inicial, leitura }: { inicial: Leitura; leitura: EstadoConsult
               onChange={(e) => mudarQuestao((q) => ({ ...q, alternativas: q.alternativas.map((x, j) => j === i ? e.target.value : x) }))} /></label>
           </div>)}
           <Campo rotulo="Explicação"><textarea rows={6} value={questao.explicacao} onChange={(e) => mudarQuestao((q) => ({ ...q, explicacao: e.target.value }))} /></Campo>
-          <button className="secundario" disabled={qProtegida} aria-describedby={qProtegida ? 'questao-protegida' : undefined}
+          <button className="secundario destrutivo" disabled={qProtegida} aria-describedby={qProtegida ? 'questao-protegida' : undefined}
             aria-label={'Remover questão ' + questao.id} onClick={() => setRemocao({
               titulo: 'Remover a questão “' + questao.enunciado + '”?', efeito: 'A questão será retirada do rascunho. A cobertura será verificada ao salvar o conjunto.',
               remover: () => { mudar((c) => ({ ...c, questoes: c.questoes.filter((q) => q.id !== questao.id) })); selecionar(null); },
@@ -281,10 +288,6 @@ function Editor({ inicial, leitura }: { inicial: Leitura; leitura: EstadoConsult
       </section>)}
     </section>}
 
-    <div className="acoes">
-      <button disabled={ocupado || !editado || desatualizado} onClick={salvar}>Salvar alterações</button>
-      <button className="secundario" disabled={!editado || ocupado} onClick={() => setDescarte(true)}>{desatualizado ? 'Recarregar versão salva' : 'Descartar alterações'}</button>
-    </div>
     {!publicado && <section className="cartao" aria-label="Publicação">
       <h2>Publicação</h2>
       {editado && <p id="publicacao-pendente">Salve as alterações antes de publicar.</p>}

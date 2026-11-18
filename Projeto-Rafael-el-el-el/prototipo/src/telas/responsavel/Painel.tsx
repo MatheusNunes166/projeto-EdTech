@@ -30,9 +30,10 @@ function AlunoVinculado({ id, nome }: { id: string; nome: string }) {
               <Registro key={t.turmaId} rotulo={`${nome} — ${t.contexto.disciplina.nome} turma ${t.contexto.turma.codigo} ${t.contexto.periodoLetivo.nome}`}>
                 <strong>{t.contexto.disciplina.nome}</strong>
                 <p className="meta">Turma {t.contexto.turma.codigo} · {t.contexto.periodoLetivo.nome}</p>
+                <p className="rotulo">Progresso da trilha</p>
                 <BarraProgresso valor={t.progresso} rotulo={`Progresso de ${nome} em ${t.contexto.disciplina.nome} ${t.contexto.periodoLetivo.nome}`} />
                 <p>Sequência: {t.sequenciaDias} dia(s) · Última atividade: {t.ultimaAtividade ? formatarData(t.ultimaAtividade) : 'Sem atividade'}</p>
-                <details><summary>Detalhes da oferta</summary><p>Graduação: {t.contexto.graduacao.nome}</p></details>
+                <details><summary>Detalhes da oferta</summary><p>Graduação: {t.contexto.graduacao.nome}</p><p className="meta">O progresso indica os tópicos dominados. A sequência conta dias consecutivos com respostas nesta turma. Última atividade é a data da resposta mais recente.</p></details>
               </Registro>
             ))}
           </ListaRegistros>

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ProtecaoSaida, useSaidaDoEditor } from '../app/rascunho';
+import { Icone } from '../componentes/Interacao';
 import { Expansor } from '../componentes/Expansor';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AREA_DA_FUNCAO, ROTULO_AREA, localizacaoDaPagina, nomesDasFuncoes } from '../app/areas';
@@ -51,22 +52,20 @@ function LayoutDaArea() {
   return (
     <div className="app">
       <PularParaConteudo />
-      <header className="topo">
-        <div className="identidade-app"><div className="marca">Trilha Adaptativa</div>
+      <header className="topo" onKeyDown={(evento) => {
+        if (evento.key !== 'Escape' || !menuAberto || evento.defaultPrevented) return;
+        evento.preventDefault();
+        setMenuAberto(false);
+        menu.current?.focus();
+      }}><div className="topo-conteudo">
+        <div className="identidade-app"><div className="marca"><span className="marca-simbolo"><Icone nome="livro" /></span>Trilha Adaptativa</div>
           <p className="localizacao" aria-label="Localização atual"><strong>{ROTULO_AREA[area]}</strong> · {localizacao.titulo}</p>
         </div>
         <button type="button" ref={menu} className={area === 'admin' ? 'acionador-menu admin-menu secundario' : 'acionador-menu secundario'}
           aria-expanded={menuAberto} aria-label="Seções da área" aria-controls="secoes-area" onClick={() => setMenuAberto(!menuAberto)}>
-          <span className="menu-celular">Menu</span><span className="menu-desktop">Seções</span>
+          <Icone nome="menu" /><span className="menu-celular">Menu</span><span className="menu-desktop">Seções</span>
         </button>
-        <div id="secoes-area" className={`secoes-area ${area === 'admin' ? 'secoes-admin' : ''}`} data-aberto={menuAberto}
-          onKeyDown={(evento) => {
-            if (evento.key === 'Escape' && menuAberto && !evento.defaultPrevented) {
-              evento.preventDefault();
-              setMenuAberto(false);
-              menu.current?.focus();
-            }
-          }}>
+        <div id="secoes-area" className={`secoes-area ${area === 'admin' ? 'secoes-admin' : ''}`} data-aberto={menuAberto}>
           <nav aria-label="Menu principal">
             {MENU[area].map((item) => <NavLink key={item.para} to={item.para} aria-current={localizacao.principal === item.para ? 'page' : false}
               className={() => localizacao.principal === item.para ? 'active' : undefined} >{item.rotulo}</NavLink>)}
@@ -94,8 +93,17 @@ function LayoutDaArea() {
             <button className="secundario" onClick={() => protecao.sair(sair)}>Sair</button>
           </div>
         </Expansor>
-      </header>
-      <main id="conteudo" tabIndex={-1} className={`conteudo ${area === 'aluno' ? 'experiencia-aluno' : ''}`}><Outlet /></main>
+      </div></header>
+      <main id="conteudo" tabIndex={-1} className={`conteudo ${area === 'aluno' ? 'experiencia-aluno' : ''}`}>
+        {pathname !== AREA_DA_FUNCAO[area] && (
+          <nav className="caminho-pagina" aria-label="Caminho da página">
+            <NavLink to={AREA_DA_FUNCAO[area]}>{ROTULO_AREA[area]}</NavLink>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">{localizacao.titulo}</span>
+          </nav>
+        )}
+        <Outlet />
+      </main>
       <FocoDaPagina caminho={pathname} />
     </div>
   );

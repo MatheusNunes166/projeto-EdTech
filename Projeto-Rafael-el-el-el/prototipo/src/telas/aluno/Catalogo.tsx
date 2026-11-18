@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useConsulta } from '../../app/contexto';
 import { ListaRegistros, Registro } from '../../componentes/Gestao';
 import { Consulta, Vazio } from '../../componentes/comuns';
@@ -8,10 +7,16 @@ import { NIVEIS_CURSO, type NivelCurso } from '../../dominio/tipos';
 
 /** Catálogo de graduações e disciplinas PUBLICADAS. Não há matrícula aqui: ela é administrativa. */
 export function Catalogo() {
-  const [busca, setBusca] = useState('');
-  const [area, setArea] = useState('');
-  const [nivel, setNivel] = useState('');
-  const [periodo, setPeriodo] = useState('');
+  const [params, setParams] = useSearchParams();
+  const busca = params.get('busca') ?? '';
+  const area = params.get('area') ?? '';
+  const nivel = params.get('nivel') ?? '';
+  const periodo = params.get('periodo') ?? '';
+  const mudar = (campo: string, valor: string) => setParams((anteriores) => {
+    const novos = new URLSearchParams(anteriores);
+    if (valor) novos.set(campo, valor); else novos.delete(campo);
+    return novos;
+  }, { replace: true });
   const filtros: FiltrosCatalogo = {
     ...(busca.trim() ? { busca } : {}), ...(area ? { area } : {}),
     ...(nivel ? { nivel: nivel as NivelCurso } : {}), ...(periodo ? { periodoLetivoId: periodo } : {}),
@@ -24,26 +29,26 @@ export function Catalogo() {
   } : { areas: [], periodos: [] };
 
   const filtrado = Boolean(busca.trim() || area || nivel || periodo);
-  const limpar = () => { setBusca(''); setArea(''); setNivel(''); setPeriodo(''); };
+  const limpar = () => setParams({}, { replace: true });
 
   return (
     <>
       <h1>Catálogo</h1>
       <p className="sub">Graduações e disciplinas publicadas. A matrícula nas turmas é feita pela coordenação ou administração.</p>
       <form className="filtros filtros-catalogo cartao" role="search" onSubmit={(e) => e.preventDefault()}>
-        <label>Buscar <input type="search" value={busca} onChange={(e) => setBusca(e.target.value)} /></label>
+        <label>Buscar <input type="search" value={busca} onChange={(e) => mudar('busca', e.target.value)} /></label>
         <label>Área
-          <select value={area} onChange={(e) => setArea(e.target.value)}>
+          <select value={area} onChange={(e) => mudar('area', e.target.value)}>
             <option value="">Todas</option>{opcoes.areas.map((a) => <option key={a} value={a}>{a}</option>)}
           </select>
         </label>
         <label>Nível
-          <select value={nivel} onChange={(e) => setNivel(e.target.value)}>
+          <select value={nivel} onChange={(e) => mudar('nivel', e.target.value)}>
             <option value="">Todos</option>{NIVEIS_CURSO.map((n) => <option key={n} value={n}>{n}</option>)}
           </select>
         </label>
         <label>Período
-          <select value={periodo} onChange={(e) => setPeriodo(e.target.value)}>
+          <select value={periodo} onChange={(e) => mudar('periodo', e.target.value)}>
             <option value="">Todos</option>{opcoes.periodos.map(([id, nome]) => <option key={id} value={id}>{nome}</option>)}
           </select>
         </label>
@@ -61,7 +66,7 @@ export function Catalogo() {
                   <ListaRegistros rotulo={"Disciplinas de " + g.nome}>
                     {g.disciplinas.map((d) => (
                       <Registro key={d.id}>
-                        <Link to={`/aluno/catalogo/disciplinas/${d.id}`}>{d.nome}</Link>{' '}
+                        <Link to={{ pathname: `/aluno/catalogo/disciplinas/${d.id}`, search: params.toString() }}>{d.nome}</Link>{' '}
                         <p className="meta">{d.codigo} · {d.nivel} · {d.numeroTopicos} tópicos · {d.ofertas.length} oferta(s)</p>
                       </Registro>
                     ))}

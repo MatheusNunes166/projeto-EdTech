@@ -1,4 +1,5 @@
-import { Link, useParams } from 'react-router-dom';
+import { Retorno } from '../../componentes/Interacao';
+import { useParams } from 'react-router-dom';
 import { useConsulta } from '../../app/contexto';
 import { Consulta, Vazio } from '../../componentes/comuns';
 import { caminhoTurma, useAlvoDaRota } from './rota';
@@ -19,10 +20,10 @@ function MateriaisDoTopico({ alvo, topicoId }: { alvo: Parameters<typeof caminho
     <Consulta estado={estado}>
       {({ trilha, contexto }) => {
         const topico = trilha.topicos.find((t) => t.topicoId === topicoId && t.desbloqueado);
-        if (!topico) return <><h1>Materiais indisponíveis</h1><Vazio>Tópico não encontrado ou ainda bloqueado.</Vazio><Link to={caminhoTurma(alvo)}>Voltar à trilha</Link></>;
+        if (!topico) return <><h1>Materiais indisponíveis</h1><Vazio>Tópico não encontrado ou ainda bloqueado.</Vazio><Retorno to={caminhoTurma(alvo)}>Voltar à trilha</Retorno></>;
         return (
           <>
-            <p><Link to={caminhoTurma(alvo)}>← Voltar à trilha</Link></p>
+            <p><Retorno to={caminhoTurma(alvo)}>Voltar à trilha</Retorno></p>
             <h1>{topico.titulo}</h1>
             <p className="meta">{contexto.disciplina.nome} · Turma {contexto.turma.codigo} · {contexto.periodoLetivo.nome}</p>
             {topico.materiais.length === 0 ? <Vazio>Este tópico ainda não tem materiais.</Vazio> : topico.materiais.map((m) => (

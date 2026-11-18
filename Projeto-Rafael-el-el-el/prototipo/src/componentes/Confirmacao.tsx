@@ -33,7 +33,7 @@ export function Confirmacao({ titulo, children, acao, aoConfirmar, aoCancelar, o
       <div id={id + '-efeito'}>{children}</div>
       <div className="acoes">
         <button type="button" ref={cancelar} className="secundario" disabled={ocupado} onClick={aoCancelar}>Cancelar</button>
-        <button type="button" className="perigo" disabled={ocupado} onClick={aoConfirmar}>{acao}</button>
+        <button type="button" className="perigo" disabled={ocupado} aria-busy={ocupado} onClick={aoConfirmar}>{ocupado ? 'Processando…' : acao}</button>
       </div>
     </dialog>
   );

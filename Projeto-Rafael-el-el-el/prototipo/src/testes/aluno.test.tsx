@@ -147,7 +147,7 @@ describe('Frontend 4 — ação por matrícula, estados e indicadores parciais',
     expect(await screen.findByText(/2 respostas registradas/)).toBeInTheDocument();
     expect(screen.getByText(/Taxa de acertos:/)).toHaveTextContent('0%');
     expect(screen.queryByText('(Sem atividade)')).toBeNull();
-    await a.usuario.click(screen.getByRole('link', { name: '← Voltar à trilha' }));
+    await a.usuario.click(screen.getByRole('link', { name: 'Voltar à trilha' }));
     expect(a.rotaAtual()).toBe(T_ALG_A);
   });
 

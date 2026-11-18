@@ -1,3 +1,4 @@
+import { MensagemSucesso } from '../../componentes/Interacao';
 import { useState, type FormEvent } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useComando, useConsulta, useUsuario } from '../../app/contexto';
@@ -26,7 +27,7 @@ export function CadastroGraduacoesDisciplinas({ coordenacao = false }: { coorden
   const Titulo = coordenacao ? 'h2' : 'h1';
   return <>
     <Titulo>Graduações e disciplinas</Titulo>
-    {aviso && <p role="status">{aviso}</p>}
+    {aviso && <MensagemSucesso>{aviso}</MensagemSucesso>}
     <Consulta estado={estado}>{({ graduacoes, disciplinas }, revisao) => (
       <div className="gestao-com-edicao">
         <div className="lista-gestao cadastros-listas">
@@ -65,7 +66,7 @@ export function CadastroGraduacoesDisciplinas({ coordenacao = false }: { coorden
                 <Campo rotulo="Descrição da graduação"><textarea value={grad.descricao} onChange={(e) => setGrad({ ...grad, descricao: e.target.value })} /></Campo>
                 <MensagemErro erro={g.erro} ignorar={['codigo', 'nome']} />
                 <div className="acoes">
-                  <button type="submit" disabled={g.ocupado}>Salvar graduação</button>
+                  <button type="submit" disabled={g.ocupado}>{g.ocupado ? 'Salvando…' : 'Salvar graduação'}</button>
                   <button type="button" className="secundario" onClick={() => { setEdicao(null); }}>Cancelar edição da graduação</button>
                 </div>
               </form>
@@ -94,7 +95,7 @@ export function CadastroGraduacoesDisciplinas({ coordenacao = false }: { coorden
               </Campo>
               <MensagemErro erro={d.erro} ignorar={['graduacaoId', 'codigo', 'nome']} />
               <div className="acoes">
-                <button type="submit" disabled={d.ocupado}>Salvar disciplina</button>
+                <button type="submit" disabled={d.ocupado}>{d.ocupado ? 'Salvando…' : 'Salvar disciplina'}</button>
                 <button type="button" className="secundario" onClick={() => { setEdicao(null); }}>Cancelar edição da disciplina</button>
               </div>
             </form>
@@ -121,7 +122,7 @@ export function CadastroPeriodosTurmas({ coordenacao = false }: { coordenacao?: 
   const Titulo = coordenacao ? 'h2' : 'h1';
   return <>
     <Titulo>Períodos letivos e turmas</Titulo>
-    {aviso && <p role="status">{aviso}</p>}
+    {aviso && <MensagemSucesso>{aviso}</MensagemSucesso>}
     <Consulta estado={estado}>{({ periodosLetivos, disciplinas, turmas }, revisao) => (
       <div className="gestao-com-edicao">
         <div className="lista-gestao cadastros-listas">
@@ -159,7 +160,7 @@ export function CadastroPeriodosTurmas({ coordenacao = false }: { coordenacao?: 
                 <Campo rotulo="Data de fim" erro={erroDoCampo(p.erro, 'dataFim')}><input value={per.dataFim} placeholder="AAAA-MM-DD" onChange={(e) => setPer({ ...per, dataFim: e.target.value })} /></Campo>
                 <MensagemErro erro={p.erro} ignorar={['nome', 'dataInicio', 'dataFim']} />
                 <div className="acoes">
-                  <button type="submit" disabled={p.ocupado}>Salvar período</button>
+                  <button type="submit" disabled={p.ocupado}>{p.ocupado ? 'Salvando…' : 'Salvar período'}</button>
                   <button type="button" className="secundario" onClick={() => { setEdicao(null); }}>Cancelar edição do período</button>
                 </div>
               </form>
@@ -187,7 +188,7 @@ export function CadastroPeriodosTurmas({ coordenacao = false }: { coordenacao?: 
               <Campo rotulo="Código da turma" erro={erroDoCampo(t.erro, 'codigo')}><input className="campo-curto" value={turma.codigo} onChange={(e) => setTurma({ ...turma, codigo: e.target.value })} /></Campo>
               <MensagemErro erro={t.erro} ignorar={['disciplinaId', 'periodoLetivoId', 'codigo', 'oferta']} />
               <div className="acoes">
-                <button type="submit" disabled={t.ocupado}>Salvar turma</button>
+                <button type="submit" disabled={t.ocupado}>{t.ocupado ? 'Salvando…' : 'Salvar turma'}</button>
                 <button type="button" className="secundario" onClick={() => { setEdicao(null); }}>Cancelar edição da turma</button>
               </div>
             </form>
