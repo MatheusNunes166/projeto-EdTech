@@ -40,6 +40,10 @@ Na entrada, escolha primeiro uma **função** disponível e depois uma **pessoa 
 
 Carla ilustra funções cumulativas em cursos diferentes: leciona Matemática Básica (Licenciatura em Matemática) e coordena Sistemas de Informação, sem que uma função amplie a outra.
 
+## Administração
+
+A Visão geral liga os totais aos cadastros correspondentes. Em **Pessoas**, use **Nova pessoa** ou **Editar** na linha. Em **Vínculos**, escolha coordenação ou acompanhamento e selecione candidatos elegíveis. Remover abre uma confirmação com as duas partes da relação.
+
 ## Estrutura acadêmica
 
 | Graduação | Disciplina | Conteúdo |

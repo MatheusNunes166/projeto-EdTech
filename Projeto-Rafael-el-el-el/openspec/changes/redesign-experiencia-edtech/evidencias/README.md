@@ -11,3 +11,7 @@ Baseline em `8e3a65c` com 662 testes em 42 arquivos e build aprovado. Node 26 co
 ## 3
 
 36 testes de componentes e shell e build aprovados. Em Chrome, a restauração abriu com foco em Cancelar e Escape devolveu o foco ao acionador, com os mesmos dados, em 1280 px e 360 px. O jsdom recebeu apenas a adaptação de abertura e fechamento do diálogo. O navegador confirmou a modalidade nativa e revelou uma disputa de Escape com o expansor pai, corrigida no diálogo.
+
+## 4
+
+61 testes administrativos, de integração e revogação e build aprovados. A 1280 px e 360 px o teclado abriu somente o formulário escolhido e cancelou a remoção contextualizada com documento idêntico. Os testes confirmaram que candidatos incompatíveis não são apresentados, os comandos rejeitam pedidos inválidos e apenas a relação confirmada é removida.

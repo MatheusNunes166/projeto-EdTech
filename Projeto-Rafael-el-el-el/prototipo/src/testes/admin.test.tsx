@@ -2,24 +2,26 @@ import { screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { renderizarApp } from './renderizar';
 
-const linha = (nome: string) => screen.getByRole('row', { name: new RegExp(nome) });
+const linha = (nome: string) => screen.getByRole('listitem', { name: new RegExp(nome) });
 
 describe('7.4 — [PA] Administração de usuários, Limites globais, Vínculos Responsável–Aluno; [OA] Vínculos de coordenadores', () => {
   it('cria pessoa com duas funções, edita e desativa', async () => {
     const { usuario, dados } = await renderizarApp('/admin/usuarios', 'u-renata');
-    await screen.findByRole('row', { name: /Ana Souza/ });
+    await screen.findByRole('listitem', { name: /Ana Souza/ });
+    expect(screen.queryByRole('form')).toBeNull();
+    await usuario.click(screen.getByRole('button', { name: 'Nova pessoa' }));
     await usuario.type(screen.getByLabelText('Nome'), 'Nina Torres');
     await usuario.type(screen.getByLabelText('E-mail'), 'nina@exemplo.com');
     await usuario.click(screen.getByRole('checkbox', { name: 'Professor' }));
     await usuario.click(screen.getByRole('checkbox', { name: 'Coordenador' }));
     await usuario.click(screen.getByRole('button', { name: 'Salvar pessoa' }));
-    expect(await screen.findByRole('row', { name: /Nina Torres.*Professor, Coordenador.*Ativa/ })).toBeInTheDocument();
+    expect(await screen.findByRole('listitem', { name: 'Nina Torres' })).toHaveTextContent(/Professor, Coordenador.*Ativa/);
     expect(dados().usuarios.find((u) => u.nome === 'Nina Torres')!.funcoes).toEqual(['professor', 'coordenador']);
 
     await usuario.click(screen.getByRole('button', { name: 'Editar Nina Torres' }));
     await usuario.clear(screen.getByLabelText('Nome')); await usuario.type(screen.getByLabelText('Nome'), 'Nina T. Torres');
     await usuario.click(screen.getByRole('button', { name: 'Salvar pessoa' }));
-    expect(await screen.findByRole('row', { name: /Nina T\. Torres/ })).toBeInTheDocument();
+    expect(await screen.findByRole('listitem', { name: /Nina T\. Torres/ })).toBeInTheDocument();
 
     await usuario.click(screen.getByRole('button', { name: 'Desativar Diego Martins' }));
     await waitFor(() => expect(linha('Diego Martins')).toHaveTextContent('Inativa'));
@@ -28,7 +30,9 @@ describe('7.4 — [PA] Administração de usuários, Limites globais, Vínculos 
 
   it('rejeita pessoa ativa sem função e mostra o erro sem sucesso', async () => {
     const { usuario, dados } = await renderizarApp('/admin/usuarios', 'u-renata');
-    await screen.findByRole('row', { name: /Ana Souza/ });
+    await screen.findByRole('listitem', { name: /Ana Souza/ });
+    expect(screen.queryByRole('form')).toBeNull();
+    await usuario.click(screen.getByRole('button', { name: 'Nova pessoa' }));
     const antes = dados().usuarios.length;
     await usuario.type(screen.getByLabelText('Nome'), 'Sem Função'); await usuario.type(screen.getByLabelText('E-mail'), 'sf@exemplo.com');
     await usuario.click(screen.getByRole('button', { name: 'Salvar pessoa' }));
@@ -36,31 +40,46 @@ describe('7.4 — [PA] Administração de usuários, Limites globais, Vínculos 
     expect(dados().usuarios).toHaveLength(antes);
   });
 
-  it('atribui e remove coordenação; exige a função Coordenador', async () => {
-    const { usuario, dados } = await renderizarApp('/admin/vinculos', 'u-renata');
+  it('atribui coordenação e só remove o vínculo após confirmação', async () => {
+    const { usuario, dados, repo } = await renderizarApp('/admin/vinculos', 'u-renata');
     await screen.findByText(/Carla Dias coordena Sistemas de Informação/);
-    await usuario.selectOptions(screen.getByLabelText('Pessoa coordenadora'), 'Ana Souza');
+    const anterior = dados();
+    await expect(repo.definirVinculoCoordenador({ coordenadorId: 'u-ana', graduacaoId: 'g-si' }, true, anterior.revisao)).rejects.toBeDefined();
+    expect(dados()).toEqual(anterior);
+    expect(screen.queryByLabelText('Pessoa coordenadora')).toBeNull();
+    await usuario.click(screen.getByRole('button', { name: 'Nova coordenação' }));
     await usuario.selectOptions(screen.getByLabelText('Graduação'), 'Sistemas de Informação');
-    await usuario.click(screen.getByRole('button', { name: 'Atribuir coordenação' }));
-    expect(await screen.findByRole('alert')).toHaveTextContent(/função coordenador/);
-    await usuario.selectOptions(screen.getByLabelText('Pessoa coordenadora'), 'Lúcia Ferraz');
+    const seletor = await screen.findByLabelText('Pessoa coordenadora');
+    expect(within(seletor).queryByRole('option', { name: 'Ana Souza' })).toBeNull();
+    await usuario.selectOptions(seletor, 'Lúcia Ferraz');
     await usuario.click(screen.getByRole('button', { name: 'Atribuir coordenação' }));
     expect(await screen.findByText(/Lúcia Ferraz coordena Sistemas de Informação/)).toBeInTheDocument();
-    await usuario.click(screen.getByRole('button', { name: 'Remover coordenação de Lúcia Ferraz em Sistemas de Informação' }));
+    const remover = screen.getByRole('button', { name: 'Remover coordenação de Lúcia Ferraz em Sistemas de Informação' });
+    const antes = dados();
+    await usuario.click(remover);
+    expect(screen.getByRole('alertdialog')).toHaveAccessibleName(/Lúcia Ferraz em Sistemas de Informação/);
+    await usuario.click(screen.getByRole('button', { name: 'Cancelar' }));
+    expect(dados()).toEqual(antes);
+    expect(remover).toHaveFocus();
+    await usuario.click(remover);
+    await usuario.click(screen.getByRole('button', { name: 'Confirmar remoção' }));
     await waitFor(() => expect(screen.queryByText(/Lúcia Ferraz coordena Sistemas de Informação/)).toBeNull());
     expect(dados().vinculosCoordenador).toContainEqual({ coordenadorId: 'u-lucia', graduacaoId: 'g-lm' });
   });
 
   it('vincula Responsável a Aluno e exige função Aluno no destino', async () => {
-    const { usuario } = await renderizarApp('/admin/vinculos', 'u-renata');
+    const { usuario, repo, dados } = await renderizarApp('/admin/vinculos', 'u-renata');
     await screen.findByText(/Helena Souza acompanha Ana Souza/);
-    await usuario.selectOptions(screen.getByLabelText('Responsável'), 'Helena Souza');
-    await usuario.selectOptions(screen.getByLabelText('Aluno'), 'Bruno Lima');
+    await usuario.click(screen.getByRole('button', { name: 'Novo vínculo de acompanhamento' }));
+    await usuario.selectOptions(await screen.findByLabelText('Responsável'), 'Helena Souza');
+    const aluno = await screen.findByLabelText('Aluno');
+    expect(within(aluno).queryByRole('option', { name: 'Marcos Silva' })).toBeNull();
+    await usuario.selectOptions(aluno, 'Bruno Lima');
     await usuario.click(screen.getByRole('button', { name: 'Vincular responsável' }));
     expect(await screen.findByText(/Helena Souza acompanha Bruno Lima/)).toBeInTheDocument();
-    await usuario.selectOptions(screen.getByLabelText('Aluno'), 'Marcos Silva');
-    await usuario.click(screen.getByRole('button', { name: 'Vincular responsável' }));
-    expect(await screen.findByRole('alert')).toHaveTextContent(/função Aluno/);
+    const antes = dados();
+    await expect(repo.definirVinculoResponsavel({ responsavelId: 'u-helena', alunoId: 'u-marcos' }, true, antes.revisao)).rejects.toBeDefined();
+    expect(dados()).toEqual(antes);
   });
 
   it.each(['u-carla', 'u-marcos', 'u-ana', 'u-helena', 'u-lucia'])('%s não acessa por endereço direto as telas globais', async (pessoa) => {

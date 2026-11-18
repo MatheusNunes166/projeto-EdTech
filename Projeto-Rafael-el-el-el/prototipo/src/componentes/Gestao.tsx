@@ -4,8 +4,8 @@ export function ListaRegistros({ rotulo, children }: { rotulo: string; children:
   return <ul className="lista-registros" aria-label={rotulo}>{children}</ul>;
 }
 
-export function Registro({ children, acoes }: { children: ReactNode; acoes?: ReactNode }) {
-  return <li className="registro"><div>{children}</div>{acoes && <div className="acoes-registro">{acoes}</div>}</li>;
+export function Registro({ children, acoes, rotulo }: { children: ReactNode; acoes?: ReactNode; rotulo?: string }) {
+  return <li className="registro" aria-label={rotulo}><div>{children}</div>{acoes && <div className="acoes-registro">{acoes}</div>}</li>;
 }
 
 export function DadoRegistro({ rotulo, children }: { rotulo: string; children: ReactNode }) {
@@ -21,6 +21,6 @@ export function PainelEdicao({ titulo, children }: { titulo: string; children: R
       if (acionador instanceof HTMLElement && acionador.isConnected) acionador.focus();
       else document.querySelector<HTMLElement>('main h1')?.focus();
     };
-  }, [titulo]);
+  }, []);
   return <section className="cartao painel-edicao" aria-label={titulo}><h2 ref={h} tabIndex={-1}>{titulo}</h2>{children}</section>;
 }

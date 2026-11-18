@@ -51,6 +51,7 @@ describe('8.2 — fluxos integrados entre funções (PA, GC, AA, OA)', () => {
     expect(await screen.findByRole('button', { name: 'Remover Marcos Silva' })).toBeInTheDocument();
 
     await irPara(usuario, 'Vínculos');
+    await usuario.click(await screen.findByRole('button', { name: 'Novo vínculo de acompanhamento' }));
     await usuario.selectOptions(await screen.findByLabelText('Responsável'), 'Helena Souza');
     await usuario.selectOptions(screen.getByLabelText('Aluno'), 'Diego Martins');
     await usuario.click(screen.getByRole('button', { name: 'Vincular responsável' }));
