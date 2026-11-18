@@ -23,7 +23,7 @@ describe('7.1 — [PA] Entrada simulada; Acesso restrito por função e vínculo
     expect(screen.queryByText('Algoritmos')).toBeNull();
     await escolherFuncaoEntrada(usuario, 'Professor');
     await usuario.click(screen.getByRole('button', { name: 'Entrar como Marcos Silva' }));
-    expect(await screen.findByRole('article', { name: 'Algoritmos turma A 2026.2' })).toBeInTheDocument();
+    expect(await screen.findByRole('listitem', { name: 'Algoritmos turma A 2026.2' })).toBeInTheDocument();
     expect(rotaAtual()).toBe('/professor');
     expect(screen.queryByText('Inglês Inicial')).toBeNull(); // nada da pessoa anterior
   });
@@ -105,7 +105,7 @@ describe('Frontend 2 — entrada por função antes de pessoa', () => {
     expect(a.rotaAtual()).toBe('/coordenacao');
     await abrirConta(a.usuario);
     await a.usuario.click(within(screen.getByRole('navigation', { name: 'Áreas da pessoa' })).getByRole('link', { name: 'Área do Professor' }));
-    expect(await screen.findByRole('article', { name: 'Matemática Básica turma A 2026.2' })).toBeInTheDocument();
+    expect(await screen.findByRole('listitem', { name: 'Matemática Básica turma A 2026.2' })).toBeInTheDocument();
     expect(localStorage.getItem(K.sessaoAcademica)).toBe('u-carla');
   });
 
@@ -155,7 +155,7 @@ describe('7.2 — [PA] Funções de usuário suportadas, Permissões cumulativas
     const { rotaAtual } = await renderizarApp('/professor', 'u-ana');
     expect(await screen.findByRole('heading', { name: 'Minhas turmas' })).toBeInTheDocument();
     expect(rotaAtual()).toBe('/aluno');
-    expect(screen.queryByRole('link', { name: 'Painel da turma' })).toBeNull();
+    expect(screen.queryByRole('link', { name: /Painel da turma/ })).toBeNull();
   });
 
   it('sem sessão qualquer área volta à entrada', async () => {
@@ -179,8 +179,8 @@ describe('7.2 — [PA] Funções de usuário suportadas, Permissões cumulativas
 
   it('duas áreas da mesma pessoa mantêm escopos distintos (Carla: docência em Matemática, coordenação de SI)', async () => {
     const { usuario } = await renderizarApp('/professor', 'u-carla');
-    expect(await screen.findByRole('article', { name: 'Matemática Básica turma A 2026.2' })).toBeInTheDocument();
-    expect(screen.queryByRole('article', { name: /Algoritmos/ })).toBeNull();
+    expect(await screen.findByRole('listitem', { name: 'Matemática Básica turma A 2026.2' })).toBeInTheDocument();
+    expect(screen.queryByRole('listitem', { name: /Algoritmos/ })).toBeNull();
     await abrirConta(usuario);
     const areas = screen.getByRole('navigation', { name: 'Áreas da pessoa' });
     expect(within(areas).getAllByRole('link').map((l) => l.textContent)).toEqual(['Área do Professor', 'Área da Coordenação']);

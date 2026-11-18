@@ -89,8 +89,8 @@ describe('8.2 — fluxos integrados entre funções (PA, GC, AA, OA)', () => {
     };
     await marcos.salvarConteudo({ disciplinaId: idDisc }, candidato, await rev());
     await entrarComo(usuario, 'Marcos Silva');
-    const cartao = await screen.findByRole('article', { name: 'Estruturas de Dados turma A 2026.2' });
-    await usuario.click(within(cartao).getByRole('link', { name: 'Conteúdo da disciplina' }));
+    const cartao = await screen.findByRole('listitem', { name: 'Estruturas de Dados turma A 2026.2' });
+    await usuario.click(within(cartao).getByRole('link', { name: /Conteúdo de Estruturas de Dados/ }));
     await usuario.click(await screen.findByRole('button', { name: 'Publicar conteúdo' }));
     expect(await screen.findByText('Alterações salvas.')).toBeInTheDocument();
     expect(disciplina().status).toBe('publicado');
@@ -129,15 +129,15 @@ describe('8.2 — fluxos integrados entre funções (PA, GC, AA, OA)', () => {
     await marcos.salvarConteudo({ disciplinaId: idDisc }, corrigida, await rev(), [{ recursoId: candidato.questoes[0].id, revisaoOriginal: 0, diferenca: diferencaTextualQuestao(candidato.questoes[0], corrigida.questoes[0]) }]);
     expect(dados().questoes.find((q) => q.id === 'q-pilhas-facil')!.enunciado).toBe(`${original} (revisado)`);
     await entrarComo(usuario, 'Marcos Silva');
-    await usuario.click(within(await screen.findByRole('article', { name: 'Estruturas de Dados turma A 2026.2' })).getByRole('link', { name: 'Painel da turma' }));
-    await usuario.click(within(await screen.findByRole('row', { name: /Diego Martins/ })).getByRole('link', { name: 'Detalhe' }));
+    await usuario.click(within(await screen.findByRole('listitem', { name: 'Estruturas de Dados turma A 2026.2' })).getByRole('link', { name: /Painel da turma A/ }));
+    await usuario.click(within(await screen.findByRole('listitem', { name: 'Diego Martins' })).getByRole('link', { name: /Detalhe de Diego Martins/ }));
     expect((await screen.findAllByText(original)).length).toBeGreaterThan(0);
     expect(screen.queryByText(`${original} (revisado)`)).toBeNull();
 
     // 8. Revogação com a tela do editor aberta: sem vínculo, o próximo carregamento nega o acesso.
-    await usuario.click(screen.getByRole('link', { name: '← Painel da turma' }));
+    await usuario.click(screen.getByRole('link', { name: 'Voltar à turma' }));
     await irPara(usuario, 'Minhas turmas');
-    await usuario.click(within(await screen.findByRole('article', { name: 'Estruturas de Dados turma A 2026.2' })).getByRole('link', { name: 'Conteúdo da disciplina' }));
+    await usuario.click(within(await screen.findByRole('listitem', { name: 'Estruturas de Dados turma A 2026.2' })).getByRole('link', { name: /Conteúdo de Estruturas de Dados/ }));
     await screen.findByLabelText('Título do tópico 1');
     const admin = outraAba('u-renata');
     await admin.definirVinculoProfessor({ turmaId: turma().id }, { professorId: 'u-marcos' }, false, (await admin.consultarDataVirtual()).revisao);

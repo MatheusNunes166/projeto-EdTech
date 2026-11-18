@@ -9,24 +9,24 @@ const PAINEL = (d: string, t: string) => `/professor/disciplinas/${d}/turmas/${t
 describe('7.11 — [AC] Painel do professor por turma, Turma sem alunos, Alunos com dificuldade, Detalhe de aluno; [AA] Histórico exibe o conteúdo anterior', () => {
   it('professor com várias turmas as identifica e abre o painel só da turma escolhida', async () => {
     const { usuario } = await renderizarApp('/professor', 'u-marcos');
-    expect(await screen.findByRole('article', { name: 'Algoritmos turma A 2026.2' })).toBeInTheDocument();
-    expect(screen.getByRole('article', { name: 'Algoritmos turma A 2027.1' })).toBeInTheDocument();
-    const b = screen.getByRole('article', { name: 'Algoritmos turma B 2026.2' });
-    expect(screen.queryByRole('article', { name: /Inglês|Matemática/ })).toBeNull();
-    await usuario.click(within(b).getByRole('link', { name: 'Painel da turma' }));
+    expect(await screen.findByRole('listitem', { name: 'Algoritmos turma A 2026.2' })).toBeInTheDocument();
+    expect(screen.getByRole('listitem', { name: 'Algoritmos turma A 2027.1' })).toBeInTheDocument();
+    const b = screen.getByRole('listitem', { name: 'Algoritmos turma B 2026.2' });
+    expect(screen.queryByRole('listitem', { name: /Inglês|Matemática/ })).toBeNull();
+    await usuario.click(within(b).getByRole('link', { name: /Painel da turma B/ }));
     expect(await screen.findByRole('heading', { name: /Algoritmos — Turma B/ })).toBeInTheDocument();
-    expect(await screen.findByRole('row', { name: /Bruno Lima/ })).toBeInTheDocument();
+    expect(await screen.findByRole('listitem', { name: /Bruno Lima/ })).toBeInTheDocument();
     expect(screen.queryByText(/Ana Souza|Elisa Prado|Diego Martins/)).toBeNull();
   });
 
   it('aluno com menos de 50% nas últimas respostas aparece como Precisa de atenção; quem não respondeu, como Sem atividade', async () => {
     await renderizarApp(PAINEL('d-alg', 't-alg-b-262'), 'u-marcos');
-    expect(await screen.findByRole('row', { name: /Bruno Lima/ })).toHaveTextContent('Precisa de atenção');
+    expect(await screen.findByRole('listitem', { name: /Bruno Lima/ })).toHaveTextContent('Precisa de atenção');
     await renderizarApp(PAINEL('d-alg', 't-alg-a-262'), 'u-marcos');
-    const diego = await screen.findByRole('row', { name: /Diego Martins/ });
+    const diego = await screen.findByRole('listitem', { name: /Diego Martins/ });
     expect(diego).toHaveTextContent('Sem atividade');
     expect(diego).not.toHaveTextContent('Precisa de atenção');
-    expect(screen.getByRole('row', { name: /Elisa Prado/ })).toHaveTextContent('100%');
+    expect(screen.getByRole('listitem', { name: /Elisa Prado/ })).toHaveTextContent('100%');
   });
 
   it('turma vazia: zero matrículas, Nenhum aluno matriculado e indicadores agregados Sem dados', async () => {
@@ -38,24 +38,27 @@ describe('7.11 — [AC] Painel do professor por turma, Turma sem alunos, Alunos 
   });
 
   it('turma com alunos mostra progresso médio e domínio médio por tópico (incluindo quem não iniciou)', async () => {
-    await renderizarApp(PAINEL('d-alg', 't-alg-a-262'), 'u-marcos');
+    const { usuario } = await renderizarApp(PAINEL('d-alg', 't-alg-a-262'), 'u-marcos');
     const agregados = await screen.findByRole('region', { name: 'Indicadores agregados da turma' });
     expect(agregados).toHaveTextContent(/Progresso médio: \d+%/);
-    expect(within(agregados).getAllByText(/Domínio médio —/)).toHaveLength(3);
+    await usuario.click(within(agregados).getByText('Domínio médio por tópico'));
+    const topicos = within(agregados).getAllByText(/Domínio médio —/);
+    expect(topicos).toHaveLength(3);
+    expect(topicos[0]).toBeVisible();
   });
 
   it('detalhe do aluno: domínio por tópico e no máximo as últimas 10 respostas, com o conteúdo originalmente apresentado', async () => {
     const { usuario } = await renderizarApp(PAINEL('d-alg', 't-alg-a-262'), 'u-marcos');
-    await usuario.click(within(await screen.findByRole('row', { name: /Elisa Prado/ })).getByRole('link', { name: 'Detalhe' }));
+    await usuario.click(within(await screen.findByRole('listitem', { name: /Elisa Prado/ })).getByRole('link', { name: /Detalhe de/ }));
     expect(await screen.findByRole('heading', { name: 'Elisa Prado' })).toBeInTheDocument();
     expect(screen.getByText('Domínio por tópico')).toBeInTheDocument();
-    const respostas = within(document.querySelector('.lista-questoes') as HTMLElement).getAllByRole('listitem').filter((l) => l.className.includes('cartao'));
+    const respostas = within(screen.getByRole('list', { name: 'Últimas respostas' })).getAllByRole('listitem').filter((l) => l.className === 'registro');
     expect(respostas).toHaveLength(10); // Elisa tem 21 respostas
   });
 
   it('após correção textual aprovada, o detalhe continua exibindo o enunciado original', async () => {
     const { usuario, outraAba, dados } = await renderizarApp(PAINEL('d-alg', 't-alg-b-262'), 'u-marcos');
-    await screen.findByRole('row', { name: /Bruno Lima/ });
+    await screen.findByRole('listitem', { name: /Bruno Lima/ });
     const resposta = dados().respostas.find((r) => r.matriculaId === 'm-bruno-alg-b-262')!;
     const original = resposta.conteudoOriginal.enunciado;
     const marcos = outraAba('u-marcos');
@@ -64,9 +67,13 @@ describe('7.11 — [AC] Painel do professor por turma, Turma sem alunos, Alunos 
     const q = candidato.questoes.find((x) => x.id === resposta.questaoId)!; const antes = structuredClone(q);
     q.enunciado = `${original} (revisado)`;
     await marcos.salvarConteudo({ disciplinaId: 'd-alg' }, candidato, revisao, [{ recursoId: q.id, revisaoOriginal: antes.revisao, diferenca: diferencaTextualQuestao(antes, q) }]);
-    await usuario.click(within(screen.getByRole('row', { name: /Bruno Lima/ })).getByRole('link', { name: 'Detalhe' }));
+    await usuario.click(within(screen.getByRole('listitem', { name: /Bruno Lima/ })).getByRole('link', { name: /Detalhe de/ }));
     expect(await screen.findByRole('heading', { name: 'Bruno Lima' })).toBeInTheDocument();
-    expect(screen.getAllByText(original).length).toBeGreaterThan(0);
+    const lista = screen.getByRole('list', { name: 'Últimas respostas' });
+    const item = within(lista).getAllByRole('listitem').find((l) => l.textContent?.includes(original))!;
+    await usuario.click(item.querySelector('summary')!);
+    expect(within(item).getByText(original)).toBeVisible();
+    expect(item).toHaveTextContent(resposta.conteudoOriginal.explicacao);
     expect(screen.queryByText(`${original} (revisado)`)).toBeNull();
   });
 

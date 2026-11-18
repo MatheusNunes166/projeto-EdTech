@@ -72,6 +72,10 @@ Cadastros separam **Graduações e disciplinas** de **Períodos e turmas**. Em g
 
 A data virtual inicial é **2026-11-17**. Os históricos de respostas são gerados pelo próprio motor adaptativo (nenhum contador é inventado), de modo que os painéis mostram progresso, XP, sequência e conquistas coerentes: Elisa concluiu a trilha com sete dias seguidos; Bruno aparece como “Precisa de atenção” em Algoritmos B; Diego e as matrículas de 2027.1 não têm respostas.
 
+## Acompanhamento docente
+
+Em **Minhas turmas**, abra o painel da oferta. Cada linha de aluno mantém progresso, taxa, atividade e acesso ao detalhe daquela matrícula. Em **Últimas respostas**, expanda uma resposta para ler questão, alternativas e explicação da versão apresentada.
+
 ## Experiência de estudo
 
 Em **Minhas turmas**, cada oferta tem seu próprio estado: **Começar trilha** sem respostas, **Continuar trilha** com atividade (mesmo a 0%) ou **Ver trilha** na conclusão. **Desempenho** continua disponível como ação secundária. Indicadores carregando ou com erro não são substituídos por zero.

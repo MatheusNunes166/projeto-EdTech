@@ -19,3 +19,7 @@ Baseline em `8e3a65c` com 662 testes em 42 arquivos e build aprovado. Node 26 co
 ## 5
 
 87 testes direcionados e build aprovados, mais o teste de revogação com a confirmação docente aberta (arquivo de coordenação com 12 aprovados). Chrome conferiu 14 aberturas de formulários por teclado a 1280 px e 360 px, e a jornada completa de Administração criando graduação, atribuindo coordenação, cancelando e confirmando remoção. O teste de contrato distingue a indicação de identidade protegida da entrada editável do comando.
+
+## 6
+
+51 testes de Professor, shell e integração e build aprovados. A 1280 px e 360 px, o teclado percorreu turma, aluno, expansão da resposta e retorno à mesma turma. A consulta preservou o documento. O histórico detalhado agora inclui a explicação do conteúdo original e o teste de correção textual verifica a versão original visível.
