@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { ProtecaoSaida, useSaidaDoEditor } from '../app/rascunho';
 import { Expansor } from '../componentes/Expansor';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AREA_DA_FUNCAO, ROTULO_AREA, localizacaoDaPagina, nomesDasFuncoes } from '../app/areas';
@@ -24,6 +25,11 @@ const areaAtual = (caminho: string): Funcao | undefined =>
   FUNCOES.find((f) => caminho === AREA_DA_FUNCAO[f] || caminho.startsWith(`${AREA_DA_FUNCAO[f]}/`));
 
 export function Layout() {
+  return <ProtecaoSaida><LayoutDaArea /></ProtecaoSaida>;
+}
+
+function LayoutDaArea() {
+  const protecao = useSaidaDoEditor();
   const usuario = useUsuario();
   const { executar } = useApp();
   const navegar = useNavigate();
@@ -85,7 +91,7 @@ export function Layout() {
                 ))}
               </nav>
             )}
-            <button className="secundario" onClick={sair}>Sair</button>
+            <button className="secundario" onClick={() => protecao.sair(sair)}>Sair</button>
           </div>
         </Expansor>
       </header>

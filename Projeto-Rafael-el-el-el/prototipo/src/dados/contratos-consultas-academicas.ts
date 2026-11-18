@@ -60,6 +60,7 @@ export interface ConteudoEditavel {
   graduacao: Pick<Graduacao, 'id' | 'codigo' | 'nome'>;
   disciplina: DisciplinaAdministravel & { topicos: Topico[] };
   questoes: QuestaoDisciplina[];
+  protecoes: { estudoIniciado: boolean; questoesRespondidas: string[] };
 }
 
 /** Histórico de uma matrícula: conteúdo apresentado na resposta, não o conteúdo corrente. */

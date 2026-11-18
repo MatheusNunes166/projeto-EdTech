@@ -138,12 +138,12 @@ describe('8.2 — fluxos integrados entre funções (PA, GC, AA, OA)', () => {
     await usuario.click(screen.getByRole('link', { name: 'Voltar à turma' }));
     await irPara(usuario, 'Minhas turmas');
     await usuario.click(within(await screen.findByRole('listitem', { name: 'Estruturas de Dados turma A 2026.2' })).getByRole('link', { name: /Conteúdo de Estruturas de Dados/ }));
-    await screen.findByLabelText('Título do tópico 1');
+    await screen.findByRole('button', { name: 'Editar tópico Pilhas' });
     const admin = outraAba('u-renata');
     await admin.definirVinculoProfessor({ turmaId: turma().id }, { professorId: 'u-marcos' }, false, (await admin.consultarDataVirtual()).revisao);
     avisarOutraAba();
     expect(await screen.findByRole('heading', { name: 'Acesso negado' })).toBeInTheDocument();
-    expect(screen.queryByLabelText('Título do tópico 1')).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Editar tópico Pilhas' })).toBeNull();
     expect(dados().respostas.length).toBeGreaterThan(0); // histórico e matrícula preservados
     expect(dados().matriculas.some((m) => m.turmaId === turma().id)).toBe(true);
 

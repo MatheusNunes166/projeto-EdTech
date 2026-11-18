@@ -76,6 +76,10 @@ A data virtual inicial é **2026-11-17**. Os históricos de respostas são gerad
 
 Em **Minhas turmas**, abra o painel da oferta. Cada linha de aluno mantém progresso, taxa, atividade e acesso ao detalhe daquela matrícula. Em **Últimas respostas**, expanda uma resposta para ler questão, alternativas e explicação da versão apresentada.
 
+### Editor da disciplina
+
+Use **Tópicos e materiais** ou **Banco de questões** e abra o item desejado. Os campos das duas seções permanecem em um rascunho local até **Salvar alterações**. Sair do editor, trocar de área ou descartar pede confirmação. O rascunho não é recuperado após fechar o navegador. Em conflito, recarregue a origem antes de salvar novamente. Questões respondidas permitem apenas correções textuais confirmadas pelo autor, após conferir a diferença. Os resultados anteriores continuam associados ao conteúdo original.
+
 ## Experiência de estudo
 
 Em **Minhas turmas**, cada oferta tem seu próprio estado: **Começar trilha** sem respostas, **Continuar trilha** com atividade (mesmo a 0%) ou **Ver trilha** na conclusão. **Desempenho** continua disponível como ação secundária. Indicadores carregando ou com erro não são substituídos por zero.

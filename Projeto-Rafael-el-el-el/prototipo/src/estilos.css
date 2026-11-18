@@ -310,3 +310,13 @@ dialog::backdrop { background: rgb(19 32 42 / 45%); }
 label:has(> input:is([type='checkbox'], [type='radio'])) { flex-direction: row; align-items: center; gap: var(--e2); min-block-size: 44px; }
 .cadastros-listas { display: grid; gap: var(--e5); }
 .campo input[placeholder='AAAA-MM-DD'], .campo .campo-curto { max-inline-size: 18ch; }
+
+.questao-editavel { padding: 0; border: 0; margin-top: var(--e4); }
+.alternativa-editavel { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: var(--e3); }
+.alternativa-editavel > label:first-child { min-inline-size: max-content; }
+.questao-editavel textarea { resize: vertical; }
+.voltar-lista { margin-bottom: var(--e3); }
+button[aria-pressed='true'].secundario { color: var(--cor-primaria-escura); background: var(--cor-selecao); border-color: var(--cor-primaria-escura); }
+@media (max-width: 639px) {
+  .alternativa-editavel { grid-template-columns: minmax(0, 1fr); gap: var(--e1); padding-block: var(--e2); border-top: 1px solid var(--cor-borda); }
+}

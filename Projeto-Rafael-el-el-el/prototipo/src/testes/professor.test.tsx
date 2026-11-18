@@ -1,8 +1,10 @@
-import { screen, waitFor, within } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { diferencaTextualQuestao } from '../conteudo/regras-disciplina';
-import { renderizarApp } from './renderizar';
+import { abrirConta, abrirDemonstracao, renderizarApp } from './renderizar';
+import { criarArmazenamentoEspiao } from './armazenamento-espiao';
+import { CHAVES_ARMAZENAMENTO } from '../app/contexto';
 
 const PAINEL = (d: string, t: string) => `/professor/disciplinas/${d}/turmas/${t}`;
 
@@ -90,6 +92,16 @@ describe('7.11 — [AC] Painel do professor por turma, Turma sem alunos, Alunos 
   });
 });
 
+async function abrirTopico(usuario: UserEvent, nome: string) {
+  await usuario.click(screen.getByRole('button', { name: 'Tópicos e materiais' }));
+  await usuario.click(await screen.findByRole('button', { name: 'Editar tópico ' + nome }));
+}
+
+async function abrirQuestao(usuario: UserEvent, id: string) {
+  await usuario.click(await screen.findByRole('button', { name: 'Banco de questões' }));
+  await usuario.click(screen.getByRole('button', { name: 'Editar questão ' + id }));
+}
+
 const grupoQuestao = (id: string) => screen.getByRole('group', { name: `Questão ${id}` });
 const respondida = (dados: () => import('../dominio/tipos').DadosAcademicos) => dados().respostas.find((r) => r.matriculaId === 'm-bruno-alg-b-262')!.questaoId;
 async function substituir(usuario: UserEvent, campo: HTMLElement, texto: string) { await usuario.clear(campo); await usuario.type(campo, texto); }
@@ -97,11 +109,13 @@ async function substituir(usuario: UserEvent, campo: HTMLElement, texto: string)
 describe('7.12 — [GC] Tópicos ordenados, Bloqueio estrutural após início do estudo, Validade contínua do conteúdo publicado', () => {
   it('descartar o rascunho local restaura o conteúdo gravado sem salvar nada', async () => {
     const { usuario, dados } = await renderizarApp('/professor/disciplinas/d-alg/conteudo', 'u-marcos');
+    await abrirTopico(usuario, 'Variáveis');
     const titulo = await screen.findByLabelText('Título do tópico 1');
     const antes = JSON.stringify(dados());
     await substituir(usuario, titulo, 'Outro nome');
     expect(screen.getByRole('button', { name: 'Salvar alterações' })).toBeEnabled();
     await usuario.click(screen.getByRole('button', { name: 'Descartar alterações' }));
+    await usuario.click(screen.getByRole('button', { name: 'Confirmar descarte' }));
     expect(screen.getByLabelText('Título do tópico 1')).toHaveValue('Variáveis');
     expect(screen.getByRole('button', { name: 'Salvar alterações' })).toBeDisabled();
     expect(JSON.stringify(dados())).toBe(antes);
@@ -111,18 +125,18 @@ describe('7.12 — [GC] Tópicos ordenados, Bloqueio estrutural após início do
     const { usuario, dados } = await renderizarApp('/professor/disciplinas/d-ing/conteudo', 'u-julia', (d) => {
       d.respostas = d.respostas.filter((r) => r.matriculaId !== 'm-ana-ing-a-262');
     });
-    await screen.findByLabelText('Título do tópico 1');
-    await usuario.click(screen.getByRole('button', { name: 'Adicionar tópico' }));
+    await usuario.click(await screen.findByRole('button', { name: 'Adicionar tópico' }));
     await usuario.type(screen.getByLabelText('Título do tópico 4'), 'Novo');
-    const existentes = screen.getAllByRole('group', { name: /^Questão / }).length;
-    for (let i = 0; i < 3; i++) await usuario.click(screen.getByRole('button', { name: 'Adicionar questão' }));
-    const novas = screen.getAllByRole('group', { name: /^Questão / }).slice(existentes);
-    expect(novas).toHaveLength(3);
-    for (const [i, grupo] of novas.entries()) {
+    await usuario.click(screen.getByRole('button', { name: 'Banco de questões' }));
+    for (const dif of ['Fácil', 'Médio', 'Difícil']) {
+      await usuario.click(screen.getByRole('button', { name: 'Adicionar questão' }));
+      const grupo = screen.getByRole('group', { name: /^Questão q-/ });
       await usuario.selectOptions(within(grupo).getByLabelText('Tópico'), 'Novo');
-      await usuario.selectOptions(within(grupo).getByLabelText('Dificuldade'), ['Fácil', 'Médio', 'Difícil'][i]);
-      await usuario.type(within(grupo).getByLabelText('Enunciado'), 'E'); await usuario.type(within(grupo).getByLabelText('Explicação'), 'x');
-      await usuario.type(within(grupo).getByLabelText(/^Alternativa 1 da questão/), 'a'); await usuario.type(within(grupo).getByLabelText(/^Alternativa 2 da questão/), 'b');
+      await usuario.selectOptions(within(grupo).getByLabelText('Dificuldade'), dif);
+      await usuario.type(within(grupo).getByLabelText('Enunciado'), 'E ' + dif);
+      await usuario.type(within(grupo).getByLabelText('Explicação'), 'x');
+      await usuario.type(within(grupo).getByLabelText(/^Alternativa 1 da questão/), 'a');
+      await usuario.type(within(grupo).getByLabelText(/^Alternativa 2 da questão/), 'b');
     }
     await usuario.click(screen.getByRole('button', { name: 'Salvar alterações' }));
     expect(await screen.findByText('Alterações salvas.')).toBeInTheDocument();
@@ -131,22 +145,24 @@ describe('7.12 — [GC] Tópicos ordenados, Bloqueio estrutural após início do
     expect(dados().questoes.filter((q) => q.disciplinaId === 'd-ing' && q.topicoId === d.topicos[3].id)).toHaveLength(3);
   });
 
-  it('após respostas, adicionar ou reordenar tópicos é rejeitado: informa o bloqueio, mantém a versão publicada e não mostra sucesso', async () => {
-    const { usuario, dados } = await renderizarApp('/professor/disciplinas/d-alg/conteudo', 'u-marcos');
-    await screen.findByLabelText('Título do tópico 1');
-    const antes = JSON.stringify(dados());
-    await usuario.click(screen.getByRole('button', { name: 'Mover Variáveis para baixo' }));
-    await usuario.click(screen.getByRole('button', { name: 'Salvar alterações' }));
-    expect(await screen.findByRole('alert')).toHaveTextContent(/estudo já foi iniciado/);
-    expect(screen.queryByText('Alterações salvas.')).toBeNull();
-    expect(JSON.stringify(dados())).toBe(antes);
-    await usuario.click(screen.getByRole('button', { name: 'Descartar alterações' }));
-    await usuario.click(screen.getByRole('button', { name: 'Adicionar tópico' }));
-    await usuario.type(screen.getByLabelText('Título do tópico 4'), 'Extra');
-    await usuario.click(screen.getByRole('button', { name: 'Salvar alterações' }));
-    expect(await screen.findByRole('alert')).toHaveTextContent(/estudo já foi iniciado|não pertence/);
-    expect(dados().disciplinas.find((d) => d.id === 'd-alg')).toMatchObject({ status: 'publicado' });
-    expect(JSON.stringify(dados())).toBe(antes);
+  it('explica o bloqueio de tópicos mesmo quando a resposta é de outra turma', async () => {
+    const { usuario, dados, repo } = await renderizarApp('/professor/disciplinas/d-alg/conteudo', 'u-marcos', (d) => {
+      d.vinculosProfessor = d.vinculosProfessor.filter((v) => v.professorId !== 'u-marcos' || v.turmaId === 't-alg-a-271');
+    });
+    const antes = dados();
+    expect(await screen.findByRole('button', { name: 'Adicionar tópico' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Adicionar tópico' })).toHaveAccessibleDescription(/estudo já foi iniciado/);
+    await abrirTopico(usuario, 'Variáveis');
+    expect(screen.getByRole('button', { name: 'Mover Variáveis para baixo' })).toBeDisabled();
+    const leitura = await repo.consultarConteudoEditavel({ disciplinaId: 'd-alg' });
+    expect(leitura.dados.protecoes.estudoIniciado).toBe(true);
+    expect(leitura.dados.protecoes).not.toHaveProperty('respostas');
+    const candidato = { topicos: [...leitura.dados.disciplina.topicos].reverse(), questoes: leitura.dados.questoes.map(({ disciplinaId: _d, ...q }) => q) };
+    await expect(repo.salvarConteudo({ disciplinaId: 'd-alg' }, candidato, leitura.revisao)).rejects.toMatchObject({ codigo: 'VALIDACAO_REJEITADA' });
+    candidato.topicos.reverse();
+    candidato.topicos.push({ id: 'extra', titulo: 'Extra', materiais: [] });
+    await expect(repo.salvarConteudo({ disciplinaId: 'd-alg' }, candidato, leitura.revisao)).rejects.toMatchObject({ codigo: 'VALIDACAO_REJEITADA' });
+    expect(dados()).toEqual(antes);
   });
 
   it('remover a única questão de uma dificuldade é rejeitado com tópico e nível; nada é salvo', async () => {
@@ -158,9 +174,10 @@ describe('7.12 — [GC] Tópicos ordenados, Bloqueio estrutural após início do
         }
       }
     });
-    await screen.findByLabelText('Título do tópico 1');
+    await abrirQuestao(usuario, 'qg-t-tri-dificil');
     const antes = JSON.stringify(dados());
     await usuario.click(screen.getByRole('button', { name: 'Remover questão qg-t-tri-dificil' }));
+    await usuario.click(screen.getByRole('button', { name: 'Retirar do rascunho' }));
     await usuario.click(screen.getByRole('button', { name: 'Salvar alterações' }));
     expect(await screen.findByText(/precisa de uma questão Difícil/)).toBeInTheDocument();
     expect(JSON.stringify(dados())).toBe(antes);
@@ -170,8 +187,8 @@ describe('7.12 — [GC] Tópicos ordenados, Bloqueio estrutural após início do
 describe('7.13 — [GC] Correção textual de questões respondidas, Proteção de questões com respostas', () => {
   async function abrirEditandoEnunciado(sufixo = ' (corrigido)') {
     const r = await renderizarApp('/professor/disciplinas/d-alg/conteudo', 'u-marcos');
-    await screen.findByLabelText('Título do tópico 1');
     const id = respondida(r.dados);
+    await abrirQuestao(r.usuario, id);
     const campo = within(grupoQuestao(id)).getByLabelText('Enunciado') as HTMLTextAreaElement;
     const original = campo.value;
     await r.usuario.type(campo, sufixo);
@@ -247,15 +264,79 @@ describe('7.13 — [GC] Correção textual de questões respondidas, Proteção 
 
   it('mudar o gabarito é rejeitado mesmo com confirmação; não há reordenação de alternativas nem segundo revisor', async () => {
     const r = await renderizarApp('/professor/disciplinas/d-alg/conteudo', 'u-marcos');
-    await screen.findByLabelText('Título do tópico 1');
-    const id = respondida(r.dados); const antes = JSON.stringify(r.dados());
+    const id = respondida(r.dados);
+    await abrirQuestao(r.usuario, id);
+    const antes = JSON.stringify(r.dados());
     const q = r.dados().questoes.find((x) => x.id === id)!;
     const outra = (q.correta + 1) % q.alternativas.length;
-    await r.usuario.click(within(grupoQuestao(id)).getByLabelText(`Correta: alternativa ${outra + 1} da questão ${id}`));
-    await r.usuario.click(screen.getByRole('button', { name: 'Salvar alterações' }));
-    expect(await screen.findByRole('alert')).toHaveTextContent(/gabarito/);
+    expect(within(grupoQuestao(id)).getByLabelText('Correta: alternativa ' + (outra + 1) + ' da questão ' + id)).toBeDisabled();
+    const l = await r.repo.consultarConteudoEditavel({ disciplinaId: 'd-alg' });
+    const questoes = l.dados.questoes.map(({ disciplinaId: _d, ...item }) => item);
+    questoes.find((item) => item.id === id)!.correta = outra;
+    await expect(r.repo.salvarConteudo({ disciplinaId: 'd-alg' }, { topicos: l.dados.disciplina.topicos, questoes }, l.revisao,
+      [{ recursoId: id, revisaoOriginal: q.revisao, diferenca: [] }])).rejects.toMatchObject({ codigo: 'VALIDACAO_REJEITADA' });
     expect(screen.queryByRole('group', { name: 'Confirmação da correção textual' })).toBeNull(); // nada a confirmar: não é correção textual
     expect(JSON.stringify(r.dados())).toBe(antes);
     expect(screen.queryByText(/segundo revisor|aprovação de outra pessoa/i)).toBeNull();
   });
+});
+
+it('retém o mesmo rascunho entre seções, na falha de persistência e ao cancelar saída', async () => {
+  const armazenamento = criarArmazenamentoEspiao();
+  const { usuario, dados, router } = await renderizarApp('/professor', 'u-marcos', undefined, armazenamento);
+  await usuario.click(await screen.findByRole('link', { name: 'Conteúdo de Algoritmos · turma A · 2026.2' }));
+  await abrirTopico(usuario, 'Variáveis');
+  await usuario.click(screen.getByRole('button', { name: 'Adicionar material' }));
+  await substituir(usuario, screen.getByLabelText('Título do material'), 'Material de teste');
+  await usuario.click(screen.getByRole('button', { name: 'Banco de questões' }));
+  expect(screen.getByText('Edição pendente')).toBeVisible();
+  await abrirTopico(usuario, 'Variáveis');
+  await usuario.click(screen.getByRole('button', { name: 'Editar material Material de teste' }));
+  const antes = dados();
+  armazenamento.falharAgoraEm(CHAVES_ARMAZENAMENTO.academico);
+  await usuario.click(screen.getByRole('button', { name: 'Salvar alterações' }));
+  expect(await screen.findByRole('alert')).toHaveTextContent(/gravar|persistir|gravação/i);
+  expect(screen.getByLabelText('Título do material')).toHaveValue('Material de teste');
+  expect(dados()).toEqual(antes);
+
+  const voltar = screen.getByRole('link', { name: 'Voltar às turmas' });
+  await usuario.click(voltar);
+  await usuario.click(screen.getByRole('button', { name: 'Cancelar' }));
+  expect(voltar).toHaveFocus();
+  expect(screen.getByLabelText('Título do material')).toHaveValue('Material de teste');
+  await act(() => router.navigate(-1));
+  expect(await screen.findByRole('alertdialog')).toHaveTextContent('Algoritmos');
+  await usuario.click(screen.getByRole('button', { name: 'Cancelar' }));
+  await abrirConta(usuario);
+  await usuario.click(screen.getByRole('button', { name: 'Sair' }));
+  await usuario.click(screen.getByRole('button', { name: 'Cancelar' }));
+  await abrirDemonstracao(usuario);
+  await usuario.click(screen.getByRole('button', { name: 'Restaurar dados de demonstração' }));
+  expect(screen.getByRole('alertdialog')).toHaveTextContent('As alterações não salvas de Algoritmos');
+  await usuario.click(screen.getByRole('button', { name: 'Cancelar' }));
+  expect(dados()).toEqual(antes);
+
+  armazenamento.falharAgoraEm();
+  await usuario.click(screen.getByRole('button', { name: 'Salvar alterações' }));
+  expect(await screen.findByText('Alterações salvas.')).toBeVisible();
+  expect(dados().respostas).toEqual(antes.respostas);
+  expect(dados().disciplinas.find((d) => d.id === 'd-alg')!.topicos[0].materiais.some((m) => m.titulo === 'Material de teste')).toBe(true);
+});
+
+it('mantém a alternativa correta de uma questão de três opções ao alternar seções', async () => {
+  const { usuario, dados } = await renderizarApp('/professor/disciplinas/d-geo/conteudo', 'u-julia', (d) => {
+    const questao = d.questoes.find((q) => q.disciplinaId === 'd-geo')!;
+    questao.alternativas = ['Primeira', 'Segunda alternativa longa', 'Terceira'];
+  });
+  const antes = dados();
+  const id = antes.questoes.find((q) => q.disciplinaId === 'd-geo')!.id;
+  await abrirQuestao(usuario, id);
+  await usuario.click(within(grupoQuestao(id)).getByLabelText('Correta: alternativa 2 da questão ' + id));
+  await usuario.click(screen.getByRole('button', { name: 'Tópicos e materiais' }));
+  await abrirQuestao(usuario, id);
+  expect(within(grupoQuestao(id)).getByLabelText('Correta: alternativa 2 da questão ' + id)).toBeChecked();
+  expect(within(grupoQuestao(id)).getByLabelText('Alternativa 2 da questão ' + id)).toHaveValue('Segunda alternativa longa');
+  expect(dados()).toEqual(antes);
+  expect(screen.getByRole('button', { name: 'Publicar conteúdo' })).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'Publicar conteúdo' })).toHaveAccessibleDescription(/Salve as alterações/);
 });

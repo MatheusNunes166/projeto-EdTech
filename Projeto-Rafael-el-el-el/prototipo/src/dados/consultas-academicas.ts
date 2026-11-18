@@ -1,3 +1,4 @@
+import { disciplinaTemResposta, questaoRespondida } from '../conteudo/regras-disciplina';
 import { disciplinaComEstudo, turmaComEstudo } from './validacao-comandos-academicos';
 import {
   pessoaAtiva, podeExecutar, type LeituraProfunda, type PedidoAutorizacao, type RecursoAcademico,
@@ -236,6 +237,8 @@ export class ConsultasAcademicas extends ComandosConteudo {
         graduacao: { id: g.id, codigo: g.codigo, nome: g.nome },
         disciplina: { ...disciplinaDTO(d), topicos: d.topicos.map((t) => ({ id: t.id, titulo: t.titulo,
           materiais: t.materiais.map((m) => ({ id: m.id, tipo: m.tipo, titulo: m.titulo, conteudo: m.conteudo })) })) },
+        protecoes: { estudoIniciado: disciplinaTemResposta(dados, d.id),
+          questoesRespondidas: dados.questoes.filter((q) => q.disciplinaId === d.id && questaoRespondida(dados, q.id)).map((q) => q.id) },
         questoes: dados.questoes.filter((q) => q.disciplinaId === d.id).map((q) => ({
           id: q.id, disciplinaId: q.disciplinaId, topicoId: q.topicoId, revisao: q.revisao, enunciado: q.enunciado,
           alternativas: [...q.alternativas], correta: q.correta, explicacao: q.explicacao, dificuldade: q.dificuldade,

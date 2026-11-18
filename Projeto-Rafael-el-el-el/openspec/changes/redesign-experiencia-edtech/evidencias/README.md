@@ -23,3 +23,7 @@ Baseline em `8e3a65c` com 662 testes em 42 arquivos e build aprovado. Node 26 co
 ## 6
 
 51 testes de Professor, shell e integração e build aprovados. A 1280 px e 360 px, o teclado percorreu turma, aluno, expansão da resposta e retorno à mesma turma. A consulta preservou o documento. O histórico detalhado agora inclui a explicação do conteúdo original e o teste de correção textual verifica a versão original visível.
+
+## 7
+
+149 testes direcionados e build aprovados. No Chrome a 1280 px e 360 px, o Professor entrou, consultou um aluno, editou material, alternou para o banco, voltou ao rascunho, cancelou a saída e salvou. O editor administrativo também foi aberto nas duas larguras. Os testes cobriram Voltar interno, Sair e restauração cancelados, falha de persistência, revisão e gabarito protegidos, cobertura indivisível e histórico imutável.
