@@ -56,3 +56,7 @@ export const T_ALG_A = '/aluno/disciplinas/d-alg/turmas/t-alg-a-262';
 export async function escolherFuncaoEntrada(usuario: ReturnType<typeof userEvent.setup>, funcao = 'Aluno') {
   await usuario.click(await screen.findByRole('button', { name: funcao }));
 }
+
+export async function abrirDemonstracao(usuario: ReturnType<typeof userEvent.setup>) {
+  await usuario.click(await screen.findByText('Demonstração', { selector: 'summary' }));
+}

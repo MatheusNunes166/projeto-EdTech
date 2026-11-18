@@ -7,7 +7,7 @@ import { Rotas } from '../app/Rotas';
 import { CHAVES_ARMAZENAMENTO as K } from '../dados/armazenamento-academico';
 import { criarSeedAcademico } from '../dados/seed-academico';
 import { criarArmazenamentoEspiao } from './armazenamento-espiao';
-import { escolherFuncaoEntrada, renderizarApp } from './renderizar';
+import { abrirDemonstracao, escolherFuncaoEntrada, renderizarApp } from './renderizar';
 import { RepositorioApp } from '../dados/repositorio-app';
 
 describe('7.1 — [PA] Entrada simulada; Acesso restrito por função e vínculo; [OA] Revogação (sessão, funções e consultas autorizadas)', () => {
@@ -195,6 +195,41 @@ describe('7.2 — [PA] Funções de usuário suportadas, Permissões cumulativas
   });
 });
 
+describe('Frontend 3 — cabeçalho e Demonstração', () => {
+  it.each([
+    ['/aluno/disciplinas/d-alg/turmas/t-alg-a-262/sessao', 'u-ana', 'Área do Aluno', 'Sessão de estudo', 'Minhas turmas'],
+    ['/aluno/catalogo/disciplinas/d-alg', 'u-ana', 'Área do Aluno', 'Detalhe da disciplina', 'Catálogo'],
+    ['/professor/disciplinas/d-alg/conteudo', 'u-marcos', 'Área do Professor', 'Conteúdo da disciplina', 'Minhas turmas'],
+    ['/coordenacao/gestao', 'u-carla', 'Área da Coordenação', 'Gestão acadêmica', 'Gestão acadêmica'],
+    ['/admin/periodos', 'u-renata', 'Área do Administrador', 'Períodos e turmas', 'Períodos e turmas'],
+    ['/responsavel', 'u-helena', 'Área do Responsável', 'Painel do responsável', 'Painel'],
+  ])('localiza %s sem perder menus ou marcar páginas duplicadas', async (rota, pessoa, area, secao, principal) => {
+    await renderizarApp(rota, pessoa);
+    const localizacao = await screen.findByLabelText('Localização atual');
+    expect(localizacao).toHaveTextContent(area); expect(localizacao).toHaveTextContent(secao);
+    const menu = within(screen.getByRole('navigation', { name: 'Menu principal' }));
+    expect(menu.getAllByRole('link', { current: 'page' })).toHaveLength(1);
+    expect(menu.getByRole('link', { current: 'page' })).toHaveTextContent(principal);
+    expect(screen.getByRole('button', { name: 'Sair' })).toBeVisible();
+  });
+
+  it('expandir/recolher não escreve, os controles começam escondidos e a entrada não oferece data', async () => {
+    const a = await renderizarApp('/aluno', 'u-ana');
+    await screen.findByRole('heading', { name: 'Minhas turmas' });
+    const antes = JSON.stringify(a.dados());
+    expect(screen.getByRole('button', { name: 'Simular próximo dia' })).not.toBeVisible();
+    await abrirDemonstracao(a.usuario);
+    expect(screen.getByRole('button', { name: 'Simular próximo dia' })).toBeVisible();
+    await abrirDemonstracao(a.usuario);
+    expect(screen.getByRole('button', { name: 'Simular próximo dia' })).not.toBeVisible();
+    expect(JSON.stringify(a.dados())).toBe(antes);
+    await a.usuario.click(screen.getByRole('button', { name: 'Sair' }));
+    await abrirDemonstracao(a.usuario);
+    expect(screen.getByRole('button', { name: 'Restaurar dados de demonstração' })).toBeVisible();
+    expect(screen.queryByRole('button', { name: 'Simular próximo dia' })).toBeNull();
+  });
+});
+
 describe('7.3 — [OA] Demonstração fictícia e restauração: aviso inicial e controles de restauração', () => {
   const legado = '{"versaoSeed":1,"usuarios":[],"cursos":[]}';
   const montar = (armazenamento: ReturnType<typeof criarArmazenamentoEspiao>) => render(
@@ -243,12 +278,15 @@ describe('7.3 — [OA] Demonstração fictícia e restauração: aviso inicial e
 
   it('cancelar a restauração mantém as alterações e a pessoa atual; o controle de data virtual continua funcionando', async () => {
     const { usuario } = await renderizarApp('/aluno', 'u-ana');
+    await abrirDemonstracao(usuario);
     expect(await screen.findByText('17/11/2026')).toBeInTheDocument();
     await usuario.click(screen.getByRole('button', { name: 'Simular próximo dia' }));
     expect(await screen.findByText('18/11/2026')).toBeInTheDocument();
     await usuario.click(screen.getByRole('button', { name: 'Restaurar dados de demonstração' }));
+    expect(screen.getByRole('heading', { name: 'Restaurar a demonstração?' })).toHaveFocus();
     expect(screen.getByRole('alertdialog', { name: 'Restaurar a demonstração?' })).toHaveTextContent(/serão apagados/);
     await usuario.click(screen.getByRole('button', { name: 'Cancelar' }));
+    expect(screen.getByRole('button', { name: 'Restaurar dados de demonstração' })).toHaveFocus();
     expect(screen.queryByRole('alertdialog')).toBeNull();
     expect(screen.getByText('18/11/2026')).toBeInTheDocument();
     expect(screen.getByText('Ana Souza')).toBeInTheDocument();
@@ -256,6 +294,7 @@ describe('7.3 — [OA] Demonstração fictícia e restauração: aviso inicial e
 
   it('confirmar limpa a sessão, recupera os dados iniciais e volta à entrada', async () => {
     const { usuario, rotaAtual, dados } = await renderizarApp('/aluno', 'u-ana');
+    await abrirDemonstracao(usuario);
     await usuario.click(await screen.findByRole('button', { name: 'Simular próximo dia' }));
     await screen.findByText('18/11/2026');
     await usuario.click(screen.getByRole('button', { name: 'Restaurar dados de demonstração' }));
@@ -271,6 +310,7 @@ describe('7.3 — [OA] Demonstração fictícia e restauração: aviso inicial e
     const storage = criarArmazenamentoEspiao();
     const { usuario, dados } = await renderizarApp('/aluno', 'u-ana', undefined, storage);
     await screen.findByRole('heading', { name: 'Minhas turmas' });
+    await abrirDemonstracao(usuario);
     const antes = dados();
     storage.falharAgoraEm(K.academico);
     await usuario.click(screen.getByRole('button', { name: 'Restaurar dados de demonstração' }));

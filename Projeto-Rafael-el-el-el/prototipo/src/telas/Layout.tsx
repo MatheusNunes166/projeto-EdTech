@@ -1,10 +1,10 @@
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { AREA_DA_FUNCAO, ROTULO_AREA, nomesDasFuncoes } from '../app/areas';
+import { AREA_DA_FUNCAO, ROTULO_AREA, localizacaoDaPagina, nomesDasFuncoes } from '../app/areas';
 import { useApp, useConsulta, useComando, useUsuario } from '../app/contexto';
 import { MensagemErro } from '../componentes/comuns';
 import { formatarData } from '../dominio/datas';
 import { FUNCOES, type Funcao } from '../dominio/tipos';
-import { Restauracao } from './Restauracao';
+import { Demonstracao } from './Restauracao';
 
 const MENU: Record<Funcao, { para: string; rotulo: string; fim?: boolean }[]> = {
   aluno: [{ para: '/aluno', rotulo: 'Minhas turmas', fim: true }, { para: '/aluno/catalogo', rotulo: 'Catálogo' }],
@@ -29,6 +29,7 @@ export function Layout() {
   const data = useConsulta((r) => r.consultarDataVirtual());
   const { rodar, erro } = useComando();
   const area = areaAtual(pathname) ?? usuario.funcoes[0];
+  const localizacao = localizacaoDaPagina(pathname, area);
 
   const sair = async () => {
     await executar((r) => r.sair());
@@ -38,9 +39,12 @@ export function Layout() {
   return (
     <div className="app">
       <header className="topo">
-        <div className="marca">Trilha Adaptativa</div>
+        <div className="identidade-app"><div className="marca">Trilha Adaptativa</div>
+          <p className="localizacao" aria-label="Localização atual"><strong>{ROTULO_AREA[area]}</strong> · {localizacao.titulo}</p>
+        </div>
         <nav aria-label="Menu principal">
-          {MENU[area].map((item) => <NavLink key={item.para} to={item.para} end={item.fim}>{item.rotulo}</NavLink>)}
+          {MENU[area].map((item) => <NavLink key={item.para} to={item.para} aria-current={localizacao.principal === item.para ? 'page' : false}
+            className={() => localizacao.principal === item.para ? 'active' : undefined}>{item.rotulo}</NavLink>)}
         </nav>
         <div className="usuario">
           <span>{usuario.nome} <small className="selo">{nomesDasFuncoes(usuario.funcoes)}</small></span>
@@ -50,20 +54,19 @@ export function Layout() {
       {usuario.funcoes.length > 1 && (
         <nav className="barra-demo" aria-label="Áreas da pessoa">
           {FUNCOES.filter((f) => usuario.funcoes.includes(f)).map((f) => (
-            <NavLink key={f} to={AREA_DA_FUNCAO[f]}>{ROTULO_AREA[f]}</NavLink>
+            <NavLink key={f} to={AREA_DA_FUNCAO[f]} aria-current={false}>{ROTULO_AREA[f]}</NavLink>
           ))}
         </nav>
       )}
-      <div className="barra-demo" role="region" aria-label="Controles da demonstração">
+      <Demonstracao>
         {data.situacao === 'ok' && (
           <>
             <span>Data simulada: <strong>{formatarData(data.dados)}</strong></span>
             <button className="secundario" onClick={() => rodar((r) => r.avancarDataVirtual(data.revisao))}>Simular próximo dia</button>
           </>
         )}
-        <Restauracao />
-      </div>
-      <MensagemErro erro={erro} />
+        <MensagemErro erro={erro} />
+      </Demonstracao>
       <main className={`conteudo ${area === 'aluno' ? 'experiencia-aluno' : ''}`}><Outlet /></main>
     </div>
   );

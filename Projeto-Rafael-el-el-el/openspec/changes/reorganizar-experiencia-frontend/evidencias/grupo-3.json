@@ -1,0 +1,65 @@
+{
+  "menus": [
+    {
+      "rota": "/aluno",
+      "localizacao": "Área do Aluno · Minhas turmas",
+      "links": [
+        "Minhas turmas",
+        "Catálogo"
+      ],
+      "atuais": 1,
+      "fechado": true
+    },
+    {
+      "rota": "/professor",
+      "localizacao": "Área do Professor · Minhas turmas",
+      "links": [
+        "Minhas turmas"
+      ],
+      "atuais": 1,
+      "fechado": true
+    },
+    {
+      "rota": "/coordenacao/gestao",
+      "localizacao": "Área da Coordenação · Gestão acadêmica",
+      "links": [
+        "Painel",
+        "Gestão acadêmica",
+        "Cadastros"
+      ],
+      "atuais": 1,
+      "fechado": true
+    },
+    {
+      "rota": "/admin/periodos",
+      "localizacao": "Área do Administrador · Períodos e turmas",
+      "links": [
+        "Visão geral",
+        "Pessoas",
+        "Vínculos",
+        "Graduações e disciplinas",
+        "Períodos e turmas",
+        "Matrículas e docentes"
+      ],
+      "atuais": 1,
+      "fechado": true
+    },
+    {
+      "rota": "/responsavel",
+      "localizacao": "Área do Responsável · Painel do responsável",
+      "links": [
+        "Painel"
+      ],
+      "atuais": 1,
+      "fechado": true
+    }
+  ],
+  "dataAvancouUmDia": true,
+  "cancelamentoPreservouDados": true,
+  "focoAberturaECancelamento": true,
+  "overflow": {
+    "width": 360,
+    "document": 345,
+    "overflow": []
+  }
+}

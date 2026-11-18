@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { normalizarErro, useApp } from '../app/contexto';
 
@@ -11,34 +11,43 @@ export function Restauracao({ rotulo = 'Restaurar dados de demonstração' }: { 
   const navegar = useNavigate();
   const [aberto, setAberto] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
+  const [ocupado, setOcupado] = useState(false);
+  const acionador = useRef<HTMLButtonElement>(null);
+  const titulo = useRef<HTMLHeadingElement>(null);
+  useEffect(() => { if (aberto) titulo.current?.focus(); }, [aberto]);
 
   const confirmar = async () => {
-    setErro(null);
+    if (ocupado) return;
+    setErro(null); setOcupado(true);
     try {
       await restaurar(true);
       setAberto(false);
       navegar('/', { replace: true });
     } catch (e) {
       setErro(normalizarErro(e).mensagem);
-    }
+    } finally { setOcupado(false); }
   };
 
   return (
     <>
-      <button className="secundario" onClick={() => setAberto(true)}>{rotulo}</button>
+      <button ref={acionador} className="secundario" onClick={() => setAberto(true)}>{rotulo}</button>
       {aberto && (
         <div role="alertdialog" aria-labelledby="rest-titulo" aria-describedby="rest-texto" className="cartao">
-          <h2 id="rest-titulo">Restaurar a demonstração?</h2>
+          <h2 id="rest-titulo" tabIndex={-1} ref={titulo}>Restaurar a demonstração?</h2>
           <p id="rest-texto">
             As alterações atuais e o histórico fictício <strong>serão apagados</strong> e a demonstração inicial será recuperada; a sessão atual será encerrada.
           </p>
           {erro && <p role="alert" className="alerta">Não foi possível restaurar: {erro}</p>}
           <div className="acoes">
-            <button onClick={confirmar}>Confirmar restauração</button>
-            <button className="secundario" onClick={() => { setAberto(false); setErro(null); }}>Cancelar</button>
+            <button disabled={ocupado} onClick={confirmar}>Confirmar restauração</button>
+            <button disabled={ocupado} className="secundario" onClick={() => { setAberto(false); setErro(null); acionador.current?.focus(); }}>Cancelar</button>
           </div>
         </div>
       )}
     </>
   );
+}
+
+export function Demonstracao({ children }: { children?: ReactNode }) {
+  return <details className="demonstracao"><summary>Demonstração</summary><div className="conteudo-demo">{children}<Restauracao /></div></details>;
 }

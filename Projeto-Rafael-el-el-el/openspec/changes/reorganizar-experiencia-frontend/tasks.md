@@ -18,11 +18,11 @@ Lista de implementação futura, após revisão desta change. Nenhuma tarefa foi
 
 ## 3. Navegação compartilhada e Demonstração
 
-- [ ] 3.1 Reorganizar `Layout.tsx` com cabeçalho compacto, área e seção atuais, menu completo, pessoa, troca de área e Sair; verificar navegação por links e endereços diretos nas cinco funções, incluindo seções internas de estudo, conteúdo e gestão, sem destinos perdidos.
-- [ ] 3.2 Agrupar os controles autenticados de data e restauração em Demonstração inicialmente recolhida e oferecer somente restauração no agrupamento da entrada; verificar que abrir e fechar não grava dados e que Simular próximo dia avança exatamente um dia usando a revisão atual.
-- [ ] 3.3 Reaproveitar `Restauracao` com confirmação explícita, aviso de perda de histórico e encerramento da sessão; verificar foco ao abrir e cancelar, preservação de dados e sessão ao cancelar ou falhar e retorno à entrada após confirmação bem-sucedida.
-- [ ] 3.4 Atualizar os testes de shell para expandir os controles antes de usá-los e cobrir seção atual, conteúdo recolhido, restauração e aviso inicial de incompatibilidade; verificar `npm test -- src/testes/shell.test.tsx`, inclusive falha de gravação sem estado parcial ou substituição automática.
-- [ ] 3.5 Documentar o novo acesso aos controles no `README.md` do protótipo; verificar que informa onde avançar o dia e restaurar, os efeitos de confirmar e a preservação do aviso inicial para dados incompatíveis.
+- [x] 3.1 Reorganizar `Layout.tsx` com cabeçalho compacto, área e seção atuais, menu completo, pessoa, troca de área e Sair; verificar navegação por links e endereços diretos nas cinco funções, incluindo seções internas de estudo, conteúdo e gestão, sem destinos perdidos.
+- [x] 3.2 Agrupar os controles autenticados de data e restauração em Demonstração inicialmente recolhida e oferecer somente restauração no agrupamento da entrada; verificar que abrir e fechar não grava dados e que Simular próximo dia avança exatamente um dia usando a revisão atual.
+- [x] 3.3 Reaproveitar `Restauracao` com confirmação explícita, aviso de perda de histórico e encerramento da sessão; verificar foco ao abrir e cancelar, preservação de dados e sessão ao cancelar ou falhar e retorno à entrada após confirmação bem-sucedida.
+- [x] 3.4 Atualizar os testes de shell para expandir os controles antes de usá-los e cobrir seção atual, conteúdo recolhido, restauração e aviso inicial de incompatibilidade; verificar `npm test -- src/testes/shell.test.tsx`, inclusive falha de gravação sem estado parcial ou substituição automática.
+- [x] 3.5 Documentar o novo acesso aos controles no `README.md` do protótipo; verificar que informa onde avançar o dia e restaurar, os efeitos de confirmar e a preservação do aviso inicial para dados incompatíveis.
 
 ## 4. Minhas turmas e acesso ao desempenho
 

@@ -180,8 +180,19 @@ tr.inativo td { color: var(--cor-suave); }
 .experiencia-aluno .topico.bloqueado { opacity: 1; }
 .usuario { flex-wrap: wrap; min-width: 0; overflow-wrap: anywhere; }
 .topo nav a { overflow-wrap: anywhere; }
+.identidade-app { min-width: 0; }
+.localizacao { margin: 4px 0 0; color: var(--cor-suave); font-size: 0.85rem; overflow-wrap: anywhere; }
+.demonstracao { max-width: 1180px; margin: 12px auto; padding: 0 24px; color: var(--cor-suave); font-size: 0.9rem; }
+.entrada .demonstracao { padding: 0; margin: 24px 0; }
+summary { cursor: pointer; font-weight: 600; width: fit-content; max-width: 100%; }
+.conteudo-demo { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 16px 0; }
+.conteudo-demo > .cartao { flex-basis: 100%; }
+.conteudo-demo button { font-size: 0.85rem; }
+.topo { gap: 16px; }
+.topo .usuario { margin-left: auto; }
 @media (max-width: 640px) {
   .entrada { padding: 24px 16px; }
+  .demonstracao { padding: 0 16px; }
   .experiencia-aluno .cartao { padding: 16px; }
   .experiencia-aluno .grade-cartoes { gap: 16px; }
 }

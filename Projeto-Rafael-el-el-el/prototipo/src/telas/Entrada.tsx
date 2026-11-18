@@ -3,7 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { AREA_DA_FUNCAO, areaInicial, nomesDasFuncoes } from '../app/areas';
 import { useApp } from '../app/contexto';
 import { FUNCOES, NOME_FUNCAO, type Funcao } from '../dominio/tipos';
-import { Restauracao } from './Restauracao';
+import { Demonstracao } from './Restauracao';
 
 export function Entrada() {
   const { repo, usuario, versao, executar } = useApp();
@@ -77,7 +77,7 @@ export function Entrada() {
           ))}
         </ul>
       )}
-      <p><Restauracao /></p>
+      <Demonstracao />
     </main>
   );
 }

@@ -3,7 +3,7 @@ import type { UserEvent } from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { diferencaTextualQuestao } from '../conteudo/regras-disciplina';
 import type { ConteudoCandidato } from '../dados/comandos-conteudo';
-import { escolherFuncaoEntrada, renderizarApp } from './renderizar';
+import { abrirDemonstracao, escolherFuncaoEntrada, renderizarApp } from './renderizar';
 
 /**
  * 8.2 — Validação integrada entre funções, pela interface e com o armazenamento real do aplicativo.
@@ -144,6 +144,7 @@ describe('8.2 — fluxos integrados entre funções (PA, GC, AA, OA)', () => {
     // 9. Cancelamento da restauração: nada muda e a pessoa continua na sessão.
     await entrarComo(usuario, 'Renata Alves');
     const estadoAntes = JSON.stringify(dados());
+    await abrirDemonstracao(usuario);
     await usuario.click(await screen.findByRole('button', { name: 'Restaurar dados de demonstração' }));
     await usuario.click(screen.getByRole('button', { name: 'Cancelar' }));
     await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
